@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Search, ShoppingCart, Menu, X, Car, MapPin, Clock, Phone, ChevronDown } from 'lucide-react';
+import { Search, ShoppingCart, Menu, X, Car, MapPin, Clock, Phone, ChevronDown, Settings } from 'lucide-react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useCategories } from '../hooks/useCategories';
 
@@ -18,6 +19,8 @@ const Header: React.FC<{
   const [showCategories, setShowCategories] = useState(false);
   const { state } = useCart();
   const { categories } = useCategories();
+  const navigate = useNavigate();
+  const location = useLocation();
   const searchInputRef = useRef<HTMLInputElement>(null);
   const categoriesDropdownRef = useRef<HTMLDivElement>(null);
   const categoriesButtonRef = useRef<HTMLButtonElement>(null);
@@ -65,6 +68,8 @@ const Header: React.FC<{
     'Batterie'
   ];
 
+  const isAdminPage = location.pathname === '/admin';
+
   return (
     <div className="relative">
       <header className="bg-white shadow-2xl sticky top-0 z-50 border-b border-gray-100">
@@ -94,7 +99,10 @@ const Header: React.FC<{
         <div className="container mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
             {/* Logo */}
-            <div className="flex items-center space-x-4 group cursor-pointer">
+            <div 
+              className="flex items-center space-x-4 group cursor-pointer"
+              onClick={() => navigate('/')}
+            >
               <div className="relative">
                 <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-800 rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-110">
                   <Car className="h-7 w-7 text-white" />
@@ -112,7 +120,8 @@ const Header: React.FC<{
             </div>
 
             {/* Search bar - Desktop */}
-            <div className="hidden md:flex flex-1 max-w-2xl mx-8 relative">
+            {!isAdminPage && (
+              <div className="hidden md:flex flex-1 max-w-2xl mx-8 relative">
               <div className="relative w-full group">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                   <Search className="h-5 w-5 text-gray-400 group-focus-within:text-blue-500 transition-colors" />
@@ -159,11 +168,13 @@ const Header: React.FC<{
                   Rechercher
                 </button>
               </div>
-            </div>
+              </div>
+            )}
 
             {/* Cart and Menu */}
             <div className="flex items-center space-x-4">
-              <button
+              {!isAdminPage && (
+                <button
                 onClick={onCartClick}
                 className="relative p-3 text-gray-600 hover:text-blue-600 transition-all duration-300 transform hover:scale-110 bg-gray-50 hover:bg-blue-50 rounded-2xl group shadow-sm hover:shadow-md"
                 aria-label={`Panier avec ${totalItems} articles`}
@@ -174,8 +185,25 @@ const Header: React.FC<{
                     {totalItems}
                   </span>
                 )}
-              </button>
+                </button>
+              )}
 
+              {/* Admin Panel Button */}
+              <button
+                onClick={() => navigate(isAdminPage ? '/' : '/admin')}
+                className={`p-3 transition-all duration-300 transform hover:scale-110 rounded-2xl shadow-sm hover:shadow-md ${
+                  isAdminPage 
+                    ? 'bg-red-50 text-red-600 hover:bg-red-100' 
+                    : 'bg-gray-50 text-gray-600 hover:text-blue-600 hover:bg-blue-50'
+                }`}
+                title={isAdminPage ? 'Retour au site' : 'Panel Admin'}
+              >
+                {isAdminPage ? (
+                  <X className="h-7 w-7" />
+                ) : (
+                  <Settings className="h-7 w-7" />
+                )}
+              </button>
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                 className="md:hidden p-3 text-gray-600 hover:text-blue-600 bg-gray-50 hover:bg-blue-50 rounded-2xl transition-all duration-300 shadow-sm hover:shadow-md"
@@ -189,7 +217,8 @@ const Header: React.FC<{
           </div>
 
           {/* Search bar - Mobile */}
-          <div className="md:hidden mt-6">
+          {!isAdminPage && (
+            <div className="md:hidden mt-6">
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                 <Search className="h-5 w-5 text-gray-400" />
@@ -210,13 +239,15 @@ const Header: React.FC<{
                 <Search className="h-5 w-5" />
               </button>
             </div>
-          </div>
+            </div>
+          )}
         </div>
 
         {/* Navigation */}
-        <nav className={`bg-gradient-to-r from-gray-50 to-gray-100 border-t border-gray-200 transition-all duration-300 ${
+        {!isAdminPage && (
+          <nav className={`bg-gradient-to-r from-gray-50 to-gray-100 border-t border-gray-200 transition-all duration-300 ${
           isMenuOpen ? 'block' : 'hidden md:block'
-        }`}>
+          }`}>
           <div className="container mx-auto px-4">
             <div className="hidden md:flex items-center justify-between py-4">
               <div className="flex items-center space-x-3">
@@ -264,11 +295,12 @@ const Header: React.FC<{
               </div>
             </div>
           </div>
-        </nav>
+          </nav>
+        )}
       </header>
 
       {/* Categories Dropdown - Moved outside header with proper z-index */}
-      {showCategories && (
+      {showCategories && !isAdminPage && (
         <>
           {/* Backdrop */}
           <div
