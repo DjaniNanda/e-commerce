@@ -7,7 +7,7 @@ public class ProductResponse {
     private List<Product> products;
     private long count;
 
-    public ProductResponse() {
+    public ProductResponse(Product product) {
     }
 
     public ProductResponse(List<Product> products, long count) {

@@ -1,5 +1,6 @@
 package com.roosvelt.Backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -18,8 +19,7 @@ public class Order {
     @NotNull
     private CustomerInfo customerInfo;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id")
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<OrderItem> items;
 
     @NotNull
@@ -42,8 +42,12 @@ public class Order {
         if (id == null) {
             id = "order_" + System.currentTimeMillis();
         }
+        if (items != null) {
+            for (OrderItem item : items) {
+                item.setOrder(this);
+            }
+        }
     }
-
 
     public Order() {}
 
@@ -54,7 +58,7 @@ public class Order {
         this.status = OrderStatus.PENDING;
     }
 
-
+    // Getters and Setters
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
 
@@ -62,7 +66,14 @@ public class Order {
     public void setCustomerInfo(CustomerInfo customerInfo) { this.customerInfo = customerInfo; }
 
     public List<OrderItem> getItems() { return items; }
-    public void setItems(List<OrderItem> items) { this.items = items; }
+    public void setItems(List<OrderItem> items) {
+        this.items = items;
+        if (items != null) {
+            for (OrderItem item : items) {
+                item.setOrder(this);
+            }
+        }
+    }
 
     public Integer getTotal() { return total; }
     public void setTotal(Integer total) { this.total = total; }
@@ -74,6 +85,11 @@ public class Order {
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 
     public enum OrderStatus {
-        PENDING, CONFIRMED, DELIVERED
+        PENDING, CONFIRMED, DELIVERED;
+
+        @JsonValue
+        public String getValue() {
+            return this.name().toLowerCase();
+        }
     }
 }

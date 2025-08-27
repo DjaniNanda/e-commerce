@@ -1,8 +1,12 @@
 package com.roosvelt.Backend.controller;
 
+import com.roosvelt.Backend.dto.CreateOrderRequest;
+import com.roosvelt.Backend.dto.OrderResponse;
 import com.roosvelt.Backend.entity.Order;
 import com.roosvelt.Backend.service.OrderService;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,38 +19,41 @@ import java.util.Map;
 @CrossOrigin(origins = "*")
 public class OrderController {
 
+    private static final Logger log = LoggerFactory.getLogger(OrderController.class);
+
     @Autowired
     private OrderService orderService;
 
     @GetMapping
-    public ResponseEntity<List<Order>> getAllOrders() {
-        List<Order> orders = orderService.getAllOrders();
+    public ResponseEntity<List<OrderResponse>> getAllOrders() {
+        List<OrderResponse> orders = orderService.getAllOrders();
         return ResponseEntity.ok(orders);
     }
 
     @PostMapping
-    public ResponseEntity<Order> createOrder(@Valid @RequestBody Order order) {
-        Order createdOrder = orderService.createOrder(order);
+    public ResponseEntity<OrderResponse> createOrder(@Valid @RequestBody CreateOrderRequest request) {
+        log.info("Creating order for customer: {}", request.getCustomerInfo().getPhone());
+        OrderResponse createdOrder = orderService.createOrder(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdOrder);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Order> getOrderById(@PathVariable String id) {
-        Order order = orderService.getOrderById(id);
+    public ResponseEntity<OrderResponse> getOrderById(@PathVariable String id) {
+        OrderResponse order = orderService.getOrderById(id);
         return ResponseEntity.ok(order);
     }
 
     @PutMapping("/{id}/status")
-    public ResponseEntity<Order> updateOrderStatus(@PathVariable String id,
-                                                   @RequestBody Map<String, String> statusRequest) {
+    public ResponseEntity<OrderResponse> updateOrderStatus(@PathVariable String id,
+                                                           @RequestBody Map<String, String> statusRequest) {
         String status = statusRequest.get("status");
-        Order updatedOrder = orderService.updateOrderStatus(id, Order.OrderStatus.valueOf(status.toUpperCase()));
+        OrderResponse updatedOrder = orderService.updateOrderStatus(id, Order.OrderStatus.valueOf(status.toUpperCase()));
         return ResponseEntity.ok(updatedOrder);
     }
 
     @GetMapping("/phone/{phone}")
-    public ResponseEntity<List<Order>> getOrdersByPhone(@PathVariable String phone) {
-        List<Order> orders = orderService.getOrdersByPhone(phone);
+    public ResponseEntity<List<OrderResponse>> getOrdersByPhone(@PathVariable String phone) {
+        List<OrderResponse> orders = orderService.getOrdersByPhone(phone);
         return ResponseEntity.ok(orders);
     }
 

@@ -13,22 +13,52 @@ const AdminPanel: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  // Load data
+  // Enhanced error logging
+  const handleError = (error: any, context: string) => {
+    console.error(`Error in ${context}:`, error);
+    const errorMessage = error?.response?.data?.message || error?.message || `Erreur lors de ${context}`;
+    setError(errorMessage);
+  };
+
+  // Load data with better error handling
   useEffect(() => {
-    if (activeTab === 'products') {
-      loadProducts();
-    } else {
-      loadOrders();
-    }
+    const loadData = async () => {
+      try {
+        setError(null); // Clear previous errors
+        if (activeTab === 'products') {
+          await loadProducts();
+        } else {
+          await loadOrders();
+        }
+      } catch (err) {
+        handleError(err, 'chargement initial');
+      }
+    };
+
+    loadData();
   }, [activeTab]);
 
   const loadProducts = async () => {
     try {
       setLoading(true);
-      const data = await productService.getAllProducts();
-      setProducts(data);
+      console.log('Loading products...');
+      
+      // Check if productService exists
+      if (!productService || !productService.getAllProducts) {
+        throw new Error('Product service not available');
+      }
+      
+      const response = await productService.getAllProducts();
+      console.log('Products response:', response);
+      
+      // Handle both direct array and object with products property
+      const productsData = Array.isArray(response) ? response : response.products || [];
+      setProducts(productsData);
+      
     } catch (err) {
-      setError('Erreur lors du chargement des produits');
+      handleError(err, 'chargement des produits');
+      // Set empty array as fallback
+      setProducts([]);
     } finally {
       setLoading(false);
     }
@@ -37,10 +67,23 @@ const AdminPanel: React.FC = () => {
   const loadOrders = async () => {
     try {
       setLoading(true);
+      console.log('Loading orders...');
+      
+      // Check if orderService exists
+      if (!orderService || !orderService.getAllOrders) {
+        throw new Error('Order service not available');
+      }
+      
       const data = await orderService.getAllOrders();
-      setOrders(data);
+      console.log('Orders response:', data);
+      
+      const ordersData = Array.isArray(data) ? data : [];
+      setOrders(ordersData);
+      
     } catch (err) {
-      setError('Erreur lors du chargement des commandes');
+      handleError(err, 'chargement des commandes');
+      // Set empty array as fallback
+      setOrders([]);
     } finally {
       setLoading(false);
     }
@@ -52,7 +95,7 @@ const AdminPanel: React.FC = () => {
         await productService.deleteProduct(id);
         setProducts(products.filter(p => p.id !== id));
       } catch (err) {
-        setError('Erreur lors de la suppression');
+        handleError(err, 'suppression du produit');
       }
     }
   };
@@ -64,7 +107,7 @@ const AdminPanel: React.FC = () => {
         order.id === id ? { ...order, status } : order
       ));
     } catch (err) {
-      setError('Erreur lors de la mise à jour');
+      handleError(err, 'mise à jour du statut');
     }
   };
 
@@ -89,6 +132,15 @@ const AdminPanel: React.FC = () => {
       default: return status;
     }
   };
+
+  // Debug component state
+  console.log('AdminPanel State:', {
+    activeTab,
+    productsCount: products.length,
+    ordersCount: orders.length,
+    loading,
+    error
+  });
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -122,6 +174,7 @@ const AdminPanel: React.FC = () => {
       </div>
 
       <div className="container mx-auto px-4 py-8">
+
         {/* Tabs */}
         <div className="flex space-x-4 mb-8 bg-white rounded-2xl p-2 shadow-sm">
           <button
@@ -158,14 +211,22 @@ const AdminPanel: React.FC = () => {
               <div>
                 <h4 className="font-semibold text-red-800">Erreur</h4>
                 <p className="text-red-700">{error}</p>
+                <button
+                  onClick={() => {
+                    setError(null);
+                    // Retry loading data
+                    if (activeTab === 'products') {
+                      loadProducts();
+                    } else {
+                      loadOrders();
+                    }
+                  }}
+                  className="mt-2 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
+                >
+                  Réessayer
+                </button>
               </div>
             </div>
-            <button
-              onClick={() => setError(null)}
-              className="mt-3 text-red-600 hover:text-red-800 text-sm font-medium"
-            >
-              Fermer
-            </button>
           </div>
         )}
 
@@ -190,72 +251,83 @@ const AdminPanel: React.FC = () => {
               </button>
             </div>
 
-            <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200">
-              <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Produit
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Catégorie
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Prix
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Actions
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
-                    {products.map((product) => (
-                      <tr key={product.id}>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="flex items-center">
-                            <img
-                              className="h-12 w-12 rounded-xl object-cover shadow-sm"
-                              src={product.images[0]}
-                              alt={product.name}
-                            />
-                            <div className="ml-4">
-                              <div className="text-sm font-semibold text-gray-900">
-                                {product.name}
+            {products.length === 0 ? (
+              <div className="bg-white rounded-2xl shadow-lg p-8 text-center">
+                <Package className="h-16 w-16 mx-auto text-gray-400 mb-4" />
+                <h3 className="text-lg font-semibold text-gray-600 mb-2">Aucun produit trouvé</h3>
+                <p className="text-gray-500">Commencez par ajouter des produits à votre catalogue.</p>
+              </div>
+            ) : (
+              <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200">
+                <div className="overflow-x-auto">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Produit
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Catégorie
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Prix
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Actions
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {products.map((product) => (
+                        <tr key={product.id}>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="flex items-center">
+                              <img
+                                className="h-12 w-12 rounded-xl object-cover shadow-sm"
+                                src={product.images?.[0] || '/placeholder-image.jpg'}
+                                alt={product.name}
+                                onError={(e) => {
+                                  (e.target as HTMLImageElement).src = '/placeholder-image.jpg';
+                                }}
+                              />
+                              <div className="ml-4">
+                                <div className="text-sm font-semibold text-gray-900">
+                                  {product.name}
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span className="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
-                            {product.category}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          {formatPrice(product.price)}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                          <div className="flex space-x-2">
-                            <button className="p-2 text-blue-600 hover:text-blue-900 hover:bg-blue-50 rounded-lg transition-colors">
-                              <Eye className="h-4 w-4" />
-                            </button>
-                            <button className="p-2 text-green-600 hover:text-green-900 hover:bg-green-50 rounded-lg transition-colors">
-                              <Edit className="h-4 w-4" />
-                            </button>
-                            <button
-                              onClick={() => handleDeleteProduct(product.id)}
-                              className="p-2 text-red-600 hover:text-red-900 hover:bg-red-50 rounded-lg transition-colors"
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <span className="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                              {product.category}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {formatPrice(product.price)}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <div className="flex space-x-2">
+                              <button className="p-2 text-blue-600 hover:text-blue-900 hover:bg-blue-50 rounded-lg transition-colors">
+                                <Eye className="h-4 w-4" />
+                              </button>
+                              <button className="p-2 text-green-600 hover:text-green-900 hover:bg-green-50 rounded-lg transition-colors">
+                                <Edit className="h-4 w-4" />
+                              </button>
+                              <button
+                                onClick={() => handleDeleteProduct(product.id)}
+                                className="p-2 text-red-600 hover:text-red-900 hover:bg-red-50 rounded-lg transition-colors"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
-            </div>
+            )}
           </div>
         )}
 
@@ -266,75 +338,83 @@ const AdminPanel: React.FC = () => {
               <h2 className="text-xl font-semibold">Gestion des Commandes</h2>
             </div>
 
-            <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200">
-              <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Commande
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Client
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Total
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Statut
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Date
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Actions
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
-                    {orders.map((order) => (
-                      <tr key={order.id}>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                          <span className="bg-gray-100 px-3 py-1 rounded-full font-mono text-xs">
-                            #{order.id.slice(-6)}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm font-semibold text-gray-900">
-                            {order.customerInfo.firstName} {order.customerInfo.lastName}
-                          </div>
-                          <div className="text-sm text-gray-500">
-                            {order.customerInfo.phone}
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          {formatPrice(order.total)}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <select
-                            value={order.status}
-                            onChange={(e) => handleUpdateOrderStatus(order.id, e.target.value as any)}
-                            className={`px-3 py-1 text-xs font-semibold rounded-full border-0 cursor-pointer ${getStatusColor(order.status)}`}
-                          >
-                            <option value="pending">En attente</option>
-                            <option value="confirmed">Confirmée</option>
-                            <option value="delivered">Livrée</option>
-                          </select>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {new Date(order.createdAt).toLocaleDateString('fr-FR')}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                          <button className="p-2 text-blue-600 hover:text-blue-900 hover:bg-blue-50 rounded-lg transition-colors">
-                            <Eye className="h-4 w-4" />
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+            {orders.length === 0 ? (
+              <div className="bg-white rounded-2xl shadow-lg p-8 text-center">
+                <ShoppingBag className="h-16 w-16 mx-auto text-gray-400 mb-4" />
+                <h3 className="text-lg font-semibold text-gray-600 mb-2">Aucune commande trouvée</h3>
+                <p className="text-gray-500">Les commandes de vos clients apparaîtront ici.</p>
               </div>
-            </div>
+            ) : (
+              <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200">
+                <div className="overflow-x-auto">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Commande
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Client
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Total
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Statut
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Date
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Actions
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {orders.map((order) => (
+                        <tr key={order.id}>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                            <span className="bg-gray-100 px-3 py-1 rounded-full font-mono text-xs">
+                              #{order.id.slice(-6)}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm font-semibold text-gray-900">
+                              {order.customerInfo.firstName} {order.customerInfo.lastName}
+                            </div>
+                            <div className="text-sm text-gray-500">
+                              {order.customerInfo.phone}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {formatPrice(order.total)}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <select
+                              value={order.status}
+                              onChange={(e) => handleUpdateOrderStatus(order.id, e.target.value as any)}
+                              className={`px-3 py-1 text-xs font-semibold rounded-full border-0 cursor-pointer ${getStatusColor(order.status)}`}
+                            >
+                              <option value="pending">En attente</option>
+                              <option value="confirmed">Confirmée</option>
+                              <option value="delivered">Livrée</option>
+                            </select>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {new Date(order.createdAt).toLocaleDateString('fr-FR')}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <button className="p-2 text-blue-600 hover:text-blue-900 hover:bg-blue-50 rounded-lg transition-colors">
+                              <Eye className="h-4 w-4" />
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>

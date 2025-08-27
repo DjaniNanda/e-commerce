@@ -188,22 +188,7 @@ const Header: React.FC<{
                 </button>
               )}
 
-              {/* Admin Panel Button */}
-              <button
-                onClick={() => navigate(isAdminPage ? '/' : '/admin')}
-                className={`p-3 transition-all duration-300 transform hover:scale-110 rounded-2xl shadow-sm hover:shadow-md ${
-                  isAdminPage 
-                    ? 'bg-red-50 text-red-600 hover:bg-red-100' 
-                    : 'bg-gray-50 text-gray-600 hover:text-blue-600 hover:bg-blue-50'
-                }`}
-                title={isAdminPage ? 'Retour au site' : 'Panel Admin'}
-              >
-                {isAdminPage ? (
-                  <X className="h-7 w-7" />
-                ) : (
-                  <Settings className="h-7 w-7" />
-                )}
-              </button>
+              
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                 className="md:hidden p-3 text-gray-600 hover:text-blue-600 bg-gray-50 hover:bg-blue-50 rounded-2xl transition-all duration-300 shadow-sm hover:shadow-md"

@@ -68,7 +68,6 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ isOpen, onClose, onSubmit }
         customerInfo: formData,
         items: state.items,
         total: state.total,
-        createdAt: new Date()
       };
       
       // Submit to backend
