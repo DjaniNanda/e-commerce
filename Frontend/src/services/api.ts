@@ -6,7 +6,9 @@ const apiRequest = async (endpoint: string, options: RequestInit = {}) => {
   
   const defaultOptions: RequestInit = {
     headers: {
-      'Content-Type': 'application/json',
+      // Only set Content-Type for JSON requests
+      // For FormData, let the browser set it automatically
+      ...(options.body instanceof FormData ? {} : { 'Content-Type': 'application/json' }),
       ...options.headers,
     },
     ...options,
@@ -31,18 +33,32 @@ export const api = {
   // GET request
   get: (endpoint: string) => apiRequest(endpoint, { method: 'GET' }),
   
-  // POST request
-  post: (endpoint: string, data: any) => 
+  // POST request (JSON)
+  post: (endpoint: string, data: any) =>
     apiRequest(endpoint, {
       method: 'POST',
       body: JSON.stringify(data),
     }),
+    
+  // POST request (FormData) - for file uploads
+  postFormData: (endpoint: string, formData: FormData) =>
+    apiRequest(endpoint, {
+      method: 'POST',
+      body: formData,
+    }),
   
   // PUT request
-  put: (endpoint: string, data: any) => 
+  put: (endpoint: string, data: any) =>
     apiRequest(endpoint, {
       method: 'PUT',
       body: JSON.stringify(data),
+    }),
+    
+  // PUT request (FormData)
+  putFormData: (endpoint: string, formData: FormData) =>
+    apiRequest(endpoint, {
+      method: 'PUT',
+      body: formData,
     }),
   
   // DELETE request

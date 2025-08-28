@@ -89,25 +89,61 @@ const AdminPanel: React.FC = () => {
     }
   };
 
+  // Fixed: Add navigation handler for "Add Product" button
+  const handleAddProduct = () => {
+    // Navigate to add product form - adjust path as needed
+    navigate('/admin/products/add');
+  };
+
+  // Fixed: Add handler for viewing product details
+  const handleViewProduct = (productId: string) => {
+    navigate(`/admin/products/${productId}`);
+  };
+
+  // Fixed: Add handler for editing product
+  const handleEditProduct = (productId: string) => {
+    navigate(`/admin/products/edit/${productId}`);
+  };
+
+  // Fixed: Add handler for viewing order details
+  const handleViewOrder = (orderId: string) => {
+    navigate(`/admin/orders/${orderId}`);
+  };
+
   const handleDeleteProduct = async (id: string) => {
     if (window.confirm('Êtes-vous sûr de vouloir supprimer ce produit ?')) {
       try {
+        setLoading(true);
         await productService.deleteProduct(id);
         setProducts(products.filter(p => p.id !== id));
+        
+        // Show success message
+        setError(null);
+        console.log('Product deleted successfully');
+        
       } catch (err) {
         handleError(err, 'suppression du produit');
+      } finally {
+        setLoading(false);
       }
     }
   };
 
   const handleUpdateOrderStatus = async (id: string, status: 'pending' | 'confirmed' | 'delivered') => {
     try {
-      await orderService.updateOrderStatus(id, status);
+      setLoading(true);
+      const updatedOrder = await orderService.updateOrderStatus(id, status);
+      
       setOrders(orders.map(order => 
         order.id === id ? { ...order, status } : order
       ));
+      
+      console.log('Order status updated successfully');
+      
     } catch (err) {
       handleError(err, 'mise à jour du statut');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -245,7 +281,11 @@ const AdminPanel: React.FC = () => {
           <div>
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-semibold">Gestion des Produits</h2>
-              <button className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-3 rounded-xl hover:from-blue-700 hover:to-blue-800 flex items-center shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-1">
+              {/* Fixed: Add onClick handler */}
+              <button 
+                onClick={handleAddProduct}
+                className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-3 rounded-xl hover:from-blue-700 hover:to-blue-800 flex items-center shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-1"
+              >
                 <Plus className="h-4 w-4 mr-2" />
                 Ajouter un produit
               </button>
@@ -256,6 +296,13 @@ const AdminPanel: React.FC = () => {
                 <Package className="h-16 w-16 mx-auto text-gray-400 mb-4" />
                 <h3 className="text-lg font-semibold text-gray-600 mb-2">Aucun produit trouvé</h3>
                 <p className="text-gray-500">Commencez par ajouter des produits à votre catalogue.</p>
+                <button 
+                  onClick={handleAddProduct}
+                  className="mt-4 bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 flex items-center mx-auto"
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Ajouter le premier produit
+                </button>
               </div>
             ) : (
               <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200">
@@ -279,7 +326,7 @@ const AdminPanel: React.FC = () => {
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
                       {products.map((product) => (
-                        <tr key={product.id}>
+                        <tr key={product.id} className="hover:bg-gray-50">
                           <td className="px-6 py-4 whitespace-nowrap">
                             <div className="flex items-center">
                               <img
@@ -307,15 +354,25 @@ const AdminPanel: React.FC = () => {
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             <div className="flex space-x-2">
-                              <button className="p-2 text-blue-600 hover:text-blue-900 hover:bg-blue-50 rounded-lg transition-colors">
+                              {/* Fixed: Add onClick handlers */}
+                              <button 
+                                onClick={() => handleViewProduct(product.id)}
+                                className="p-2 text-blue-600 hover:text-blue-900 hover:bg-blue-50 rounded-lg transition-colors"
+                                title="Voir les détails"
+                              >
                                 <Eye className="h-4 w-4" />
                               </button>
-                              <button className="p-2 text-green-600 hover:text-green-900 hover:bg-green-50 rounded-lg transition-colors">
+                              <button 
+                                onClick={() => handleEditProduct(product.id)}
+                                className="p-2 text-green-600 hover:text-green-900 hover:bg-green-50 rounded-lg transition-colors"
+                                title="Modifier"
+                              >
                                 <Edit className="h-4 w-4" />
                               </button>
                               <button
                                 onClick={() => handleDeleteProduct(product.id)}
                                 className="p-2 text-red-600 hover:text-red-900 hover:bg-red-50 rounded-lg transition-colors"
+                                title="Supprimer"
                               >
                                 <Trash2 className="h-4 w-4" />
                               </button>
@@ -372,7 +429,7 @@ const AdminPanel: React.FC = () => {
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
                       {orders.map((order) => (
-                        <tr key={order.id}>
+                        <tr key={order.id} className="hover:bg-gray-50">
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                             <span className="bg-gray-100 px-3 py-1 rounded-full font-mono text-xs">
                               #{order.id.slice(-6)}
@@ -401,10 +458,25 @@ const AdminPanel: React.FC = () => {
                             </select>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {new Date(order.createdAt).toLocaleDateString('fr-FR')}
+                            <div>
+                              <div className="font-medium">
+                                {new Date(order.createdAt).toLocaleDateString('fr-FR')}
+                              </div>
+                              <div className="text-xs text-gray-400">
+                                {new Date(order.createdAt).toLocaleTimeString('fr-FR', {
+                                  hour: '2-digit',
+                                  minute: '2-digit'
+                                })}
+                              </div>
+                            </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            <button className="p-2 text-blue-600 hover:text-blue-900 hover:bg-blue-50 rounded-lg transition-colors">
+                            {/* Fixed: Add onClick handler */}
+                            <button 
+                              onClick={() => handleViewOrder(order.id)}
+                              className="p-2 text-blue-600 hover:text-blue-900 hover:bg-blue-50 rounded-lg transition-colors"
+                              title="Voir les détails"
+                            >
                               <Eye className="h-4 w-4" />
                             </button>
                           </td>

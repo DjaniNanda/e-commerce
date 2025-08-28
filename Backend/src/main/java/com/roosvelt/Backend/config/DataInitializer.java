@@ -30,7 +30,6 @@ public class DataInitializer implements CommandLineRunner {
                         45000,
                         Arrays.asList("/amortisseurs1.jpg", "/amortisseurs2.jpg"),
                         "suspension",
-                        "Amortisseurs",
                         "12 mois"
                 ),
                 new Product(
@@ -39,7 +38,6 @@ public class DataInitializer implements CommandLineRunner {
                         25000,
                         Arrays.asList("/filtreaoil3.jpg"),
                         "moteur",
-                        "Filtres à air",
                         "6 mois"
                 ),
                 new Product(
@@ -48,7 +46,6 @@ public class DataInitializer implements CommandLineRunner {
                         15000,
                         Arrays.asList("/Labiellettedebarrestabilisatrice3.jpg", "/Labiellettedebarrestabilisatrice1.jpg"),
                         "suspension",
-                        "Barres stabilisatrices",
                         "12 mois"
                 )
         );

@@ -26,6 +26,7 @@ public class OrderService {
     @Autowired
     private ProductRepository productRepository;
 
+    @Transactional(readOnly = true)  // Added this annotation
     public List<OrderResponse> getAllOrders() {
         log.info("Getting all orders");
         return orderRepository.findAllByOrderByCreatedAtDesc()
@@ -75,6 +76,7 @@ public class OrderService {
         }
     }
 
+    @Transactional(readOnly = true)  // Added this annotation
     public OrderResponse getOrderById(String id) {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found with id: " + id));
@@ -90,6 +92,7 @@ public class OrderService {
         return new OrderResponse(updatedOrder);
     }
 
+    @Transactional(readOnly = true)  // Added this annotation
     public List<OrderResponse> getOrdersByPhone(String phone) {
         return orderRepository.findByCustomerPhone(phone)
                 .stream()

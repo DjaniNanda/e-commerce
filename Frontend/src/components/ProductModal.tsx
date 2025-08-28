@@ -113,11 +113,7 @@ const ProductModal: React.FC<{
                     <span className="bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800 px-4 py-2 rounded-xl text-sm font-semibold">
                       {product.category}
                     </span>
-                    {product.subcategory && (
-                      <span className="bg-gray-100 text-gray-700 px-4 py-2 rounded-xl text-sm font-medium">
-                        {product.subcategory}
-                      </span>
-                    )}
+                    
                   </div>
                 </div>
 

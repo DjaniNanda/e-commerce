@@ -1,74 +1,35 @@
-package com.roosvelt.Backend.entity;
+package com.roosvelt.Backend.dto;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
+import com.roosvelt.Backend.entity.Product;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Entity
-@Table(name = "products")
-public class Product {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class ProductOrderItemResponse {
     private Long id;
-
-    @NotBlank
-    @Column(nullable = false)
     private String name;
-
-    @NotBlank
-    @Column(columnDefinition = "TEXT")
     private String description;
-
-    @NotNull
-    @Positive
-    @Column(nullable = false)
     private Integer price;
-
-    @ElementCollection
-    @CollectionTable(name = "product_images", joinColumns = @JoinColumn(name = "product_id"))
-    @Column(name = "image_url")
     private List<String> images;
-
-    @NotBlank
-    @Column(nullable = false)
     private String category;
-
     private String warranty;
-
-    @Column(name = "created_at")
     private LocalDateTime createdAt;
-
-    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
+    public ProductOrderItemResponse() {}
+
+    public ProductOrderItemResponse(Product product) {
+        this.id = product.getId();
+        this.name = product.getName();
+        this.description = product.getDescription();
+        this.price = product.getPrice();
+        this.images = product.getImages();
+        this.category = product.getCategory();
+        this.warranty = product.getWarranty();
+        this.createdAt = product.getCreatedAt();
+        this.updatedAt = product.getUpdatedAt();
     }
 
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
-
-
-    public Product() {}
-
-    public Product(String name, String description, Integer price, List<String> images,
-                   String category, String warranty) {
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.images = images;
-        this.category = category;
-        this.warranty = warranty;
-    }
-
-
+    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -96,4 +57,3 @@ public class Product {
     public LocalDateTime getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 }
-

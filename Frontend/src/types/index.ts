@@ -5,7 +5,6 @@ export interface Product {
   price: number;
   images: string[];
   category: string;
-  subcategory: string;
   warranty: string;
 }
 
@@ -15,6 +14,7 @@ export interface CartItem {
 }
 
 export interface Order {
+  updatedAt: string | number | Date;
   id: string;
   customerInfo: {
     firstName: string;

@@ -46,7 +46,6 @@ public class ProductService {
         if (productDetails.getPrice() != null) product.setPrice(productDetails.getPrice());
         if (productDetails.getImages() != null) product.setImages(productDetails.getImages());
         if (productDetails.getCategory() != null) product.setCategory(productDetails.getCategory());
-        if (productDetails.getSubcategory() != null) product.setSubcategory(productDetails.getSubcategory());
         if (productDetails.getWarranty() != null) product.setWarranty(productDetails.getWarranty());
 
         return productRepository.save(product);
