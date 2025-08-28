@@ -12,6 +12,7 @@ import java.util.List;
 @Table(name = "orders")
 public class Order {
     @Id
+    @Column(columnDefinition = "VARCHAR(255)")
     private String id;
 
     @Embedded
