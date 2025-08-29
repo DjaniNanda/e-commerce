@@ -11,7 +11,7 @@ import { Car, Grid, List, MapPin, Phone, Search } from 'lucide-react';
 const MainApp: React.FC = () => {
   console.log('MainApp component rendering...');
   
-  const { products, productsCount, loading, error, searchProducts, filterProducts, getProductsByCategory } = useProducts();
+  const { products, productsCount, loading, error, searchProducts, filterProducts } = useProducts();
   useCategories();
   
   console.log('Products:', products, 'Count:', productsCount, 'Loading:', loading, 'Error:', error);
@@ -27,70 +27,68 @@ const MainApp: React.FC = () => {
     priceRange: [0, 1000000] as [number, number]
   });
 
-  // Apply search or category filtering
-  const applySearchOrFilter = useCallback(async () => {
+  // Memoize filter parameters to prevent unnecessary re-renders
+  const filterParams = useMemo(() => {
+    const params = {
+      category: selectedCategory || filters.category || undefined,
+      minPrice: filters.priceRange[0] > 0 ? filters.priceRange[0] : undefined,
+      maxPrice: filters.priceRange[1] < 1000000 ? filters.priceRange[1] : undefined,
+      search: searchQuery || undefined,
+    };
+    
+    // Remove undefined values
+    return Object.fromEntries(
+      Object.entries(params).filter(([_, value]) => value !== undefined)
+    );
+  }, [searchQuery, selectedCategory, filters.category, filters.priceRange]);
+
+  // Use useCallback to prevent function recreation on every render
+  const applyFilters = useCallback(async () => {
     try {
       // Don't apply filters during initial loading
       if (loading) {
-        console.log('Skipping search/filter application - still loading');
+        console.log('Skipping filter application - still loading');
         return;
       }
 
-      // Priority: Category selection over search
-      if (selectedCategory) {
-        console.log('Loading products by category:', selectedCategory);
-        await getProductsByCategory(selectedCategory);
-      } else if (searchQuery) {
-        console.log('Searching products:', searchQuery);
-        await searchProducts(searchQuery);
-      } else if (filters.priceRange[0] > 0 || filters.priceRange[1] < 1000000) {
-        // Only apply price filters if no category or search
-        console.log('Applying price filters:', filters);
-        const filterParams = {
-          minPrice: filters.priceRange[0] > 0 ? filters.priceRange[0] : undefined,
-          maxPrice: filters.priceRange[1] < 1000000 ? filters.priceRange[1] : undefined,
-        };
+      console.log('Applying filters:', filterParams);
+      
+      if (Object.keys(filterParams).length > 0) {
         await filterProducts(filterParams);
       }
-      
     } catch (error) {
-      console.error('Error applying search/filter:', error);
+      console.error('Error applying filters:', error);
     }
-  }, [selectedCategory, searchQuery, filters, loading, getProductsByCategory, searchProducts, filterProducts]);
+  }, [filterParams, loading, filterProducts]);
 
   // Track if we've made an API call for the current filter parameters
-  const [lastSearchState, setLastSearchState] = useState({ category: '', search: '', priceRange: [0, 1000000] });
+  const [lastFilterParams, setLastFilterParams] = useState({});
   const [hasSearched, setHasSearched] = useState(false);
 
-  // Apply search/filter when parameters change
+  // Apply filters when filterParams change (but not loading state)
   React.useEffect(() => {
-    console.log('Search/Filter effect triggered', { selectedCategory, searchQuery, filters, loading, hasSearched });
+    console.log('Filter effect triggered', { filterParams, loading, hasSearched });
     
-    const currentSearchState = {
-      category: selectedCategory,
-      search: searchQuery,
-      priceRange: filters.priceRange
-    };
 
-    if (!loading && (selectedCategory || searchQuery || filters.priceRange[0] > 0 || filters.priceRange[1] < 1000000)) {
-      const currentStateString = JSON.stringify(currentSearchState);
-      const lastStateString = JSON.stringify(lastSearchState);
+    if (!loading && Object.keys(filterParams).length > 0) {
+      const filterParamsString = JSON.stringify(filterParams);
+      const lastFilterParamsString = JSON.stringify(lastFilterParams);
       
-      if (currentStateString !== lastStateString) {
-        console.log('Search/Filter parameters changed, applying');
-        setLastSearchState(currentSearchState);
+      if (filterParamsString !== lastFilterParamsString) {
+        console.log('Filter parameters changed, applying filters');
+        setLastFilterParams(filterParams);
         setHasSearched(true);
-        applySearchOrFilter();
+        applyFilters();
       } else {
-        console.log('Search/Filter parameters unchanged, skipping API call');
+        console.log('Filter parameters unchanged, skipping API call');
       }
-    } else if (!selectedCategory && !searchQuery && filters.priceRange[0] === 0 && filters.priceRange[1] === 1000000 && hasSearched) {
+    } else if (Object.keys(filterParams).length === 0 && hasSearched) {
       // Reset when filters are cleared
-      console.log('Search/Filters cleared, resetting search state');
+      console.log('Filters cleared, resetting search state');
       setHasSearched(false);
-      setLastSearchState({ category: '', search: '', priceRange: [0, 1000000] });
+      setLastFilterParams({});
     }
-  }, [selectedCategory, searchQuery, filters, loading, applySearchOrFilter, lastSearchState, hasSearched]);
+  }, [filterParams, loading, applyFilters, lastFilterParams, hasSearched]);
 
   const handleSearch = useCallback(async (query: string) => {
     console.log('Search initiated:', query);
@@ -98,7 +96,7 @@ const MainApp: React.FC = () => {
       setSearchQuery(query);
       setSelectedCategory('');
       
-      // Clear category when starting a new search
+      // Clear previous filters when starting a new search
       if (query.trim()) {
         // Don't call searchProducts here - let the effect handle it
         console.log('Search query set, effect will handle the API call');
@@ -112,11 +110,7 @@ const MainApp: React.FC = () => {
     console.log('Category clicked:', category);
     setSelectedCategory(category);
     setSearchQuery('');
-    // Clear price filters when selecting category
-    setFilters({
-      category: '',
-      priceRange: [0, 1000000]
-    });
+    setFilters(prev => ({ ...prev, category }));
   }, []);
 
   const clearFilters = useCallback(() => {
@@ -128,7 +122,7 @@ const MainApp: React.FC = () => {
       priceRange: [0, 1000000]
     });
     setHasSearched(false);
-    setLastSearchState({ category: '', search: '', priceRange: [0, 1000000] });
+    setLastFilterParams({});
   }, []);
 
   // Add a loading state check
