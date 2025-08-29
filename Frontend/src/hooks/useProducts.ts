@@ -61,6 +61,22 @@ export const useProducts = () => {
     }
   };
 
+  // Get products by category
+  const getProductsByCategory = async (category: string) => {
+    try {
+      setLoading(true);
+      const products = await productService.getProductsByCategory(category);
+      setProducts(products);
+      setProductsCount(products.length);
+      setError(null);
+    } catch (err) {
+      setError('Erreur lors du chargement des produits par catégorie');
+      console.error('Error loading products by category:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Load products on component mount
   useEffect(() => {
     loadProducts();
@@ -73,6 +89,7 @@ export const useProducts = () => {
     error,
     searchProducts,
     filterProducts,
+    getProductsByCategory,
     loadProducts, // In case you want to refresh the data
   };
 };
