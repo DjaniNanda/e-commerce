@@ -37,7 +37,8 @@ export const productService = {
   
   // Filtrer les produits par catégorie
   getProductsByCategory: async (category: string): Promise<Product[]> => {
-    return await api.get(`/products/category/${category}`);
+    const response = await api.get(`/products/filter?category=${encodeURIComponent(category)}`);
+    return response.products || response; // Handle both response formats
   },
   
   // Filtrer les produits par prix
