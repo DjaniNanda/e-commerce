@@ -61,9 +61,9 @@ const Header: React.FC<{
   };
 
   const searchSuggestions = [
-    'Plaquettes de frein',
-    'Filtres à huile',
-    'Amortisseurs',
+    'Plaquette de frein',
+    'Filtre à huile',
+    'Amortisseur',
     'Pneus',
     'Batterie'
   ];
