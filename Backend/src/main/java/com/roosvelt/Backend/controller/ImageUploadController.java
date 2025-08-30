@@ -4,30 +4,36 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api")
 public class ImageUploadController {
 
-    @Value("${app.upload.dir:../frontend/public/images/products}")
-    private String uploadDir;
+    @Value("${imgbb.api.key}")
+    private String imgbbApiKey;
 
+    private static final String IMGBB_API_URL = "https://api.imgbb.com/1/upload";
     private static final List<String> ALLOWED_EXTENSIONS = Arrays.asList("jpg", "jpeg", "png", "gif", "webp");
     private static final long MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+
+    private final RestTemplate restTemplate = new RestTemplate();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @PostMapping("/upload-image")
     public ResponseEntity<?> uploadImage(@RequestParam("image") MultipartFile file) {
@@ -57,74 +63,75 @@ public class ImageUploadController {
                         .body(createErrorResponse("Type de fichier non supporté. Utilisez: " + String.join(", ", ALLOWED_EXTENSIONS)));
             }
 
-            // Generate unique filename
-            String uniqueFileName = generateUniqueFileName(originalFileName);
+            // Convert file to base64
+            String base64Image = Base64.getEncoder().encodeToString(file.getBytes());
 
-            // Create upload directory if it doesn't exist
-            Path uploadPath = Paths.get(uploadDir);
-            if (!Files.exists(uploadPath)) {
-                Files.createDirectories(uploadPath);
+            // Prepare request
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+            MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+            body.add("key", imgbbApiKey);
+            body.add("image", base64Image);
+            body.add("name", getFileNameWithoutExtension(originalFileName));
+
+            HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+
+            // Upload to ImgBB
+            ResponseEntity<String> response = restTemplate.postForEntity(IMGBB_API_URL, requestEntity, String.class);
+
+            if (response.getStatusCode().is2xxSuccessful()) {
+                JsonNode jsonResponse = objectMapper.readTree(response.getBody());
+
+                if (jsonResponse.get("success").asBoolean()) {
+                    JsonNode data = jsonResponse.get("data");
+
+                    String imageUrl = data.get("url").asText();
+                    String deleteUrl = data.get("delete_url").asText();
+
+                    Map<String, Object> responseMap = new HashMap<>();
+                    responseMap.put("success", true);
+                    responseMap.put("imagePath", imageUrl); // This is what your frontend will use
+                    responseMap.put("deleteUrl", deleteUrl); // Store this in your database if you want to delete later
+                    responseMap.put("fileName", originalFileName);
+                    responseMap.put("size", file.getSize());
+
+                    return ResponseEntity.ok(responseMap);
+                } else {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                            .body(createErrorResponse("Erreur ImgBB: " + jsonResponse.get("error").get("message").asText()));
+                }
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body(createErrorResponse("Erreur de communication avec ImgBB"));
             }
 
-            // Save file
-            Path filePath = uploadPath.resolve(uniqueFileName);
-            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-
-            // Return the image path (with leading slash for frontend)
-            String imagePath = "/images/products/" + uniqueFileName;
-
-            Map<String, Object> response = new HashMap<>();
-            response.put("success", true);
-            response.put("imagePath", imagePath);
-            response.put("fileName", uniqueFileName);
-            response.put("originalName", originalFileName);
-            response.put("size", file.getSize());
-
-            return ResponseEntity.ok(response);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(createErrorResponse("Erreur lors de la sauvegarde du fichier: " + e.getMessage()));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(createErrorResponse("Erreur interne du serveur"));
+                    .body(createErrorResponse("Erreur lors de l'upload: " + e.getMessage()));
         }
     }
 
+    // Optional: Delete image (Note: ImgBB free tier has limited delete functionality)
     @DeleteMapping("/delete-image")
-    public ResponseEntity<?> deleteImage(@RequestParam("imagePath") String imagePath) {
+    public ResponseEntity<?> deleteImage(@RequestParam("deleteUrl") String deleteUrl) {
         try {
-            // Remove leading slash and "images/products/" to get just the filename
-            String fileName = imagePath.replace("/images/products/", "");
+            // For ImgBB, you would typically call the delete URL directly
+            // But this requires the full delete URL which includes a hash
+            ResponseEntity<String> response = restTemplate.getForEntity(deleteUrl, String.class);
 
-            Path filePath = Paths.get(uploadDir, fileName);
-
-            if (Files.exists(filePath)) {
-                Files.delete(filePath);
+            if (response.getStatusCode().is2xxSuccessful()) {
                 return ResponseEntity.ok(Map.of("success", true, "message", "Image supprimée avec succès"));
             } else {
-                return ResponseEntity.notFound().build();
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(createErrorResponse("Impossible de supprimer l'image"));
             }
 
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(createErrorResponse("Erreur lors de la suppression du fichier"));
+                    .body(createErrorResponse("Erreur lors de la suppression"));
         }
-    }
-
-    private String generateUniqueFileName(String originalFileName) {
-        String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
-        String uuid = UUID.randomUUID().toString().substring(0, 8);
-        String extension = getFileExtension(originalFileName);
-        String nameWithoutExt = getFileNameWithoutExtension(originalFileName);
-
-        // Sanitize the original name (remove special characters)
-        nameWithoutExt = nameWithoutExt.replaceAll("[^a-zA-Z0-9_-]", "_");
-
-        return String.format("%s_%s_%s.%s", timestamp, uuid, nameWithoutExt, extension);
     }
 
     private String getFileExtension(String fileName) {
