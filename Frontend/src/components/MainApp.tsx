@@ -187,28 +187,28 @@ const MainApp: React.FC = () => {
       <main className="container mx-auto px-4 py-8">
         {/* Hero Section */}
         {!searchQuery && !selectedCategory && (
-          <div className="bg-gradient-to-r from-blue-600 via-blue-700 to-blue-800 text-white rounded-3xl p-12 sm:p-10 mb-12 text-center relative overflow-hidden shadow-2xl">
+          <div className="bg-gradient-to-r from-blue-600 via-blue-700 to-blue-800 text-white rounded-3xl p-10 mb-12 text-center relative overflow-hidden shadow-2xl">
             <div className="absolute inset-0 bg-black/10"></div>
             <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full -translate-y-48 translate-x-48"></div>
             <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/5 rounded-full translate-y-32 -translate-x-32"></div>
             <div className="relative z-10">
-              <h2 className="text-5xl sm:text-4xl md:text-5xl font-black mb-8 sm:mb-6 leading-tight">
+              <h2 className="text-4xl md:text-5xl font-black mb-6 leading-tight">
                 Pièces Automobiles
                 <span className="block text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-orange-300">
                   de Qualité Premium
                 </span>
               </h2>
-              <p className="text-2xl sm:text-xl md:text-2xl mb-10 sm:mb-8 text-blue-100 max-w-3xl mx-auto leading-relaxed">
+              <p className="text-xl md:text-2xl mb-8 text-blue-100 max-w-3xl mx-auto leading-relaxed">
                 Livraison gratuite à Yaoundé • Paiement à la livraison • Garantie assurée
               </p>
-              <div className="flex flex-wrap justify-center gap-4 text-base sm:text-sm font-medium">
+              <div className="flex flex-wrap justify-center gap-4 text-sm font-medium">
                 {[
                   { icon: "✓", text: "Stock permanent" },
                   { icon: "⚡", text: "Livraison rapide" },
                   { icon: "💎", text: "Qualité garantie" },
                   { icon: "🛡️", text: "Service 7j/7" }
                 ].map((item, index) => (
-                  <div key={index} className="bg-white/20 backdrop-blur-sm px-5 py-3 sm:px-4 sm:py-2 rounded-full border border-white/30 hover:bg-white/30 transition-all duration-300 transform hover:scale-105">
+                  <div key={index} className="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full border border-white/30 hover:bg-white/30 transition-all duration-300 transform hover:scale-105">
                     <span className="mr-2">{item.icon}</span>
                     {item.text}
                   </div>
@@ -219,27 +219,27 @@ const MainApp: React.FC = () => {
         )}
 
         {/* Updated Toolbar */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 bg-white rounded-2xl p-8 sm:p-6 shadow-sm border border-gray-100 space-y-4 sm:space-y-0">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-6 w-full sm:w-auto">
+        <div className="flex items-center justify-between mb-8 bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+          <div className="flex items-center space-x-6">
             <div className="text-gray-600">
-              <span className="text-3xl sm:text-2xl font-bold text-blue-600">{productsCount || 0}</span>
-              <span className="ml-2 text-lg sm:text-base">produit{(productsCount || 0) !== 1 ? 's' : ''} trouvé{(productsCount || 0) !== 1 ? 's' : ''}</span>
+              <span className="text-2xl font-bold text-blue-600">{productsCount || 0}</span>
+              <span className="ml-2">produit{(productsCount || 0) !== 1 ? 's' : ''} trouvé{(productsCount || 0) !== 1 ? 's' : ''}</span>
             </div>
             {(searchQuery || selectedCategory) && (
-              <div className="flex flex-wrap items-center gap-2">
+              <div className="flex items-center space-x-2">
                 {searchQuery && (
-                  <span className="bg-blue-100 text-blue-800 px-4 py-2 sm:px-3 sm:py-1 rounded-full text-base sm:text-sm font-medium">
+                  <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
                     Recherche: "{searchQuery}"
                   </span>
                 )}
                 {selectedCategory && (
-                  <span className="bg-green-100 text-green-800 px-4 py-2 sm:px-3 sm:py-1 rounded-full text-base sm:text-sm font-medium">
+                  <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
                     Catégorie: {selectedCategory}
                   </span>
                 )}
                 <button
                   onClick={clearFilters}
-                  className="text-gray-500 hover:text-red-500 text-base sm:text-sm underline"
+                  className="text-gray-500 hover:text-red-500 text-sm underline"
                 >
                   Effacer filtres
                 </button>
@@ -247,27 +247,27 @@ const MainApp: React.FC = () => {
             )}
           </div>
 
-          <div className="flex items-center space-x-4 sm:space-x-3">
-            <span className="text-base sm:text-sm text-gray-500 hidden sm:block">Vue:</span>
+          <div className="flex items-center space-x-3">
+            <span className="text-sm text-gray-500 hidden sm:block">Vue:</span>
             <button
               onClick={() => setViewMode('grid')}
-              className={`p-4 sm:p-3 rounded-xl transition-all duration-200 ${
+              className={`p-3 rounded-xl transition-all duration-200 ${
                 viewMode === 'grid' 
                   ? 'bg-blue-100 text-blue-600 shadow-md' 
                   : 'text-gray-400 hover:bg-gray-100 hover:text-gray-600'
               }`}
             >
-              <Grid className="h-6 w-6 sm:h-5 sm:w-5" />
+              <Grid className="h-5 w-5" />
             </button>
             <button
               onClick={() => setViewMode('list')}
-              className={`p-4 sm:p-3 rounded-xl transition-all duration-200 ${
+              className={`p-3 rounded-xl transition-all duration-200 ${
                 viewMode === 'list' 
                   ? 'bg-blue-100 text-blue-600 shadow-md' 
                   : 'text-gray-400 hover:bg-gray-100 hover:text-gray-600'
               }`}
             >
-              <List className="h-6 w-6 sm:h-5 sm:w-5" />
+              <List className="h-5 w-5" />
             </button>
           </div>
         </div>
