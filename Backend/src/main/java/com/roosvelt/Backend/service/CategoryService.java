@@ -32,9 +32,6 @@ public class CategoryService {
         if (categoryDetails.getName() != null) {
             category.setName(categoryDetails.getName());
         }
-        if (categoryDetails.getSubcategories() != null) {
-            category.setSubcategories(categoryDetails.getSubcategories());
-        }
 
         return categoryRepository.save(category);
     }

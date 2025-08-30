@@ -21,7 +21,6 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "*") // Configure this properly for production
 public class ImageUploadController {
 
     @Value("${app.upload.dir:../frontend/public/images/products}")

@@ -13,12 +13,6 @@ export const useCategories = () => {
       setError(null);
       const data = await categoryService.getAllCategories();
       setCategories(data);
-    } catch (err) {
-      setError('Erreur lors du chargement des catégories');
-      console.error('Error fetching categories:', err);
-      // Fallback vers les catégories locales en cas d'erreur
-      const { categories: localCategories } = await import('../data/categories');
-      setCategories(localCategories);
     } finally {
       setLoading(false);
     }

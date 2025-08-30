@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/products")
-@CrossOrigin(origins = "*")
 public class ProductController {
 
     @Autowired
@@ -42,8 +41,11 @@ public class ProductController {
             @RequestParam(required = false) Integer maxPrice,
             @RequestParam(required = false) String search) {
 
-        ProductResponse productResponse = productService.filterProducts(category, minPrice, maxPrice, search);
-        return ResponseEntity.ok(productResponse);
+        String normalizedCategory = "null".equals(category) ? null : category;
+        String normalizedSearch = "null".equals(search) ? null : search;
+
+        ProductResponse response = productService.filterProducts(normalizedCategory, minPrice, maxPrice, normalizedSearch);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping

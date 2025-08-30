@@ -15,11 +15,11 @@ public class Product {
     private Long id;
 
     @NotBlank
-    @Column(nullable = false)
+    @Column(name = "name", nullable = false, columnDefinition = "VARCHAR(255)")
     private String name;
 
     @NotBlank
-    @Column(columnDefinition = "TEXT")
+    @Column(name = "description", nullable = false, columnDefinition = "TEXT")
     private String description;
 
     @NotNull
@@ -33,9 +33,10 @@ public class Product {
     private List<String> images;
 
     @NotBlank
-    @Column(nullable = false)
+    @Column(name = "category")
     private String category;
 
+    @Column(name = "warranty")
     private String warranty;
 
     @Column(name = "created_at")
@@ -55,7 +56,6 @@ public class Product {
         updatedAt = LocalDateTime.now();
     }
 
-
     public Product() {}
 
     public Product(String name, String description, Integer price, List<String> images,
@@ -68,7 +68,7 @@ public class Product {
         this.warranty = warranty;
     }
 
-
+    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -96,4 +96,3 @@ public class Product {
     public LocalDateTime getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 }
-
