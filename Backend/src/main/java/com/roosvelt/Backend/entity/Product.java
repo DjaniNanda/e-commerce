@@ -19,7 +19,7 @@ public class Product {
     private String name;
 
     @NotBlank
-    @Column(name = "description", nullable = false, columnDefinition = "TEXT")
+    @Column( columnDefinition = "TEXT")
     private String description;
 
     @NotNull
