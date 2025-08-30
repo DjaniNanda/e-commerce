@@ -28,7 +28,7 @@ export const useProducts = () => {
   const searchProducts = async (query: string) => {
     try {
       setLoading(true);
-      const response = await productService.searchProducts(query);
+      const response = await productService.searchProducts(query.trim());
       setProducts(response.products);
       setProductsCount(response.count);
       setError(null);

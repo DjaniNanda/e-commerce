@@ -49,8 +49,12 @@ const Header: React.FC<{
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    if (searchQuery.trim()) {
-      onSearch(searchQuery.trim());
+    const trimmedQuery = searchQuery.trim();
+    if (trimmedQuery) {
+      onSearch(trimmedQuery);
+    } else {
+      // If empty search, trigger a reset
+      onSearch('');
     }
   };
 

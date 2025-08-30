@@ -69,8 +69,8 @@ const MainApp: React.FC = () => {
   React.useEffect(() => {
     console.log('Filter effect triggered', { filterParams, loading, hasSearched });
     
-
-    if (!loading && Object.keys(filterParams).length > 0) {
+    // Only apply filters if we're not in search mode and have filter parameters
+    if (!loading && !searchQuery && Object.keys(filterParams).length > 0) {
       const filterParamsString = JSON.stringify(filterParams);
       const lastFilterParamsString = JSON.stringify(lastFilterParams);
       
@@ -82,35 +82,49 @@ const MainApp: React.FC = () => {
       } else {
         console.log('Filter parameters unchanged, skipping API call');
       }
-    } else if (Object.keys(filterParams).length === 0 && hasSearched) {
+    } else if (Object.keys(filterParams).length === 0 && hasSearched && !searchQuery) {
       // Reset when filters are cleared
       console.log('Filters cleared, resetting search state');
       setHasSearched(false);
       setLastFilterParams({});
     }
-  }, [filterParams, loading, applyFilters, lastFilterParams, hasSearched]);
+  }, [filterParams, loading, applyFilters, lastFilterParams, hasSearched, searchQuery]);
 
   const handleSearch = useCallback(async (query: string) => {
     console.log('Search initiated:', query);
     try {
+      const trimmedQuery = query.trim();
+      if (!trimmedQuery) {
+        // If empty search, reset to show all products or clear results
+        setSearchQuery('');
+        setSelectedCategory('');
+        setHasSearched(false);
+        setLastFilterParams({});
+        return;
+      }
+      
       setSearchQuery(query);
       setSelectedCategory('');
+      setFilters({
+        category: '',
+        priceRange: [0, 1000000]
+      });
       
-      // Clear previous filters when starting a new search
-      if (query.trim()) {
-        // Don't call searchProducts here - let the effect handle it
-        console.log('Search query set, effect will handle the API call');
-      }
+      // Call search directly instead of using filter effect
+      await searchProducts(trimmedQuery);
+      setHasSearched(true);
+      
     } catch (error) {
       console.error('Search error:', error);
     }
-  }, []);
+  }, [searchProducts]);
 
   const handleCategoryClick = useCallback((category: string) => {
     console.log('Category clicked:', category);
+    setSearchQuery(''); // Clear search when selecting category
     setSelectedCategory(category);
-    setSearchQuery('');
     setFilters(prev => ({ ...prev, category }));
+    setHasSearched(false); // Reset search state to use filter effect
   }, []);
 
   const clearFilters = useCallback(() => {

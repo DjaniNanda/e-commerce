@@ -32,7 +32,11 @@ export const productService = {
   
   // Rechercher des produits
   searchProducts: async (query: string): Promise<ProductResponse> => {
-    return await api.get(`/products/search?q=${encodeURIComponent(query)}`);
+    const trimmedQuery = query.trim();
+    if (!trimmedQuery) {
+      return { products: [], count: 0 };
+    }
+    return await api.get(`/products/search?q=${encodeURIComponent(trimmedQuery)}`);
   },
   
   // Filtrer les produits par catégorie
