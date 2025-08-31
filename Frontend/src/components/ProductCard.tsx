@@ -61,7 +61,7 @@ const ProductCard: React.FC<{
               </button>
             </div>
             {product.warranty && (
-              <div className="absolute bottom-2 left-2 bg-green-500 text-white px-2 py-1 rounded-full text-xs font-medium">
+              <div className="absolute bottom-2 left-2 bg-green-500 text-white px-2 py-1 rounded-full text-sm sm:text-xs font-medium">
                 Garantie {product.warranty}
               </div>
             )}
@@ -70,16 +70,16 @@ const ProductCard: React.FC<{
           <div className="flex-1 p-6 flex flex-col justify-between">
             <div>
               <div className="flex items-start justify-between mb-2">
-                <h3 className="font-bold text-lg text-gray-800 line-clamp-1">{product.name}</h3>
-                <span className="bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-sm font-medium whitespace-nowrap ml-4">
+                <h3 className="font-bold text-xl sm:text-lg text-gray-800 line-clamp-1">{product.name}</h3>
+                <span className="bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-base sm:text-sm font-medium whitespace-nowrap ml-4">
                   {product.category}
                 </span>
               </div>
-              <p className="text-gray-600 text-sm mb-4 line-clamp-2">{product.description}</p>
+              <p className="text-gray-600 text-base sm:text-sm mb-4 line-clamp-2">{product.description}</p>
             </div>
             
             <div className="flex items-center justify-between">
-              <div className="text-2xl font-bold text-blue-600">
+              <div className="text-3xl sm:text-2xl font-bold text-blue-600">
                 {formatPrice(product.price)}
               </div>
               
@@ -89,16 +89,16 @@ const ProductCard: React.FC<{
                     e.stopPropagation();
                     onViewDetails(product);
                   }}
-                  className="flex items-center justify-center px-4 py-2 border-2 border-blue-600 text-blue-600 rounded-xl hover:bg-blue-50 transition-all duration-200 font-medium"
+                  className="flex items-center justify-center px-4 py-2 border-2 border-blue-600 text-blue-600 rounded-xl hover:bg-blue-50 transition-all duration-200 font-medium text-base sm:text-sm"
                 >
-                  <Eye className="h-4 w-4 mr-2" />
+                  <Eye className="h-5 w-5 sm:h-4 sm:w-4 mr-2" />
                   Détails
                 </button>
                 <button
                   onClick={handleAddToCart}
-                  className="flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl"
+                  className="flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl text-base sm:text-sm"
                 >
-                  <ShoppingCart className="h-4 w-4 mr-2" />
+                  <ShoppingCart className="h-5 w-5 sm:h-4 sm:w-4 mr-2" />
                   Ajouter
                 </button>
               </div>
@@ -142,7 +142,7 @@ const ProductCard: React.FC<{
         </div>
 
         {product.warranty && (
-          <div className="absolute bottom-3 left-3 bg-green-500 text-white px-3 py-1 rounded-full text-xs font-medium shadow-lg">
+          <div className="absolute bottom-3 left-3 bg-green-500 text-white px-3 py-1 rounded-full text-sm sm:text-xs font-medium shadow-lg">
             Garantie {product.warranty}
           </div>
         )}
@@ -154,13 +154,13 @@ const ProductCard: React.FC<{
 
       <div className="p-6 sm:p-5">
         <div className="mb-3">
-          <h3 className="font-bold text-xl sm:text-lg text-gray-800 mb-2 line-clamp-2 sm:line-clamp-1">{product.name}</h3>
-          <span className="bg-blue-50 text-blue-700 px-4 py-2 sm:px-3 sm:py-1 rounded-full text-base sm:text-sm font-medium">
+          <h3 className="font-bold text-2xl sm:text-lg text-gray-800 mb-2 line-clamp-2 sm:line-clamp-1">{product.name}</h3>
+          <span className="bg-blue-50 text-blue-700 px-4 py-2 sm:px-3 sm:py-1 rounded-full text-lg sm:text-sm font-medium">
             {product.category}
           </span>
         </div>
 
-        <div className="text-3xl sm:text-2xl font-bold text-blue-600 mb-6 sm:mb-4">
+        <div className="text-4xl sm:text-2xl font-bold text-blue-600 mb-6 sm:mb-4">
           {formatPrice(product.price)}
         </div>
 
@@ -170,16 +170,16 @@ const ProductCard: React.FC<{
               e.stopPropagation();
               onViewDetails(product);
             }}
-            className="flex-1 flex items-center justify-center px-4 py-3 sm:px-3 sm:py-2 border-2 border-blue-600 text-blue-600 rounded-xl hover:bg-blue-50 transition-all duration-200 font-medium text-base sm:text-sm"
+            className="flex-1 flex items-center justify-center px-4 py-4 sm:px-3 sm:py-2 border-2 border-blue-600 text-blue-600 rounded-xl hover:bg-blue-50 transition-all duration-200 font-medium text-lg sm:text-sm"
           >
-            <Eye className="h-5 w-5 sm:h-4 sm:w-4 mr-2" />
+            <Eye className="h-6 w-6 sm:h-4 sm:w-4 mr-2" />
             Détails
           </button>
           <button
             onClick={handleAddToCart}
-            className="flex-1 flex items-center justify-center px-4 py-3 sm:px-3 sm:py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl text-base sm:text-sm"
+            className="flex-1 flex items-center justify-center px-4 py-4 sm:px-3 sm:py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl text-lg sm:text-sm"
           >
-            <ShoppingCart className="h-5 w-5 sm:h-4 sm:w-4 mr-2" />
+            <ShoppingCart className="h-6 w-6 sm:h-4 sm:w-4 mr-2" />
             Ajouter
           </button>
         </div>
