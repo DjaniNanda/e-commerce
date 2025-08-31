@@ -108,9 +108,9 @@ const Cart: React.FC<{
                           </div>
                           
                           <div className="flex-1 min-w-0">
-                            <h3 className="font-bold text-lg sm:text-base text-gray-800 line-clamp-2 sm:truncate">{item.product.name}</h3>
-                            <p className="text-base sm:text-sm text-gray-600 mt-1">{item.product.category}</p>
-                            <p className="text-xl sm:text-lg font-bold text-blue-600 mt-2 sm:mt-1">{formatPrice(item.product.price)}</p>
+                            <h3 className="font-bold text-xl sm:text-base text-gray-800 line-clamp-2 sm:truncate">{item.product.name}</h3>
+                            <p className="text-lg sm:text-sm text-gray-600 mt-1">{item.product.category}</p>
+                            <p className="text-2xl sm:text-lg font-bold text-blue-600 mt-2 sm:mt-1">{formatPrice(item.product.price)}</p>
                           </div>
                         </div>
                         
@@ -123,7 +123,7 @@ const Cart: React.FC<{
                               <Minus className="h-5 w-5 sm:h-4 sm:w-4" />
                             </button>
                             
-                            <span className="w-10 sm:w-8 text-center font-bold text-lg sm:text-base">{item.quantity}</span>
+                            <span className="w-10 sm:w-8 text-center font-bold text-xl sm:text-base">{item.quantity}</span>
                             
                             <button
                               onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
@@ -156,7 +156,7 @@ const Cart: React.FC<{
                     </div>
                     
                     <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-5 sm:p-4 rounded-xl border border-green-200">
-                      <div className="flex flex-col sm:flex-row items-center justify-center text-base sm:text-sm text-green-700 space-y-2 sm:space-y-0 sm:space-x-4">
+                      <div className="flex flex-col sm:flex-row items-center justify-center text-lg sm:text-sm text-green-700 space-y-2 sm:space-y-0 sm:space-x-4">
                         <span>✓ Livraison gratuite</span>
                         <span className="hidden sm:inline">•</span>
                         <span>✓ Paiement à la livraison</span>
