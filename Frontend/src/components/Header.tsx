@@ -80,7 +80,7 @@ const Header: React.FC<{
         {/* Top bar */}
         <div className="bg-gradient-to-r from-blue-900 via-blue-800 to-blue-900 text-white py-3">
           <div className="container mx-auto px-4">
-            <div className="flex flex-wrap items-center justify-between text-sm">
+            <div className="flex flex-wrap items-center justify-between text-sm sm:text-sm">
               <div className="flex items-center space-x-6">
                 <div className="flex items-center space-x-2">
                   <MapPin className="h-4 w-4 animate-pulse" />
@@ -93,7 +93,7 @@ const Header: React.FC<{
               </div>
               <div className="flex items-center space-x-2">
                 <Phone className="h-4 w-4" />
-                <span className="font-semibold">+237 6XX XXX XXX</span>
+                <span className="font-semibold text-base sm:text-sm">+237 6XX XXX XXX</span>
               </div>
             </div>
           </div>
