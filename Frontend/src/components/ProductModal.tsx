@@ -37,24 +37,24 @@ const ProductModal: React.FC<{
   return (
     <>
       <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div className="bg-white rounded-3xl max-w-5xl w-full max-h-[95vh] overflow-hidden shadow-2xl animate-in slide-in-from-bottom-10 duration-300">
+        <div className="bg-white rounded-3xl max-w-5xl w-full max-h-[95vh] overflow-hidden shadow-2xl animate-in slide-in-from-bottom-10 duration-300 mx-2 sm:mx-4">
           {/* Header */}
-          <div className="sticky top-0 bg-white/95 backdrop-blur-sm border-b border-gray-100 px-8 py-6 flex items-center justify-between z-10">
-            <h2 className="text-2xl font-bold text-gray-800">Détails du produit</h2>
+          <div className="sticky top-0 bg-white/95 backdrop-blur-sm border-b border-gray-100 px-8 sm:px-8 py-8 sm:py-6 flex items-center justify-between z-10">
+            <h2 className="text-3xl sm:text-2xl font-bold text-gray-800">Détails du produit</h2>
             <button
               onClick={onClose}
-              className="p-3 hover:bg-gray-100 rounded-2xl transition-all duration-200 group"
+              className="p-4 sm:p-3 hover:bg-gray-100 rounded-2xl transition-all duration-200 group"
             >
-              <X className="h-6 w-6 group-hover:rotate-90 transition-transform duration-200" />
+              <X className="h-7 w-7 sm:h-6 sm:w-6 group-hover:rotate-90 transition-transform duration-200" />
             </button>
           </div>
 
-          <div className="p-8 overflow-y-auto max-h-[calc(95vh-100px)]">
-            <div className="grid lg:grid-cols-2 gap-12">
+          <div className="p-8 sm:p-8 overflow-y-auto max-h-[calc(95vh-100px)]">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 sm:gap-12">
               {/* Images Section */}
               <div>
-                <div className="relative mb-6 group">
-                  <div className="aspect-w-1 aspect-h-1 w-full h-96 bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl overflow-hidden">
+                <div className="relative mb-8 sm:mb-6 group">
+                  <div className="aspect-w-1 aspect-h-1 w-full h-80 sm:h-96 bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl overflow-hidden">
                     <img
                       src={imageError ? '/api/placeholder/400/400' : product.images[currentImageIndex]}
                       alt={product.name}
@@ -67,27 +67,27 @@ const ProductModal: React.FC<{
                     <>
                       <button
                         onClick={prevImage}
-                        className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/90 backdrop-blur-sm p-3 rounded-full hover:bg-white transition-all duration-200 shadow-lg hover:shadow-xl opacity-0 group-hover:opacity-100"
+                        className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/90 backdrop-blur-sm p-4 sm:p-3 rounded-full hover:bg-white transition-all duration-200 shadow-lg hover:shadow-xl opacity-0 group-hover:opacity-100"
                       >
-                        <ChevronLeft className="h-6 w-6" />
+                        <ChevronLeft className="h-7 w-7 sm:h-6 sm:w-6" />
                       </button>
                       <button
                         onClick={nextImage}
-                        className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/90 backdrop-blur-sm p-3 rounded-full hover:bg-white transition-all duration-200 shadow-lg hover:shadow-xl opacity-0 group-hover:opacity-100"
+                        className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/90 backdrop-blur-sm p-4 sm:p-3 rounded-full hover:bg-white transition-all duration-200 shadow-lg hover:shadow-xl opacity-0 group-hover:opacity-100"
                       >
-                        <ChevronRight className="h-6 w-6" />
+                        <ChevronRight className="h-7 w-7 sm:h-6 sm:w-6" />
                       </button>
                     </>
                   )}
                 </div>
 
                 {product.images.length > 1 && (
-                  <div className="flex space-x-3 overflow-x-auto pb-2">
+                  <div className="flex space-x-4 sm:space-x-3 overflow-x-auto pb-3 sm:pb-2">
                     {product.images.map((image, index) => (
                       <button
                         key={index}
                         onClick={() => setCurrentImageIndex(index)}
-                        className={`flex-shrink-0 w-20 h-20 rounded-xl border-2 overflow-hidden transition-all duration-200 ${
+                        className={`flex-shrink-0 w-24 h-24 sm:w-20 sm:h-20 rounded-xl border-2 overflow-hidden transition-all duration-200 ${
                           index === currentImageIndex 
                             ? 'border-blue-500 ring-2 ring-blue-200 scale-105' 
                             : 'border-gray-200 hover:border-gray-300'
@@ -105,54 +105,54 @@ const ProductModal: React.FC<{
               </div>
 
               {/* Product Info Section */}
-              <div className="space-y-6">
+              <div className="space-y-8 sm:space-y-6">
                 <div>
-                  <h1 className="text-3xl font-bold text-gray-800 mb-4 leading-tight">{product.name}</h1>
+                  <h1 className="text-4xl sm:text-3xl font-bold text-gray-800 mb-6 sm:mb-4 leading-tight">{product.name}</h1>
                   
-                  <div className="flex items-center space-x-3 mb-6">
-                    <span className="bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800 px-4 py-2 rounded-xl text-sm font-semibold">
+                  <div className="flex items-center space-x-4 sm:space-x-3 mb-8 sm:mb-6">
+                    <span className="bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800 px-5 py-3 sm:px-4 sm:py-2 rounded-xl text-base sm:text-sm font-semibold">
                       {product.category}
                     </span>
                     
                   </div>
                 </div>
 
-                <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-2xl p-6">
-                  <div className="text-4xl font-black text-blue-600 mb-2">
+                <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-2xl p-8 sm:p-6">
+                  <div className="text-5xl sm:text-4xl font-black text-blue-600 mb-3 sm:mb-2">
                     {formatPrice(product.price)}
                   </div>
-                  <p className="text-blue-700 text-sm font-medium">Prix tout compris, livraison gratuite</p>
+                  <p className="text-blue-700 text-base sm:text-sm font-medium">Prix tout compris, livraison gratuite</p>
                 </div>
 
-                <div className="flex items-center space-x-3">
-                  <div className="bg-green-100 text-green-800 px-4 py-2 rounded-xl font-semibold">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-3 sm:space-y-0 sm:space-x-3">
+                  <div className="bg-green-100 text-green-800 px-5 py-3 sm:px-4 sm:py-2 rounded-xl font-semibold text-base sm:text-sm">
                     🛡️ Garantie {product.warranty}
                   </div>
-                  <div className="bg-yellow-100 text-yellow-800 px-4 py-2 rounded-xl font-semibold">
+                  <div className="bg-yellow-100 text-yellow-800 px-5 py-3 sm:px-4 sm:py-2 rounded-xl font-semibold text-base sm:text-sm">
                     ⚡ En stock
                   </div>
                 </div>
 
-                <div className="bg-gray-50 rounded-2xl p-6">
-                  <h3 className="font-bold text-gray-800 mb-3 text-lg">Description</h3>
-                  <p className="text-gray-600 leading-relaxed">{product.description}</p>
+                <div className="bg-gray-50 rounded-2xl p-8 sm:p-6">
+                  <h3 className="font-bold text-gray-800 mb-4 sm:mb-3 text-xl sm:text-lg">Description</h3>
+                  <p className="text-gray-600 leading-relaxed text-lg sm:text-base">{product.description}</p>
                 </div>
 
-                <div className="space-y-4">
+                <div className="space-y-6 sm:space-y-4">
                   <button
                     onClick={handleAddToCart}
-                    className="w-full flex items-center justify-center px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-2xl hover:from-blue-700 hover:to-blue-800 transition-all duration-200 font-bold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+                    className="w-full flex items-center justify-center px-8 py-5 sm:py-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-2xl hover:from-blue-700 hover:to-blue-800 transition-all duration-200 font-bold text-xl sm:text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1"
                   >
-                    <ShoppingCart className="h-6 w-6 mr-3" />
+                    <ShoppingCart className="h-7 w-7 sm:h-6 sm:w-6 mr-4 sm:mr-3" />
                     Ajouter au panier
                   </button>
 
-                  <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl p-6 border border-green-200">
-                    <h4 className="font-bold text-green-800 mb-3 flex items-center">
-                      <span className="mr-2">🚛</span>
+                  <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl p-8 sm:p-6 border border-green-200">
+                    <h4 className="font-bold text-green-800 mb-4 sm:mb-3 flex items-center text-lg sm:text-base">
+                      <span className="mr-3 sm:mr-2 text-xl sm:text-base">🚛</span>
                       Livraison gratuite
                     </h4>
-                    <ul className="text-sm text-green-700 space-y-2">
+                    <ul className="text-base sm:text-sm text-green-700 space-y-3 sm:space-y-2">
                       <li>✓ Livraison gratuite à Yaoundé</li>
                       <li>✓ Expédition dans tout le Cameroun</li>
                       <li>✓ Paiement à la livraison disponible</li>
