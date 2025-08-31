@@ -117,7 +117,7 @@ const ProductCard: React.FC<{
       onMouseLeave={() => setIsHovered(false)}
     >
       <div className="relative">
-        <div className="aspect-w-1 aspect-h-1 w-full h-56 bg-gradient-to-br from-gray-100 to-gray-200">
+        <div className="aspect-w-1 aspect-h-1 w-full h-64 sm:h-56 bg-gradient-to-br from-gray-100 to-gray-200">
           <img
             src={imageError ? '/api/placeholder/300/300' : product.images[0]}
             alt={product.name}
@@ -152,34 +152,34 @@ const ProductCard: React.FC<{
         }`} />
       </div>
 
-      <div className="p-5">
+      <div className="p-6 sm:p-5">
         <div className="mb-3">
-          <h3 className="font-bold text-lg text-gray-800 mb-1 line-clamp-1">{product.name}</h3>
-          <span className="bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-sm font-medium">
+          <h3 className="font-bold text-xl sm:text-lg text-gray-800 mb-2 line-clamp-2 sm:line-clamp-1">{product.name}</h3>
+          <span className="bg-blue-50 text-blue-700 px-4 py-2 sm:px-3 sm:py-1 rounded-full text-base sm:text-sm font-medium">
             {product.category}
           </span>
         </div>
 
-        <div className="text-2xl font-bold text-blue-600 mb-4">
+        <div className="text-3xl sm:text-2xl font-bold text-blue-600 mb-6 sm:mb-4">
           {formatPrice(product.price)}
         </div>
 
-        <div className="flex space-x-2">
+        <div className="flex space-x-3 sm:space-x-2">
           <button
             onClick={(e) => {
               e.stopPropagation();
               onViewDetails(product);
             }}
-            className="flex-1 flex items-center justify-center px-3 py-2 border-2 border-blue-600 text-blue-600 rounded-xl hover:bg-blue-50 transition-all duration-200 font-medium"
+            className="flex-1 flex items-center justify-center px-4 py-3 sm:px-3 sm:py-2 border-2 border-blue-600 text-blue-600 rounded-xl hover:bg-blue-50 transition-all duration-200 font-medium text-base sm:text-sm"
           >
-            <Eye className="h-4 w-4 mr-2" />
+            <Eye className="h-5 w-5 sm:h-4 sm:w-4 mr-2" />
             Détails
           </button>
           <button
             onClick={handleAddToCart}
-            className="flex-1 flex items-center justify-center px-3 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl"
+            className="flex-1 flex items-center justify-center px-4 py-3 sm:px-3 sm:py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl text-base sm:text-sm"
           >
-            <ShoppingCart className="h-4 w-4 mr-2" />
+            <ShoppingCart className="h-5 w-5 sm:h-4 sm:w-4 mr-2" />
             Ajouter
           </button>
         </div>

@@ -108,16 +108,16 @@ const Header: React.FC<{
               onClick={() => navigate('/')}
             >
               <div className="relative">
-                <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-800 rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-110">
-                  <Car className="h-7 w-7 text-white" />
+                <div className="w-14 h-14 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-600 to-blue-800 rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-110">
+                  <Car className="h-8 w-8 sm:h-7 sm:w-7 text-white" />
                 </div>
-                <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-gradient-to-r from-red-500 to-pink-500 rounded-full animate-pulse shadow-lg"></div>
+                <div className="absolute -bottom-1 -right-1 w-5 h-5 sm:w-4 sm:h-4 bg-gradient-to-r from-red-500 to-pink-500 rounded-full animate-pulse shadow-lg"></div>
               </div>
               <div>
-                <h1 className="text-2xl font-black text-gray-800 group-hover:text-blue-600 transition-all duration-300 tracking-tight">
+                <h1 className="text-3xl sm:text-2xl font-black text-gray-800 group-hover:text-blue-600 transition-all duration-300 tracking-tight">
                   AUTO-BUSINESS
                 </h1>
-                <p className="text-sm text-gray-500 hidden sm:block font-medium">
+                <p className="text-base sm:text-sm text-gray-500 block font-medium">
                   Pièces automobiles de qualité premium
                 </p>
               </div>
@@ -180,12 +180,12 @@ const Header: React.FC<{
               {!isAdminPage && (
                 <button
                 onClick={onCartClick}
-                className="relative p-3 text-gray-600 hover:text-blue-600 transition-all duration-300 transform hover:scale-110 bg-gray-50 hover:bg-blue-50 rounded-2xl group shadow-sm hover:shadow-md"
+                className="relative p-4 sm:p-3 text-gray-600 hover:text-blue-600 transition-all duration-300 transform hover:scale-110 bg-gray-50 hover:bg-blue-50 rounded-2xl group shadow-sm hover:shadow-md"
                 aria-label={`Panier avec ${totalItems} articles`}
               >
-                <ShoppingCart className="h-7 w-7" />
+                <ShoppingCart className="h-8 w-8 sm:h-7 sm:w-7" />
                 {totalItems > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs font-bold rounded-full h-7 w-7 flex items-center justify-center animate-bounce group-hover:animate-pulse shadow-lg">
+                  <span className="absolute -top-2 -right-2 bg-gradient-to-r from-red-500 to-pink-500 text-white text-sm sm:text-xs font-bold rounded-full h-8 w-8 sm:h-7 sm:w-7 flex items-center justify-center animate-bounce group-hover:animate-pulse shadow-lg">
                     {totalItems}
                   </span>
                 )}
@@ -195,11 +195,11 @@ const Header: React.FC<{
               
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="md:hidden p-3 text-gray-600 hover:text-blue-600 bg-gray-50 hover:bg-blue-50 rounded-2xl transition-all duration-300 shadow-sm hover:shadow-md"
+                className="md:hidden p-4 text-gray-600 hover:text-blue-600 bg-gray-50 hover:bg-blue-50 rounded-2xl transition-all duration-300 shadow-sm hover:shadow-md"
               >
-                <div className="relative w-6 h-6">
-                  <Menu className={`h-6 w-6 absolute transition-all duration-300 ${isMenuOpen ? 'opacity-0 rotate-45' : 'opacity-100 rotate-0'}`} />
-                  <X className={`h-6 w-6 absolute transition-all duration-300 ${isMenuOpen ? 'opacity-100 rotate-0' : 'opacity-0 -rotate-45'}`} />
+                <div className="relative w-7 h-7">
+                  <Menu className={`h-7 w-7 absolute transition-all duration-300 ${isMenuOpen ? 'opacity-0 rotate-45' : 'opacity-100 rotate-0'}`} />
+                  <X className={`h-7 w-7 absolute transition-all duration-300 ${isMenuOpen ? 'opacity-100 rotate-0' : 'opacity-0 -rotate-45'}`} />
                 </div>
               </button>
             </div>
@@ -207,10 +207,10 @@ const Header: React.FC<{
 
           {/* Search bar - Mobile */}
           {!isAdminPage && (
-            <div className="md:hidden mt-6">
+            <div className="md:hidden mt-8">
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <Search className="h-5 w-5 text-gray-400" />
+              <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
+                <Search className="h-6 w-6 text-gray-400" />
               </div>
               <input
                 type="text"
@@ -218,14 +218,14 @@ const Header: React.FC<{
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSearch(e)}
-                className="w-full pl-12 pr-16 py-4 border-2 border-gray-200 rounded-2xl focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all duration-300 shadow-sm"
+                className="w-full pl-14 pr-20 py-5 text-lg border-2 border-gray-200 rounded-2xl focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all duration-300 shadow-sm"
               />
               <button
                 onClick={(e) => handleSearch(e)}
                 disabled={!searchQuery.trim()}
-                className="absolute right-2 top-2 bottom-2 px-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl hover:from-blue-700 hover:to-blue-800 disabled:from-gray-400 disabled:to-gray-500 transition-all duration-200"
+                className="absolute right-3 top-3 bottom-3 px-5 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl hover:from-blue-700 hover:to-blue-800 disabled:from-gray-400 disabled:to-gray-500 transition-all duration-200"
               >
-                <Search className="h-5 w-5" />
+                <Search className="h-6 w-6" />
               </button>
             </div>
             </div>
@@ -270,15 +270,15 @@ const Header: React.FC<{
             </div>
 
             <div className="md:hidden">
-              <div className="grid grid-cols-2 gap-3 py-4">
+              <div className="grid grid-cols-1 gap-4 py-6">
                 {categories.map((category) => (
                   <button
                     key={category.id}
                     onClick={() => handleCategoryClick(category.id)}
-                    className="text-left p-4 text-gray-700 hover:text-blue-600 hover:bg-white rounded-2xl transition-all duration-300 border border-gray-200 hover:border-blue-300 hover:shadow-md transform hover:-translate-y-1"
+                    className="text-left p-6 text-gray-700 hover:text-blue-600 hover:bg-white rounded-2xl transition-all duration-300 border border-gray-200 hover:border-blue-300 hover:shadow-md transform hover:-translate-y-1"
                   >
-                    <div className="font-semibold">{category.name}</div>
-                    <div className="text-xs text-gray-500 mt-1">Voir tout →</div>
+                    <div className="font-semibold text-lg">{category.name}</div>
+                    <div className="text-sm text-gray-500 mt-2">Voir tout →</div>
                   </button>
                 ))}
               </div>
