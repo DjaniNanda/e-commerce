@@ -108,7 +108,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ isOpen, onClose, onSubmit }
         <div className="sticky top-0 bg-gradient-to-r from-blue-600 to-blue-700 px-8 sm:px-8 py-8 sm:py-6 flex items-center justify-between">
           <div>
             <h2 className="text-3xl sm:text-2xl font-bold text-white">Finaliser la commande</h2>
-            <p className="text-blue-100 text-base sm:text-sm mt-2 sm:mt-1">Complétez vos informations pour procéder</p>
+            <p className="text-blue-100 text-lg sm:text-sm mt-2 sm:mt-1">Complétez vos informations pour procéder</p>
           </div>
           <button
             onClick={onClose}
@@ -134,7 +134,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ isOpen, onClose, onSubmit }
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-6">
                     <div className="space-y-3 sm:space-y-2">
-                      <label className="block text-base sm:text-sm font-semibold text-gray-700">
+                      <label className="block text-lg sm:text-sm font-semibold text-gray-700">
                         Prénom *
                       </label>
                       <input
@@ -142,13 +142,13 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ isOpen, onClose, onSubmit }
                         name="firstName"
                         value={formData.firstName}
                         onChange={handleInputChange}
-                        className={`w-full px-5 py-4 sm:px-4 sm:py-3 text-lg sm:text-base border-2 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 ${
+                        className={`w-full px-5 py-4 sm:px-4 sm:py-3 text-xl sm:text-base border-2 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 ${
                           errors.firstName ? 'border-red-400 bg-red-50' : 'border-gray-200 bg-white hover:border-gray-300'
                         }`}
                         placeholder="Votre prénom"
                       />
                       {errors.firstName && (
-                        <p className="text-red-500 text-base sm:text-sm flex items-center mt-2 sm:mt-1">
+                        <p className="text-red-500 text-lg sm:text-sm flex items-center mt-2 sm:mt-1">
                           <span className="w-1 h-1 bg-red-500 rounded-full mr-2"></span>
                           {errors.firstName}
                         </p>
@@ -156,7 +156,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ isOpen, onClose, onSubmit }
                     </div>
 
                     <div className="space-y-3 sm:space-y-2">
-                      <label className="block text-base sm:text-sm font-semibold text-gray-700">
+                      <label className="block text-lg sm:text-sm font-semibold text-gray-700">
                         Nom *
                       </label>
                       <input
@@ -164,13 +164,13 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ isOpen, onClose, onSubmit }
                         name="lastName"
                         value={formData.lastName}
                         onChange={handleInputChange}
-                        className={`w-full px-5 py-4 sm:px-4 sm:py-3 text-lg sm:text-base border-2 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 ${
+                        className={`w-full px-5 py-4 sm:px-4 sm:py-3 text-xl sm:text-base border-2 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 ${
                           errors.lastName ? 'border-red-400 bg-red-50' : 'border-gray-200 bg-white hover:border-gray-300'
                         }`}
                         placeholder="Votre nom"
                       />
                       {errors.lastName && (
-                        <p className="text-red-500 text-base sm:text-sm flex items-center mt-2 sm:mt-1">
+                        <p className="text-red-500 text-lg sm:text-sm flex items-center mt-2 sm:mt-1">
                           <span className="w-1 h-1 bg-red-500 rounded-full mr-2"></span>
                           {errors.lastName}
                         </p>
@@ -179,7 +179,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ isOpen, onClose, onSubmit }
                   </div>
 
                   <div className="mt-8 sm:mt-6 space-y-3 sm:space-y-2">
-                    <label className="block text-base sm:text-sm font-semibold text-gray-700 flex items-center">
+                    <label className="block text-lg sm:text-sm font-semibold text-gray-700 flex items-center">
                       <Phone className="h-5 w-5 sm:h-4 sm:w-4 mr-2 text-gray-500" />
                       Numéro de téléphone *
                     </label>
@@ -188,13 +188,13 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ isOpen, onClose, onSubmit }
                       name="phone"
                       value={formData.phone}
                       onChange={handleInputChange}
-                      className={`w-full px-5 py-4 sm:px-4 sm:py-3 text-lg sm:text-base border-2 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 ${
+                      className={`w-full px-5 py-4 sm:px-4 sm:py-3 text-xl sm:text-base border-2 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 ${
                         errors.phone ? 'border-red-400 bg-red-50' : 'border-gray-200 bg-white hover:border-gray-300'
                       }`}
                       placeholder="Ex: +237 6XX XXX XXX"
                     />
                     {errors.phone && (
-                      <p className="text-red-500 text-base sm:text-sm flex items-center mt-2 sm:mt-1">
+                      <p className="text-red-500 text-lg sm:text-sm flex items-center mt-2 sm:mt-1">
                         <span className="w-1 h-1 bg-red-500 rounded-full mr-2"></span>
                         {errors.phone}
                       </p>
@@ -213,14 +213,14 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ isOpen, onClose, onSubmit }
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-6 mb-8 sm:mb-6">
                     <div className="space-y-3 sm:space-y-2">
-                      <label className="block text-base sm:text-sm font-semibold text-gray-700">
+                      <label className="block text-lg sm:text-sm font-semibold text-gray-700">
                         Ville *
                       </label>
                       <select
                         name="city"
                         value={formData.city}
                         onChange={handleInputChange}
-                        className="w-full px-5 py-4 sm:px-4 sm:py-3 text-lg sm:text-base border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 bg-white hover:border-gray-300"
+                        className="w-full px-5 py-4 sm:px-4 sm:py-3 text-xl sm:text-base border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 bg-white hover:border-gray-300"
                       >
                         {cameroonCities.map(city => (
                           <option key={city} value={city}>{city}</option>
@@ -229,7 +229,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ isOpen, onClose, onSubmit }
                     </div>
 
                     <div className="space-y-3 sm:space-y-2">
-                      <label className="block text-base sm:text-sm font-semibold text-gray-700">
+                      <label className="block text-lg sm:text-sm font-semibold text-gray-700">
                         Quartier *
                       </label>
                       <input
@@ -237,13 +237,13 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ isOpen, onClose, onSubmit }
                         name="quarter"
                         value={formData.quarter}
                         onChange={handleInputChange}
-                        className={`w-full px-5 py-4 sm:px-4 sm:py-3 text-lg sm:text-base border-2 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 ${
+                        className={`w-full px-5 py-4 sm:px-4 sm:py-3 text-xl sm:text-base border-2 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 ${
                           errors.quarter ? 'border-red-400 bg-red-50' : 'border-gray-200 bg-white hover:border-gray-300'
                         }`}
                         placeholder="Nom du quartier"
                       />
                       {errors.quarter && (
-                        <p className="text-red-500 text-base sm:text-sm flex items-center mt-2 sm:mt-1">
+                        <p className="text-red-500 text-lg sm:text-sm flex items-center mt-2 sm:mt-1">
                           <span className="w-1 h-1 bg-red-500 rounded-full mr-2"></span>
                           {errors.quarter}
                         </p>
@@ -252,7 +252,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ isOpen, onClose, onSubmit }
                   </div>
 
                   <div className="space-y-3 sm:space-y-2">
-                    <label className="block text-base sm:text-sm font-semibold text-gray-700">
+                    <label className="block text-lg sm:text-sm font-semibold text-gray-700">
                       Lieux Exact *
                     </label>
                     <input
@@ -260,13 +260,13 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ isOpen, onClose, onSubmit }
                       name="address"
                       value={formData.address}
                       onChange={handleInputChange}
-                      className={`w-full px-5 py-4 sm:px-4 sm:py-3 text-lg sm:text-base border-2 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 ${
+                      className={`w-full px-5 py-4 sm:px-4 sm:py-3 text-xl sm:text-base border-2 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 ${
                         errors.address ? 'border-red-400 bg-red-50' : 'border-gray-200 bg-white hover:border-gray-300'
                       }`}
                       placeholder="Rue, numéro, point de repère..."
                     />
                     {errors.address && (
-                      <p className="text-red-500 text-base sm:text-sm flex items-center mt-2 sm:mt-1">
+                      <p className="text-red-500 text-lg sm:text-sm flex items-center mt-2 sm:mt-1">
                         <span className="w-1 h-1 bg-red-500 rounded-full mr-2"></span>
                         {errors.address}
                       </p>
@@ -291,11 +291,11 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ isOpen, onClose, onSubmit }
                       {state.items.map((item) => (
                         <div key={item.product.id} className="flex justify-between items-start">
                           <div className="flex-1">
-                            <p className="font-medium text-lg sm:text-base text-gray-800 leading-tight">{item.product.name}</p>
-                            <p className="text-base sm:text-sm text-gray-500 mt-2 sm:mt-1">Quantité: {item.quantity}</p>
+                            <p className="font-medium text-xl sm:text-base text-gray-800 leading-tight">{item.product.name}</p>
+                            <p className="text-lg sm:text-sm text-gray-500 mt-2 sm:mt-1">Quantité: {item.quantity}</p>
                           </div>
                           <div className="text-right ml-5 sm:ml-4">
-                            <p className="font-semibold text-lg sm:text-base text-gray-800">
+                            <p className="font-semibold text-xl sm:text-base text-gray-800">
                               {formatPrice(item.product.price * item.quantity)}
                             </p>
                           </div>
@@ -305,8 +305,8 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ isOpen, onClose, onSubmit }
                     
                     <div className="border-t-2 border-gray-200 pt-4">
                       <div className="flex justify-between items-center">
-                        <span className="text-xl sm:text-lg font-bold text-gray-800">Total:</span>
-                        <span className="text-3xl sm:text-2xl font-bold text-blue-600">{formatPrice(state.total)}</span>
+                        <span className="text-2xl sm:text-lg font-bold text-gray-800">Total:</span>
+                        <span className="text-4xl sm:text-2xl font-bold text-blue-600">{formatPrice(state.total)}</span>
                       </div>
                     </div>
                   </div>
@@ -314,11 +314,11 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ isOpen, onClose, onSubmit }
 
                 {/* Payment Info */}
                 <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-8 sm:p-6 border border-blue-200">
-                  <h4 className="font-semibold text-lg sm:text-base text-blue-900 mb-5 sm:mb-4 flex items-center">
+                  <h4 className="font-semibold text-xl sm:text-base text-blue-900 mb-5 sm:mb-4 flex items-center">
                     <CreditCard className="h-6 w-6 sm:h-5 sm:w-5 mr-3 sm:mr-2" />
                     Mode de paiement
                   </h4>
-                  <div className="space-y-4 sm:space-y-3 text-base sm:text-sm">
+                  <div className="space-y-4 sm:space-y-3 text-lg sm:text-sm">
                     <div className="flex items-center text-blue-800">
                       <div className="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
                       <span>Paiement à la livraison (Cash)</span>
@@ -338,7 +338,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ isOpen, onClose, onSubmit }
                 <div className="bg-green-50 rounded-xl p-6 sm:p-4 border border-green-200">
                   <div className="flex items-center text-green-800">
                     <Shield className="h-6 w-6 sm:h-5 sm:w-5 mr-3 sm:mr-2" />
-                    <span className="text-base sm:text-sm font-medium">Commande sécurisée</span>
+                    <span className="text-lg sm:text-sm font-medium">Commande sécurisée</span>
                   </div>
                 </div>
               </div>
@@ -349,7 +349,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ isOpen, onClose, onSubmit }
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-5 sm:py-4 rounded-xl hover:from-blue-700 hover:to-blue-800 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transition-all duration-300 font-semibold flex items-center justify-center text-xl sm:text-lg shadow-lg hover:shadow-xl transform hover:scale-[1.02] disabled:transform-none"
+                className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-5 sm:py-4 rounded-xl hover:from-blue-700 hover:to-blue-800 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transition-all duration-300 font-semibold flex items-center justify-center text-2xl sm:text-lg shadow-lg hover:shadow-xl transform hover:scale-[1.02] disabled:transform-none"
               >
                 {isSubmitting ? (
                   <>
@@ -363,7 +363,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ isOpen, onClose, onSubmit }
                   </>
                 )}
               </button>
-              <p className="text-center text-base sm:text-sm text-gray-500 mt-4 sm:mt-3">
+              <p className="text-center text-lg sm:text-sm text-gray-500 mt-4 sm:mt-3">
                 En confirmant, vous acceptez nos conditions de vente
               </p>
             </div>
