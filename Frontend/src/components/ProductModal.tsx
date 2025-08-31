@@ -110,7 +110,7 @@ const ProductModal: React.FC<{
                   <h1 className="text-4xl sm:text-3xl font-bold text-gray-800 mb-6 sm:mb-4 leading-tight">{product.name}</h1>
                   
                   <div className="flex items-center space-x-4 sm:space-x-3 mb-8 sm:mb-6">
-                    <span className="bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800 px-5 py-3 sm:px-4 sm:py-2 rounded-xl text-base sm:text-sm font-semibold">
+                    <span className="bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800 px-5 py-3 sm:px-4 sm:py-2 rounded-xl text-lg sm:text-sm font-semibold">
                       {product.category}
                     </span>
                     
@@ -121,38 +121,38 @@ const ProductModal: React.FC<{
                   <div className="text-5xl sm:text-4xl font-black text-blue-600 mb-3 sm:mb-2">
                     {formatPrice(product.price)}
                   </div>
-                  <p className="text-blue-700 text-base sm:text-sm font-medium">Prix tout compris, livraison gratuite</p>
+                  <p className="text-blue-700 text-lg sm:text-sm font-medium">Prix tout compris, livraison gratuite</p>
                 </div>
 
                 <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-3 sm:space-y-0 sm:space-x-3">
-                  <div className="bg-green-100 text-green-800 px-5 py-3 sm:px-4 sm:py-2 rounded-xl font-semibold text-base sm:text-sm">
+                  <div className="bg-green-100 text-green-800 px-5 py-3 sm:px-4 sm:py-2 rounded-xl font-semibold text-lg sm:text-sm">
                     🛡️ Garantie {product.warranty}
                   </div>
-                  <div className="bg-yellow-100 text-yellow-800 px-5 py-3 sm:px-4 sm:py-2 rounded-xl font-semibold text-base sm:text-sm">
+                  <div className="bg-yellow-100 text-yellow-800 px-5 py-3 sm:px-4 sm:py-2 rounded-xl font-semibold text-lg sm:text-sm">
                     ⚡ En stock
                   </div>
                 </div>
 
                 <div className="bg-gray-50 rounded-2xl p-8 sm:p-6">
-                  <h3 className="font-bold text-gray-800 mb-4 sm:mb-3 text-xl sm:text-lg">Description</h3>
-                  <p className="text-gray-600 leading-relaxed text-lg sm:text-base">{product.description}</p>
+                  <h3 className="font-bold text-gray-800 mb-4 sm:mb-3 text-2xl sm:text-lg">Description</h3>
+                  <p className="text-gray-600 leading-relaxed text-xl sm:text-base">{product.description}</p>
                 </div>
 
                 <div className="space-y-6 sm:space-y-4">
                   <button
                     onClick={handleAddToCart}
-                    className="w-full flex items-center justify-center px-8 py-5 sm:py-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-2xl hover:from-blue-700 hover:to-blue-800 transition-all duration-200 font-bold text-xl sm:text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+                    className="w-full flex items-center justify-center px-8 py-5 sm:py-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-2xl hover:from-blue-700 hover:to-blue-800 transition-all duration-200 font-bold text-2xl sm:text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1"
                   >
                     <ShoppingCart className="h-7 w-7 sm:h-6 sm:w-6 mr-4 sm:mr-3" />
                     Ajouter au panier
                   </button>
 
                   <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl p-8 sm:p-6 border border-green-200">
-                    <h4 className="font-bold text-green-800 mb-4 sm:mb-3 flex items-center text-lg sm:text-base">
-                      <span className="mr-3 sm:mr-2 text-xl sm:text-base">🚛</span>
+                    <h4 className="font-bold text-green-800 mb-4 sm:mb-3 flex items-center text-xl sm:text-base">
+                      <span className="mr-3 sm:mr-2 text-2xl sm:text-base">🚛</span>
                       Livraison gratuite
                     </h4>
-                    <ul className="text-base sm:text-sm text-green-700 space-y-3 sm:space-y-2">
+                    <ul className="text-lg sm:text-sm text-green-700 space-y-3 sm:space-y-2">
                       <li>✓ Livraison gratuite à Yaoundé</li>
                       <li>✓ Expédition dans tout le Cameroun</li>
                       <li>✓ Paiement à la livraison disponible</li>
