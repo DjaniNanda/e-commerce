@@ -354,7 +354,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ isOpen, onClose, onSubmit }
                 className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-5 sm:py-4 rounded-xl hover:from-blue-700 hover:to-blue-800 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transition-all duration-300 font-semibold flex items-center justify-center text-2xl sm:text-lg shadow-lg hover:shadow-xl transform hover:scale-[1.02] disabled:transform-none"
               >
                 {isSubmitting ? (
-                {t('common.cancel')}
+                  <>
                     <div className="animate-spin rounded-full h-6 w-6 sm:h-5 sm:w-5 border-2 border-white border-t-transparent mr-4 sm:mr-3"></div>
                     Traitement en cours...
                   </>
