@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Search, ShoppingCart, Menu, X, Car, MapPin, Clock, Phone, ChevronDown, Settings } from 'lucide-react';
+import { Search, ShoppingCart, Menu, X, Car, MapPin, Clock, Phone, ChevronDown, Settings, Globe } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { useTranslation } from '../context/TranslationContext';
 import { useCategories } from '../hooks/useCategories';
 
 const Header: React.FC<{
@@ -19,6 +20,7 @@ const Header: React.FC<{
   const [showCategories, setShowCategories] = useState(false);
   const { state } = useCart();
   const { categories } = useCategories();
+  const { language, setLanguage, t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -84,16 +86,30 @@ const Header: React.FC<{
               <div className="flex items-center space-x-6">
                 <div className="flex items-center space-x-2">
                   <MapPin className="h-4 w-4 animate-pulse" />
-                  <span className="font-semibold">LIVRAISON GRATUITE - YAOUNDÉ</span>
+                  <span className="font-semibold">{t('header.delivery')}</span>
                 </div>
                 <div className="hidden sm:flex items-center space-x-2">
                   <Clock className="h-4 w-4" />
-                  <span>Lun-Dim: 8h30 - 22h30</span>
+                  <span>{t('header.hours')}</span>
                 </div>
               </div>
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-4">
+                {/* Language Switcher */}
+                <div className="flex items-center space-x-2">
+                  <Globe className="h-4 w-4" />
+                  <select
+                    value={language}
+                    onChange={(e) => setLanguage(e.target.value as 'fr' | 'en')}
+                    className="bg-transparent text-white text-sm font-medium border-none outline-none cursor-pointer"
+                  >
+                    <option value="fr" className="text-black">FR</option>
+                    <option value="en" className="text-black">EN</option>
+                  </select>
+                </div>
+                <div className="flex items-center space-x-2">
                 <Phone className="h-4 w-4" />
                 <span className="font-semibold text-base sm:text-sm">+237 6XX XXX XXX</span>
+              </div>
               </div>
             </div>
           </div>
@@ -117,9 +133,7 @@ const Header: React.FC<{
                 <h1 className="text-3xl sm:text-2xl font-black text-gray-800 group-hover:text-blue-600 transition-all duration-300 tracking-tight">
                   AUTO-BUSINESS
                 </h1>
-                <p className="text-base sm:text-sm text-gray-500 block font-medium">
-                  Pièces automobiles de qualité premium
-                </p>
+                <p className="text-base sm:text-sm text-gray-500 block font-medium">{t('header.tagline')}</p>
               </div>
             </div>
 
@@ -133,7 +147,7 @@ const Header: React.FC<{
                 <input
                   ref={searchInputRef}
                   type="text"
-                  placeholder="Rechercher des pièces automobiles..."
+                  placeholder={t('header.search.placeholder')}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onFocus={() => setIsSearchFocused(true)}
@@ -169,7 +183,7 @@ const Header: React.FC<{
                   disabled={!searchQuery.trim()}
                   className="absolute right-2 top-2 bottom-2 px-6 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl hover:from-blue-700 hover:to-blue-800 disabled:from-gray-400 disabled:to-gray-500 transition-all duration-200 transform hover:scale-105 disabled:scale-100 shadow-lg disabled:shadow-none font-medium"
                 >
-                  Rechercher
+                  {t('header.search.button')}
                 </button>
               </div>
               </div>
@@ -214,7 +228,7 @@ const Header: React.FC<{
               </div>
               <input
                 type="text"
-                placeholder="Rechercher des pièces..."
+                placeholder={t('header.search.placeholder')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSearch(e)}
@@ -246,7 +260,7 @@ const Header: React.FC<{
                   className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-lg hover:shadow-xl font-medium"
                 >
                   <Menu className="h-5 w-5" />
-                  <span>Catégories</span>
+                  <span>{t('header.categories')}</span>
                   <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${showCategories ? 'rotate-180' : ''}`} />
                 </button>
 
@@ -265,7 +279,7 @@ const Header: React.FC<{
 
               <div className="flex items-center text-sm text-gray-600">
                 <span className="font-medium text-green-600 animate-pulse">●</span>
-                <span className="ml-2">En stock - Livraison rapide</span>
+                <span className="ml-2">{t('header.stock')}</span>
               </div>
             </div>
 
@@ -278,7 +292,7 @@ const Header: React.FC<{
                     className="text-left p-6 text-gray-700 hover:text-blue-600 hover:bg-white rounded-2xl transition-all duration-300 border border-gray-200 hover:border-blue-300 hover:shadow-md transform hover:-translate-y-1"
                   >
                     <div className="font-semibold text-lg">{category.name}</div>
-                    <div className="text-sm text-gray-500 mt-2">Voir tout →</div>
+                    <div className="text-sm text-gray-500 mt-2">{t('products.view')} →</div>
                   </button>
                 ))}
               </div>
@@ -313,7 +327,7 @@ const Header: React.FC<{
                     <div className="font-semibold group-hover:font-bold transition-all">
                       {category.name}
                     </div>
-                    <div className="text-xs text-gray-500 mt-1">Voir tout →</div>
+                    <div className="text-xs text-gray-500 mt-1">{t('products.view')} →</div>
                   </button>
                 ))}
               </div>

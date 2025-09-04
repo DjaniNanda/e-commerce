@@ -1,3 +1,71 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Custom utilities for mobile-first design */
+@layer utilities {
+  .text-mobile-xs { font-size: 0.75rem; }
+  .text-mobile-sm { font-size: 0.875rem; }
+  .text-mobile-base { font-size: 1rem; }
+  .text-mobile-lg { font-size: 1.125rem; }
+  .text-mobile-xl { font-size: 1.25rem; }
+  .text-mobile-2xl { font-size: 1.5rem; }
+  .text-mobile-3xl { font-size: 1.875rem; }
+  .text-mobile-4xl { font-size: 2.25rem; }
+  .text-mobile-5xl { font-size: 3rem; }
+  .text-mobile-6xl { font-size: 3.75rem; }
+  
+  /* Mobile-specific padding and margins */
+  .p-mobile { padding: 1.5rem; }
+  .px-mobile { padding-left: 1.5rem; padding-right: 1.5rem; }
+  .py-mobile { padding-top: 1.5rem; padding-bottom: 1.5rem; }
+  .m-mobile { margin: 1.5rem; }
+  .mx-mobile { margin-left: 1.5rem; margin-right: 1.5rem; }
+  .my-mobile { margin-top: 1.5rem; margin-bottom: 1.5rem; }
+}
+/* Mobile-first responsive typography and spacing */
+@layer base {
+  html {
+    /* Increase base font size for mobile */
+    font-size: 18px;
+  }
+  
+  /* Desktop and larger screens */
+  @media (min-width: 768px) {
+    html {
+      font-size: 16px;
+    }
+  }
+  
+  /* Ensure minimum touch target sizes on mobile */
+  @media (max-width: 767px) {
+    button, 
+    input[type="button"], 
+    input[type="submit"], 
+    input[type="reset"], 
+    a {
+      min-height: 44px;
+      min-width: 44px;
+    }
+    
+    /* Larger text inputs for better mobile UX */
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="number"],
+    textarea,
+    select {
+      font-size: 16px; /* Prevents zoom on iOS */
+      min-height: 44px;
+    }
+  }
+  
+  /* Better line heights for readability */
+  p {
+    line-height: 1.6;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    line-height: 1.2;
+  }
+}

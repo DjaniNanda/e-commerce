@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, MapPin, Phone, User, CreditCard, Package, Shield } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { useTranslation } from '../context/TranslationContext';
 import { orderService } from '../services/orderService';
 
 interface CheckoutFormProps {
@@ -11,6 +12,7 @@ interface CheckoutFormProps {
 
 const CheckoutForm: React.FC<CheckoutFormProps> = ({ isOpen, onClose, onSubmit }) => {
   const { state } = useCart();
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -33,25 +35,25 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ isOpen, onClose, onSubmit }
     const newErrors: Record<string, string> = {};
 
     if (!formData.firstName.trim()) {
-      newErrors.firstName = 'Le prénom est requis';
+      newErrors.firstName = t('checkout.first.name') + ' requis';
     }
 
     if (!formData.lastName.trim()) {
-      newErrors.lastName = 'Le nom est requis';
+      newErrors.lastName = t('checkout.last.name') + ' requis';
     }
 
     if (!formData.phone.trim()) {
-      newErrors.phone = 'Le numéro de téléphone est requis';
+      newErrors.phone = t('checkout.phone') + ' requis';
     } else if (!/^[0-9+\-\s()]{8,}$/.test(formData.phone)) {
-      newErrors.phone = 'Numéro de téléphone invalide';
+      newErrors.phone = t('checkout.phone') + ' invalide';
     }
 
     if (!formData.address.trim()) {
-      newErrors.address = 'L\'adresse est requise';
+      newErrors.address = 'Adresse requise';
     }
 
     if (!formData.quarter.trim()) {
-      newErrors.quarter = 'Le quartier est requis';
+      newErrors.quarter = t('checkout.quarter') + ' requis';
     }
 
     setErrors(newErrors);
@@ -107,8 +109,8 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ isOpen, onClose, onSubmit }
         {/* Header */}
         <div className="sticky top-0 bg-gradient-to-r from-blue-600 to-blue-700 px-8 sm:px-8 py-8 sm:py-6 flex items-center justify-between">
           <div>
-            <h2 className="text-3xl sm:text-2xl font-bold text-white">Finaliser la commande</h2>
-            <p className="text-blue-100 text-lg sm:text-sm mt-2 sm:mt-1">Complétez vos informations pour procéder</p>
+            <h2 className="text-3xl sm:text-2xl font-bold text-white">{t('checkout.title')}</h2>
+            <p className="text-blue-100 text-lg sm:text-sm mt-2 sm:mt-1">{t('checkout.subtitle')}</p>
           </div>
           <button
             onClick={onClose}
@@ -129,13 +131,13 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ isOpen, onClose, onSubmit }
                     <div className="bg-blue-100 p-3 sm:p-2 rounded-lg mr-4 sm:mr-3">
                       <User className="h-6 w-6 sm:h-5 sm:w-5 text-blue-600" />
                     </div>
-                    Informations personnelles
+                    {t('checkout.personal.info')}
                   </h3>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-6">
                     <div className="space-y-3 sm:space-y-2">
                       <label className="block text-lg sm:text-sm font-semibold text-gray-700">
-                        Prénom *
+                        {t('checkout.first.name')} *
                       </label>
                       <input
                         type="text"
@@ -145,7 +147,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ isOpen, onClose, onSubmit }
                         className={`w-full px-5 py-4 sm:px-4 sm:py-3 text-xl sm:text-base border-2 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 ${
                           errors.firstName ? 'border-red-400 bg-red-50' : 'border-gray-200 bg-white hover:border-gray-300'
                         }`}
-                        placeholder="Votre prénom"
+                        placeholder={t('checkout.first.name')}
                       />
                       {errors.firstName && (
                         <p className="text-red-500 text-lg sm:text-sm flex items-center mt-2 sm:mt-1">
@@ -157,7 +159,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ isOpen, onClose, onSubmit }
 
                     <div className="space-y-3 sm:space-y-2">
                       <label className="block text-lg sm:text-sm font-semibold text-gray-700">
-                        Nom *
+                        {t('checkout.last.name')} *
                       </label>
                       <input
                         type="text"
@@ -167,7 +169,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ isOpen, onClose, onSubmit }
                         className={`w-full px-5 py-4 sm:px-4 sm:py-3 text-xl sm:text-base border-2 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 ${
                           errors.lastName ? 'border-red-400 bg-red-50' : 'border-gray-200 bg-white hover:border-gray-300'
                         }`}
-                        placeholder="Votre nom"
+                        placeholder={t('checkout.last.name')}
                       />
                       {errors.lastName && (
                         <p className="text-red-500 text-lg sm:text-sm flex items-center mt-2 sm:mt-1">
@@ -181,7 +183,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ isOpen, onClose, onSubmit }
                   <div className="mt-8 sm:mt-6 space-y-3 sm:space-y-2">
                     <label className="block text-lg sm:text-sm font-semibold text-gray-700 flex items-center">
                       <Phone className="h-5 w-5 sm:h-4 sm:w-4 mr-2 text-gray-500" />
-                      Numéro de téléphone *
+                      {t('checkout.phone')} *
                     </label>
                     <input
                       type="tel"
@@ -208,13 +210,13 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ isOpen, onClose, onSubmit }
                     <div className="bg-green-100 p-3 sm:p-2 rounded-lg mr-4 sm:mr-3">
                       <MapPin className="h-6 w-6 sm:h-5 sm:w-5 text-green-600" />
                     </div>
-                    Adresse de livraison
+                    {t('checkout.delivery.address')}
                   </h3>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-6 mb-8 sm:mb-6">
                     <div className="space-y-3 sm:space-y-2">
                       <label className="block text-lg sm:text-sm font-semibold text-gray-700">
-                        Ville *
+                        {t('checkout.city')} *
                       </label>
                       <select
                         name="city"
@@ -230,7 +232,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ isOpen, onClose, onSubmit }
 
                     <div className="space-y-3 sm:space-y-2">
                       <label className="block text-lg sm:text-sm font-semibold text-gray-700">
-                        Quartier *
+                        {t('checkout.quarter')} *
                       </label>
                       <input
                         type="text"
@@ -240,7 +242,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ isOpen, onClose, onSubmit }
                         className={`w-full px-5 py-4 sm:px-4 sm:py-3 text-xl sm:text-base border-2 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 ${
                           errors.quarter ? 'border-red-400 bg-red-50' : 'border-gray-200 bg-white hover:border-gray-300'
                         }`}
-                        placeholder="Nom du quartier"
+                        placeholder={t('checkout.quarter')}
                       />
                       {errors.quarter && (
                         <p className="text-red-500 text-lg sm:text-sm flex items-center mt-2 sm:mt-1">
@@ -253,7 +255,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ isOpen, onClose, onSubmit }
 
                   <div className="space-y-3 sm:space-y-2">
                     <label className="block text-lg sm:text-sm font-semibold text-gray-700">
-                      Lieux Exact *
+                      {t('checkout.exact.location')} *
                     </label>
                     <input
                       type="text"
@@ -282,7 +284,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ isOpen, onClose, onSubmit }
                   <div className="bg-gradient-to-r from-gray-50 to-gray-100 px-8 sm:px-6 py-5 sm:py-4 border-b border-gray-200">
                     <h3 className="text-xl sm:text-lg font-semibold text-gray-800 flex items-center">
                       <Package className="h-6 w-6 sm:h-5 sm:w-5 mr-3 sm:mr-2 text-gray-600" />
-                      Résumé de la commande
+                      {t('checkout.order.summary')}
                     </h3>
                   </div>
                   
@@ -305,7 +307,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ isOpen, onClose, onSubmit }
                     
                     <div className="border-t-2 border-gray-200 pt-4">
                       <div className="flex justify-between items-center">
-                        <span className="text-2xl sm:text-lg font-bold text-gray-800">Total:</span>
+                        <span className="text-2xl sm:text-lg font-bold text-gray-800">{t('common.total')}:</span>
                         <span className="text-4xl sm:text-2xl font-bold text-blue-600">{formatPrice(state.total)}</span>
                       </div>
                     </div>
@@ -316,20 +318,20 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ isOpen, onClose, onSubmit }
                 <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-8 sm:p-6 border border-blue-200">
                   <h4 className="font-semibold text-xl sm:text-base text-blue-900 mb-5 sm:mb-4 flex items-center">
                     <CreditCard className="h-6 w-6 sm:h-5 sm:w-5 mr-3 sm:mr-2" />
-                    Mode de paiement
+                    {t('checkout.payment.method')}
                   </h4>
                   <div className="space-y-4 sm:space-y-3 text-lg sm:text-sm">
                     <div className="flex items-center text-blue-800">
                       <div className="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
-                      <span>Paiement à la livraison (Cash)</span>
+                      <span>{t('checkout.cash.delivery')}</span>
                     </div>
                     <div className="flex items-center text-blue-800">
                       <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
-                      <span>Livraison gratuite à Yaoundé</span>
+                      <span>{t('checkout.free.delivery.yaounde')}</span>
                     </div>
                     <div className="flex items-center text-blue-800">
                       <div className="w-2 h-2 bg-orange-500 rounded-full mr-3"></div>
-                      <span>Expédition dans tout le Cameroun</span>
+                      <span>{t('checkout.shipping.cameroon')}</span>
                     </div>
                   </div>
                 </div>
@@ -338,7 +340,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ isOpen, onClose, onSubmit }
                 <div className="bg-green-50 rounded-xl p-6 sm:p-4 border border-green-200">
                   <div className="flex items-center text-green-800">
                     <Shield className="h-6 w-6 sm:h-5 sm:w-5 mr-3 sm:mr-2" />
-                    <span className="text-lg sm:text-sm font-medium">Commande sécurisée</span>
+                    <span className="text-lg sm:text-sm font-medium">{t('checkout.secure.order')}</span>
                   </div>
                 </div>
               </div>
@@ -352,19 +354,19 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ isOpen, onClose, onSubmit }
                 className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-5 sm:py-4 rounded-xl hover:from-blue-700 hover:to-blue-800 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transition-all duration-300 font-semibold flex items-center justify-center text-2xl sm:text-lg shadow-lg hover:shadow-xl transform hover:scale-[1.02] disabled:transform-none"
               >
                 {isSubmitting ? (
-                  <>
+                {t('common.cancel')}
                     <div className="animate-spin rounded-full h-6 w-6 sm:h-5 sm:w-5 border-2 border-white border-t-transparent mr-4 sm:mr-3"></div>
                     Traitement en cours...
                   </>
                 ) : (
                   <>
                     <Shield className="h-6 w-6 sm:h-5 sm:w-5 mr-4 sm:mr-3" />
-                    Confirmer la commande
+                    {t('checkout.confirm')}
                   </>
                 )}
               </button>
               <p className="text-center text-lg sm:text-sm text-gray-500 mt-4 sm:mt-3">
-                En confirmant, vous acceptez nos conditions de vente
+                {t('checkout.terms')}
               </p>
             </div>
           </form>

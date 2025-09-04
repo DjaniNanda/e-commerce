@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ShoppingCart, Eye, Heart } from 'lucide-react';
 import { Product } from '../types';
 import { useCart } from '../context/CartContext';
+import { useTranslation } from '../context/TranslationContext';
 
 const ProductCard: React.FC<{
   product: Product;
@@ -9,6 +10,7 @@ const ProductCard: React.FC<{
   viewMode?: 'grid' | 'list';
 }> = ({ product, onViewDetails, viewMode = 'grid' }) => {
   const { dispatch } = useCart();
+  const { t } = useTranslation();
   const [isHovered, setIsHovered] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
   const [imageError, setImageError] = useState(false);
@@ -94,14 +96,14 @@ const ProductCard: React.FC<{
                   <Eye className="h-5 w-5 sm:h-4 sm:w-4 mr-2" />
                   Détails
                 </button>
-                <button
+              {t('products.details')}
                   onClick={handleAddToCart}
                   className="flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl text-base sm:text-sm"
                 >
                   <ShoppingCart className="h-5 w-5 sm:h-4 sm:w-4 mr-2" />
                   Ajouter
                 </button>
-              </div>
+              {t('products.add')}
             </div>
           </div>
         </div>
@@ -143,7 +145,7 @@ const ProductCard: React.FC<{
 
         {product.warranty && (
           <div className="absolute bottom-3 left-3 bg-green-500 text-white px-3 py-1 rounded-full text-sm sm:text-xs font-medium shadow-lg">
-            Garantie {product.warranty}
+            {t('products.warranty')} {product.warranty}
           </div>
         )}
 
@@ -173,14 +175,14 @@ const ProductCard: React.FC<{
             className="flex-1 flex items-center justify-center px-4 py-4 sm:px-3 sm:py-2 border-2 border-blue-600 text-blue-600 rounded-xl hover:bg-blue-50 transition-all duration-200 font-medium text-lg sm:text-sm"
           >
             <Eye className="h-6 w-6 sm:h-4 sm:w-4 mr-2" />
-            Détails
+            {t('products.details')}
           </button>
           <button
             onClick={handleAddToCart}
             className="flex-1 flex items-center justify-center px-4 py-4 sm:px-3 sm:py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl text-lg sm:text-sm"
           >
             <ShoppingCart className="h-6 w-6 sm:h-4 sm:w-4 mr-2" />
-            Ajouter
+            {t('products.add')}
           </button>
         </div>
       </div>

@@ -3,6 +3,7 @@ import Header from './Header';
 import ProductCard from './ProductCard';
 import ProductModal from './ProductModal';
 import Cart from './Cart';
+import { useTranslation } from '../context/TranslationContext';
 import { useProducts } from '../hooks/useProducts';
 import { useCategories } from '../hooks/useCategories';
 import { Product } from '../types';
@@ -12,6 +13,7 @@ const MainApp: React.FC = () => {
   console.log('MainApp component rendering...');
   
   const { products, productsCount, loading, error, searchProducts, filterProducts } = useProducts();
+  const { t } = useTranslation();
   useCategories();
   
   console.log('Products:', products, 'Count:', productsCount, 'Loading:', loading, 'Error:', error);
@@ -90,6 +92,15 @@ const MainApp: React.FC = () => {
     }
   }, [filterParams, loading, applyFilters, lastFilterParams, hasSearched, searchQuery]);
 
+  // Load all products on initial mount
+  React.useEffect(() => {
+    console.log('Initial load effect triggered');
+    if (!loading && !hasSearched && !searchQuery && Object.keys(filterParams).length === 0) {
+      console.log('Loading all products on initial mount');
+      // This will trigger the products hook to load all products
+      setHasSearched(true);
+    }
+  }, [loading, hasSearched, searchQuery, filterParams]);
   const handleSearch = useCallback(async (query: string) => {
     console.log('Search initiated:', query);
     try {
@@ -146,7 +157,7 @@ const MainApp: React.FC = () => {
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 sm:h-12 sm:w-12 border-b-2 border-blue-600 mx-auto mb-6 sm:mb-4"></div>
-          <p className="text-gray-600 text-xl sm:text-base">Chargement...</p>
+          <p className="text-gray-600 text-xl sm:text-base">{t('common.loading')}</p>
         </div>
       </div>
     );
@@ -167,7 +178,7 @@ const MainApp: React.FC = () => {
             onClick={() => window.location.reload()}
             className="bg-blue-600 text-white px-8 py-4 sm:px-6 sm:py-2 rounded-lg hover:bg-blue-700 transition-colors text-lg sm:text-base"
           >
-            Recharger la page
+            {t('common.retry')}
           </button>
         </div>
       </div>
@@ -193,20 +204,20 @@ const MainApp: React.FC = () => {
             <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/5 rounded-full translate-y-32 -translate-x-32"></div>
             <div className="relative z-10">
               <h2 className="text-6xl sm:text-4xl md:text-5xl font-black mb-10 sm:mb-6 leading-tight">
-                Pièces Automobiles
+                {t('hero.title')}
                 <span className="block text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-orange-300">
-                  de Qualité Premium
+                  {t('hero.subtitle')}
                 </span>
               </h2>
               <p className="text-3xl sm:text-xl md:text-2xl mb-12 sm:mb-8 text-blue-100 max-w-3xl mx-auto leading-relaxed">
-                Livraison gratuite à Yaoundé • Paiement à la livraison • Garantie assurée
+                {t('hero.description')}
               </p>
               <div className="flex flex-wrap justify-center gap-6 sm:gap-4 text-lg sm:text-sm font-medium">
                 {[
-                  { icon: "✓", text: "Stock permanent" },
-                  { icon: "⚡", text: "Livraison rapide" },
-                  { icon: "💎", text: "Qualité garantie" },
-                  { icon: "🛡️", text: "Service 7j/7" }
+                  { icon: "✓", text: t('hero.stock') },
+                  { icon: "⚡", text: t('hero.delivery') },
+                  { icon: "💎", text: t('hero.quality') },
+                  { icon: "🛡️", text: t('hero.service') }
                 ].map((item, index) => (
                   <div key={index} className="bg-white/20 backdrop-blur-sm px-8 py-4 sm:px-4 sm:py-2 rounded-full border border-white/30 hover:bg-white/30 transition-all duration-300 transform hover:scale-105">
                     <span className="mr-3 sm:mr-2 text-xl sm:text-base">{item.icon}</span>
@@ -223,32 +234,34 @@ const MainApp: React.FC = () => {
           <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-6 w-full sm:w-auto">
             <div className="text-gray-600">
               <span className="text-4xl sm:text-2xl font-bold text-blue-600">{productsCount || 0}</span>
-              <span className="ml-3 sm:ml-2 text-xl sm:text-base">produit{(productsCount || 0) !== 1 ? 's' : ''} trouvé{(productsCount || 0) !== 1 ? 's' : ''}</span>
+              <span className="ml-3 sm:ml-2 text-xl sm:text-base">
+                {(productsCount || 0) === 1 ? t('products.found') : t('products.found.plural')}
+              </span>
             </div>
             {(searchQuery || selectedCategory) && (
               <div className="flex flex-wrap items-center gap-3 sm:gap-2 w-full sm:w-auto">
                 {searchQuery && (
                   <span className="bg-blue-100 text-blue-800 px-6 py-3 sm:px-3 sm:py-1 rounded-full text-lg sm:text-sm font-medium">
-                    Recherche: "{searchQuery}"
+                    {t('products.search')}: "{searchQuery}"
                   </span>
                 )}
                 {selectedCategory && (
                   <span className="bg-green-100 text-green-800 px-6 py-3 sm:px-3 sm:py-1 rounded-full text-lg sm:text-sm font-medium">
-                    Catégorie: {selectedCategory}
+                    {t('products.category')}: {selectedCategory}
                   </span>
                 )}
                 <button
                   onClick={clearFilters}
                   className="text-gray-500 hover:text-red-500 text-lg sm:text-sm underline py-2 px-2"
                 >
-                  Effacer filtres
+                  {t('products.clear.filters')}
                 </button>
               </div>
             )}
           </div>
 
           <div className="flex items-center space-x-4 sm:space-x-3 w-full sm:w-auto justify-center sm:justify-end">
-            <span className="text-lg sm:text-sm text-gray-500">Vue:</span>
+            <span className="text-lg sm:text-sm text-gray-500">{t('products.view')}:</span>
             <button
               onClick={() => setViewMode('grid')}
               className={`p-5 sm:p-3 rounded-xl transition-all duration-200 ${
@@ -276,26 +289,25 @@ const MainApp: React.FC = () => {
         {loading && hasSearched ? (
           <div className="text-center py-24 sm:py-20">
             <div className="animate-spin rounded-full h-16 w-16 sm:h-12 sm:w-12 border-b-2 border-blue-600 mx-auto mb-6 sm:mb-4"></div>
-            <p className="text-gray-600 text-xl sm:text-base">Recherche en cours...</p>
+            <p className="text-gray-600 text-xl sm:text-base">{t('common.loading')}</p>
           </div>
         ) : (productsCount || 0) === 0 && hasSearched ? (
           <div className="text-center py-24 sm:py-20 px-6">
             <div className="w-32 h-32 sm:w-24 sm:h-24 mx-auto mb-8 sm:mb-6 bg-gradient-to-br from-gray-200 to-gray-300 rounded-full flex items-center justify-center">
               <Search className="h-14 w-14 sm:h-10 sm:w-10 text-gray-400" />
             </div>
-            <h3 className="text-3xl sm:text-2xl font-bold text-gray-800 mb-4 sm:mb-3">Aucun produit trouvé</h3>
+            <h3 className="text-3xl sm:text-2xl font-bold text-gray-800 mb-4 sm:mb-3">{t('products.none.found')}</h3>
             <p className="text-gray-500 mb-8 sm:mb-6 max-w-md mx-auto text-lg sm:text-base leading-relaxed">
-              Nous n'avons pas trouvé de produits correspondant à vos critères. 
-              Essayez de modifier votre recherche ou parcourir nos catégories.
+              {t('products.none.description')}
             </p>
             <button
               onClick={clearFilters}
               className="bg-blue-600 text-white px-8 py-4 sm:px-6 sm:py-3 rounded-xl hover:bg-blue-700 transition-colors font-medium text-lg sm:text-base"
             >
-              Voir tous les produits
+              {t('products.view.all')}
             </button>
           </div>
-        ) : hasSearched ? (
+        ) : hasSearched || (productsCount || 0) > 0 ? (
           <div className={`grid gap-8 sm:gap-6 ${
             viewMode === 'grid' 
               ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4' 
@@ -315,9 +327,9 @@ const MainApp: React.FC = () => {
             <div className="w-40 h-40 sm:w-24 sm:h-24 mx-auto mb-10 sm:mb-6 bg-gradient-to-br from-blue-100 to-blue-200 rounded-full flex items-center justify-center">
               <Search className="h-18 w-18 sm:h-10 sm:w-10 text-blue-500" />
             </div>
-            <h3 className="text-4xl sm:text-2xl font-bold text-gray-800 mb-6 sm:mb-3">Prêt à rechercher ?</h3>
+            <h3 className="text-4xl sm:text-2xl font-bold text-gray-800 mb-6 sm:mb-3">{t('products.ready.search')}</h3>
             <p className="text-xl sm:text-base text-gray-500 mb-10 sm:mb-6 max-w-md mx-auto leading-relaxed">
-              Utilisez la barre de recherche ci-dessus ou sélectionnez une catégorie pour commencer.
+              {t('products.ready.description')}
             </p>
           </div>
         ) : null}
@@ -349,12 +361,11 @@ const MainApp: React.FC = () => {
                 </div>
                 <div>
                   <h3 className="text-4xl sm:text-2xl font-black">AUTO-BUSINESS</h3>
-                  <p className="text-gray-400 text-lg sm:text-sm">Excellence automobile</p>
+                  <p className="text-gray-400 text-lg sm:text-sm">{t('footer.excellence')}</p>
                 </div>
               </div>
               <p className="text-gray-300 leading-relaxed max-w-md text-xl sm:text-base mb-10 sm:mb-6">
-                Votre partenaire de confiance pour toutes vos pièces automobiles au Cameroun. 
-                Nous nous engageons à fournir des produits de qualité premium avec un service exceptionnel.
+                {t('footer.description')}
               </p>
               <div className="flex space-x-6 sm:space-x-4">
                 {['📧', '📱', '🌐'].map((icon, index) => (
@@ -369,7 +380,7 @@ const MainApp: React.FC = () => {
             </div>
 
             <div>
-              <h4 className="font-bold mb-10 sm:mb-6 text-2xl sm:text-lg">Contact</h4>
+              <h4 className="font-bold mb-10 sm:mb-6 text-2xl sm:text-lg">{t('footer.contact')}</h4>
               <div className="text-gray-300 space-y-6 sm:space-y-3">
                 <div className="flex items-center space-x-5 sm:space-x-3">
                   <Phone className="h-8 w-8 sm:h-5 sm:w-5 text-blue-400" />
@@ -387,18 +398,18 @@ const MainApp: React.FC = () => {
             </div>
             
             <div>
-              <h4 className="font-bold mb-10 sm:mb-6 text-2xl sm:text-lg">Horaires</h4>
+              <h4 className="font-bold mb-10 sm:mb-6 text-2xl sm:text-lg">{t('footer.hours')}</h4>
               <div className="text-gray-300 space-y-4 sm:space-y-2">
                 <div className="flex justify-between text-xl sm:text-base">
-                  <span>Lun - Ven:</span>
+                  <span>{t('footer.monday.friday')}:</span>
                   <span className="text-green-400 font-medium">8h30 - 22h30</span>
                 </div>
                 <div className="flex justify-between text-xl sm:text-base">
-                  <span>Samedi:</span>
+                  <span>{t('footer.saturday')}:</span>
                   <span className="text-green-400 font-medium">8h30 - 22h30</span>
                 </div>
                 <div className="flex justify-between text-xl sm:text-base">
-                  <span>Dimanche:</span>
+                  <span>{t('footer.sunday')}:</span>
                   <span className="text-green-400 font-medium">8h30 - 22h30</span>
                 </div>
               </div>
@@ -408,12 +419,12 @@ const MainApp: React.FC = () => {
           <div className="border-t border-gray-700 pt-12 sm:pt-8">
             <div className="flex flex-col md:flex-row justify-between items-center space-y-6 sm:space-y-4 md:space-y-0">
               <p className="text-gray-400 text-lg sm:text-sm text-center md:text-left">
-                &copy; 2025 AUTO-BUSINESS. Tous droits réservés.
+                &copy; 2025 AUTO-BUSINESS. {t('footer.rights')}.
               </p>
               <div className="flex flex-wrap justify-center gap-8 sm:gap-6 text-lg sm:text-sm text-gray-400">
-                <button className="hover:text-white transition-colors py-2 px-1">Politique de confidentialité</button>
-                <button className="hover:text-white transition-colors py-2 px-1">Conditions d'utilisation</button>
-                <button className="hover:text-white transition-colors py-2 px-1">Support</button>
+                <button className="hover:text-white transition-colors py-2 px-1">{t('footer.privacy')}</button>
+                <button className="hover:text-white transition-colors py-2 px-1">{t('footer.terms')}</button>
+                <button className="hover:text-white transition-colors py-2 px-1">{t('footer.support')}</button>
               </div>
             </div>
           </div>
