@@ -94,16 +94,16 @@ const ProductCard: React.FC<{
                   className="flex items-center justify-center px-4 py-2 border-2 border-blue-600 text-blue-600 rounded-xl hover:bg-blue-50 transition-all duration-200 font-medium text-base sm:text-sm"
                 >
                   <Eye className="h-5 w-5 sm:h-4 sm:w-4 mr-2" />
-                  Détails
+                  {t('products.details')}
                 </button>
-              {t('products.details')}
+                <button
                   onClick={handleAddToCart}
                   className="flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all duration-200 font-medium shadow-lg hover:shadow-xl text-base sm:text-sm"
                 >
                   <ShoppingCart className="h-5 w-5 sm:h-4 sm:w-4 mr-2" />
-                  Ajouter
+                  {t('products.add')}
                 </button>
-              {t('products.add')}
+              </div>
             </div>
           </div>
         </div>
