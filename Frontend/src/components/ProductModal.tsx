@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { X, ShoppingCart, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Product } from '../types';
 import { useCart } from '../context/CartContext';
+import '../components styles/ProductModal.css';
 
 const ProductModal: React.FC<{
   product: Product;
@@ -36,67 +37,56 @@ const ProductModal: React.FC<{
 
   return (
     <>
-      <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div className="bg-white rounded-3xl max-w-5xl w-full max-h-[95vh] overflow-hidden shadow-2xl animate-in slide-in-from-bottom-10 duration-300 mx-2 sm:mx-4">
+      <div className="modal-overlay">
+        <div className="modal-container">
           {/* Header */}
-          <div className="sticky top-0 bg-white/95 backdrop-blur-sm border-b border-gray-100 px-8 sm:px-8 py-8 sm:py-6 flex items-center justify-between z-10">
-            <h2 className="text-3xl sm:text-2xl font-bold text-gray-800">Détails du produit</h2>
-            <button
-              onClick={onClose}
-              className="p-4 sm:p-3 hover:bg-gray-100 rounded-2xl transition-all duration-200 group"
-            >
-              <X className="h-7 w-7 sm:h-6 sm:w-6 group-hover:rotate-90 transition-transform duration-200" />
+          <div className="modal-header">
+            <h2 className="modal-title">Détails du produit</h2>
+            <button onClick={onClose} className="close-button">
+              <X className="close-icon" />
             </button>
           </div>
 
-          <div className="p-8 sm:p-8 overflow-y-auto max-h-[calc(95vh-100px)]">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 sm:gap-12">
+          <div className="modal-content">
+            <div className="modal-grid">
               {/* Images Section */}
-              <div>
-                <div className="relative mb-8 sm:mb-6 group">
-                  <div className="aspect-w-1 aspect-h-1 w-full h-80 sm:h-96 bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl overflow-hidden">
+              <div className="images-section">
+                <div className="main-image-container">
+                  <div className="main-image-wrapper">
                     <img
                       src={imageError ? '/api/placeholder/400/400' : product.images[currentImageIndex]}
                       alt={product.name}
                       onError={() => setImageError(true)}
-                      className="w-full h-full object-cover"
+                      className="main-image"
                     />
                   </div>
                   
                   {product.images.length > 1 && (
                     <>
-                      <button
-                        onClick={prevImage}
-                        className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/90 backdrop-blur-sm p-4 sm:p-3 rounded-full hover:bg-white transition-all duration-200 shadow-lg hover:shadow-xl opacity-0 group-hover:opacity-100"
-                      >
-                        <ChevronLeft className="h-7 w-7 sm:h-6 sm:w-6" />
+                      <button onClick={prevImage} className="nav-button nav-button-left">
+                        <ChevronLeft className="nav-icon" />
                       </button>
-                      <button
-                        onClick={nextImage}
-                        className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/90 backdrop-blur-sm p-4 sm:p-3 rounded-full hover:bg-white transition-all duration-200 shadow-lg hover:shadow-xl opacity-0 group-hover:opacity-100"
-                      >
-                        <ChevronRight className="h-7 w-7 sm:h-6 sm:w-6" />
+                      <button onClick={nextImage} className="nav-button nav-button-right">
+                        <ChevronRight className="nav-icon" />
                       </button>
                     </>
                   )}
                 </div>
 
                 {product.images.length > 1 && (
-                  <div className="flex space-x-4 sm:space-x-3 overflow-x-auto pb-3 sm:pb-2">
+                  <div className="thumbnails-container">
                     {product.images.map((image, index) => (
                       <button
                         key={index}
                         onClick={() => setCurrentImageIndex(index)}
-                        className={`flex-shrink-0 w-24 h-24 sm:w-20 sm:h-20 rounded-xl border-2 overflow-hidden transition-all duration-200 ${
-                          index === currentImageIndex 
-                            ? 'border-blue-500 ring-2 ring-blue-200 scale-105' 
-                            : 'border-gray-200 hover:border-gray-300'
+                        className={`thumbnail ${
+                          index === currentImageIndex ? 'thumbnail-active' : ''
                         }`}
                       >
                         <img
                           src={image}
                           alt={`${product.name} ${index + 1}`}
-                          className="w-full h-full object-cover"
+                          className="thumbnail-image"
                         />
                       </button>
                     ))}
@@ -105,54 +95,50 @@ const ProductModal: React.FC<{
               </div>
 
               {/* Product Info Section */}
-              <div className="space-y-8 sm:space-y-6">
+              <div className="product-info">
                 <div>
-                  <h1 className="text-4xl sm:text-3xl font-bold text-gray-800 mb-6 sm:mb-4 leading-tight">{product.name}</h1>
+                  <h1 className="product-title">{product.name}</h1>
                   
-                  <div className="flex items-center space-x-4 sm:space-x-3 mb-8 sm:mb-6">
-                    <span className="bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800 px-5 py-3 sm:px-4 sm:py-2 rounded-xl text-lg sm:text-sm font-semibold">
+                  <div className="product-meta">
+                    <span className="category-badge">
                       {product.category}
                     </span>
-                    
                   </div>
                 </div>
 
-                <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-2xl p-8 sm:p-6">
-                  <div className="text-5xl sm:text-4xl font-black text-blue-600 mb-3 sm:mb-2">
+                <div className="price-section">
+                  <div className="price-amount">
                     {formatPrice(product.price)}
                   </div>
-                  <p className="text-blue-700 text-lg sm:text-sm font-medium">Prix tout compris, livraison gratuite</p>
+                  <p className="price-subtitle">Prix tout compris, livraison gratuite</p>
                 </div>
 
-                <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-3 sm:space-y-0 sm:space-x-3">
-                  <div className="bg-green-100 text-green-800 px-5 py-3 sm:px-4 sm:py-2 rounded-xl font-semibold text-lg sm:text-sm">
+                <div className="badges-container">
+                  <div className="warranty-badge">
                     🛡️ Garantie {product.warranty}
                   </div>
-                  <div className="bg-yellow-100 text-yellow-800 px-5 py-3 sm:px-4 sm:py-2 rounded-xl font-semibold text-lg sm:text-sm">
+                  <div className="stock-badge">
                     ⚡ En stock
                   </div>
                 </div>
 
-                <div className="bg-gray-50 rounded-2xl p-8 sm:p-6">
-                  <h3 className="font-bold text-gray-800 mb-4 sm:mb-3 text-2xl sm:text-lg">Description</h3>
-                  <p className="text-gray-600 leading-relaxed text-xl sm:text-base">{product.description}</p>
+                <div className="description-section">
+                  <h3 className="description-title">Description</h3>
+                  <p className="description-text">{product.description}</p>
                 </div>
 
-                <div className="space-y-6 sm:space-y-4">
-                  <button
-                    onClick={handleAddToCart}
-                    className="w-full flex items-center justify-center px-8 py-5 sm:py-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-2xl hover:from-blue-700 hover:to-blue-800 transition-all duration-200 font-bold text-2xl sm:text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1"
-                  >
-                    <ShoppingCart className="h-7 w-7 sm:h-6 sm:w-6 mr-4 sm:mr-3" />
+                <div className="actions-section">
+                  <button onClick={handleAddToCart} className="add-to-cart-button">
+                    <ShoppingCart className="cart-icon" />
                     Ajouter au panier
                   </button>
 
-                  <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl p-8 sm:p-6 border border-green-200">
-                    <h4 className="font-bold text-green-800 mb-4 sm:mb-3 flex items-center text-xl sm:text-base">
-                      <span className="mr-3 sm:mr-2 text-2xl sm:text-base">🚛</span>
+                  <div className="delivery-info">
+                    <h4 className="delivery-title">
+                      <span className="delivery-icon">🚛</span>
                       Livraison gratuite
                     </h4>
-                    <ul className="text-lg sm:text-sm text-green-700 space-y-3 sm:space-y-2">
+                    <ul className="delivery-list">
                       <li>✓ Livraison gratuite à Yaoundé</li>
                       <li>✓ Expédition dans tout le Cameroun</li>
                       <li>✓ Paiement à la livraison disponible</li>
@@ -168,6 +154,5 @@ const ProductModal: React.FC<{
     </>
   );
 };
-
 
 export default ProductModal;
