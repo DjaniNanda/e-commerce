@@ -8,7 +8,7 @@ import { useProducts } from '../hooks/useProducts';
 import { useCategories } from '../hooks/useCategories';
 import { Product } from '../types';
 import { Car, Grid, List, MapPin, Phone, Search } from 'lucide-react';
-import './MainApp.css';
+import '../components styles/MainApp.css';
 
 const MainApp: React.FC = () => {
   console.log('MainApp component rendering...');
