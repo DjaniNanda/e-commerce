@@ -78,10 +78,10 @@ const Header: React.FC<{
 
   return (
     <div className="relative">
-      <header className="bg-white shadow-2xl sticky top-0 z-50 border-b border-gray-100">
+      <header className="bg-white shadow-2xl sticky top-0 z-50 border-b border-gray-100 w-full">
         {/* Top bar */}
-        <div className="bg-gradient-to-r from-blue-900 via-blue-800 to-blue-900 text-white py-3">
-          <div className="container mx-auto px-4">
+        <div className="bg-gradient-to-r from-blue-900 via-blue-800 to-blue-900 text-white py-2 sm:py-3 w-full">
+          <div className="w-full px-4 sm:px-6">
             <div className="flex flex-wrap items-center justify-between text-sm sm:text-sm">
               <div className="flex items-center space-x-6">
                 <div className="flex items-center space-x-2">
@@ -116,7 +116,7 @@ const Header: React.FC<{
         </div>
 
         {/* Main header */}
-        <div className="container mx-auto px-4 py-6">
+        <div className="w-full px-4 sm:px-6 py-4 sm:py-6">
           <div className="flex items-center justify-between">
             {/* Logo */}
             <div 
@@ -139,7 +139,7 @@ const Header: React.FC<{
 
             {/* Search bar - Desktop */}
             {!isAdminPage && (
-              <div className="hidden md:flex flex-1 max-w-2xl mx-8 relative">
+              <div className="hidden md:flex flex-1 max-w-2xl mx-4 lg:mx-8 relative">
               <div className="relative w-full group">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                   <Search className="h-5 w-5 text-gray-400 group-focus-within:text-blue-500 transition-colors" />
@@ -221,7 +221,7 @@ const Header: React.FC<{
 
           {/* Search bar - Mobile */}
           {!isAdminPage && (
-            <div className="md:hidden mt-8">
+            <div className="md:hidden mt-4 sm:mt-6">
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
                 <Search className="h-6 w-6 text-gray-400" />
@@ -250,8 +250,8 @@ const Header: React.FC<{
         {!isAdminPage && (
           <nav className={`bg-gradient-to-r from-gray-50 to-gray-100 border-t border-gray-200 transition-all duration-300 ${
           isMenuOpen ? 'block' : 'hidden md:block'
-          }`}>
-          <div className="container mx-auto px-4">
+          } w-full`}>
+          <div className="w-full px-4 sm:px-6">
             <div className="hidden md:flex items-center justify-between py-4">
               <div className="flex items-center space-x-3">
                 <button
@@ -284,15 +284,15 @@ const Header: React.FC<{
             </div>
 
             <div className="md:hidden">
-              <div className="grid grid-cols-1 gap-4 py-6">
+              <div className="grid grid-cols-1 gap-3 py-4 sm:py-6">
                 {categories.map((category) => (
                   <button
                     key={category.id}
                     onClick={() => handleCategoryClick(category.id)}
-                    className="text-left p-6 text-gray-700 hover:text-blue-600 hover:bg-white rounded-2xl transition-all duration-300 border border-gray-200 hover:border-blue-300 hover:shadow-md transform hover:-translate-y-1"
+                    className="text-left p-4 sm:p-6 text-gray-700 hover:text-blue-600 hover:bg-white rounded-xl sm:rounded-2xl transition-all duration-300 border border-gray-200 hover:border-blue-300 hover:shadow-md transform hover:-translate-y-1"
                   >
-                    <div className="font-semibold text-lg">{category.name}</div>
-                    <div className="text-sm text-gray-500 mt-2">{t('products.view')} →</div>
+                    <div className="font-semibold text-base sm:text-lg">{category.name}</div>
+                    <div className="text-sm text-gray-500 mt-1 sm:mt-2">{t('products.view')} →</div>
                   </button>
                 ))}
               </div>
@@ -314,9 +314,9 @@ const Header: React.FC<{
           {/* Dropdown */}
           <div
             ref={categoriesDropdownRef}
-            className="absolute top-full left-0 right-0 bg-white shadow-2xl border border-gray-200 z-[70] rounded-b-2xl"
+            className="absolute top-full left-0 right-0 bg-white shadow-2xl border border-gray-200 z-[70] rounded-b-2xl w-full"
           >
-            <div className="container mx-auto px-4 py-8">
+            <div className="w-full px-4 sm:px-6 py-6 sm:py-8">
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
                 {categories.map((category) => (
                   <button
