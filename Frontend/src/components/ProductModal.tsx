@@ -1,8 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, ShoppingCart, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Product } from '../types';
 import { useCart } from '../context/CartContext';
+import { useTranslation } from '../context/TranslationContext';
 import '../components styles/ProductModal.css';
+
+// Translation wrapper component for backend content
+const TranslatableText: React.FC<{ 
+  children: string; 
+  className?: string;
+  element?: 'span' | 'h1' | 'h2' | 'h3' | 'h4' | 'p' | 'div' | 'li';
+}> = ({ children, className = '', element = 'span' }) => {
+  const Element = element;
+  
+  return (
+    <Element 
+      className={`${className} notranslate-temp`}
+      data-translate="true"
+      suppressHydrationWarning
+    >
+      {children}
+    </Element>
+  );
+};
 
 const ProductModal: React.FC<{
   product: Product;
@@ -12,6 +32,46 @@ const ProductModal: React.FC<{
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [imageError, setImageError] = useState(false);
   const { dispatch } = useCart();
+  const { t, language } = useTranslation();
+
+  // Force Google Translate to re-scan when modal opens or language changes
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const triggerTranslation = () => {
+      // Remove temporary notranslate class to allow translation
+      const elements = document.querySelectorAll('.notranslate-temp');
+      elements.forEach(el => {
+        el.classList.remove('notranslate-temp');
+        if (language === 'en') {
+          el.classList.add('translate-content');
+        } else {
+          el.classList.remove('translate-content');
+        }
+      });
+
+      // Trigger Google Translate re-scan for modal content
+      if (window.google && window.google.translate) {
+        setTimeout(() => {
+          const googleSelect = document.querySelector('select.goog-te-combo') as HTMLSelectElement;
+          if (googleSelect) {
+            const currentValue = googleSelect.value;
+            const targetValue = language === 'en' ? 'en' : 'fr';
+            
+            if (currentValue !== targetValue) {
+              googleSelect.value = targetValue;
+              googleSelect.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+          }
+        }, 100);
+      }
+    };
+
+    // Delay to ensure modal is fully rendered
+    const timeoutId = setTimeout(triggerTranslation, 200);
+    
+    return () => clearTimeout(timeoutId);
+  }, [isOpen, product, language]);
 
   if (!isOpen) return null;
 
@@ -41,7 +101,7 @@ const ProductModal: React.FC<{
         <div className="modal-container">
           {/* Header */}
           <div className="modal-header">
-            <h2 className="modal-title">Détails du produit</h2>
+            <h2 className="modal-title">{t('products.details')}</h2>
             <button onClick={onClose} className="close-button">
               <X className="close-icon" />
             </button>
@@ -97,11 +157,18 @@ const ProductModal: React.FC<{
               {/* Product Info Section */}
               <div className="product-info">
                 <div>
-                  <h1 className="product-title">{product.name}</h1>
+                  <TranslatableText 
+                    element="h1" 
+                    className="product-title"
+                  >
+                    {product.name}
+                  </TranslatableText>
                   
                   <div className="product-meta">
                     <span className="category-badge">
-                      {product.category}
+                      <TranslatableText>
+                        {product.category}
+                      </TranslatableText>
                     </span>
                   </div>
                 </div>
@@ -115,7 +182,7 @@ const ProductModal: React.FC<{
 
                 <div className="badges-container">
                   <div className="warranty-badge">
-                    🛡️ Garantie {product.warranty}
+                    🛡️ <TranslatableText>{t('products.warranty')} {product.warranty}</TranslatableText>
                   </div>
                   <div className="stock-badge">
                     ⚡ En stock
@@ -124,25 +191,30 @@ const ProductModal: React.FC<{
 
                 <div className="description-section">
                   <h3 className="description-title">Description</h3>
-                  <p className="description-text">{product.description}</p>
+                  <TranslatableText 
+                    element="p" 
+                    className="description-text"
+                  >
+                    {product.description}
+                  </TranslatableText>
                 </div>
 
                 <div className="actions-section">
                   <button onClick={handleAddToCart} className="add-to-cart-button">
                     <ShoppingCart className="cart-icon" />
-                    Ajouter au panier
+                    {t('products.add')} au panier
                   </button>
 
                   <div className="delivery-info">
                     <h4 className="delivery-title">
                       <span className="delivery-icon">🚛</span>
-                      Livraison gratuite
+                      {t('cart.free.delivery')}
                     </h4>
                     <ul className="delivery-list">
-                      <li>✓ Livraison gratuite à Yaoundé</li>
-                      <li>✓ Expédition dans tout le Cameroun</li>
-                      <li>✓ Paiement à la livraison disponible</li>
-                      <li>✓ Support client 7j/7</li>
+                      <TranslatableText element="li">✓ Livraison gratuite à Yaoundé</TranslatableText>
+                      <TranslatableText element="li">✓ Expédition dans tout le Cameroun</TranslatableText>
+                      <TranslatableText element="li">✓ Paiement à la livraison disponible</TranslatableText>
+                      <TranslatableText element="li">✓ Support client 7j/7</TranslatableText>
                     </ul>
                   </div>
                 </div>
