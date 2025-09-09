@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useRef } from 'react';
 import Header from './Header';
 import ProductCard from './ProductCard';
 import ProductModal from './ProductModal';
@@ -11,26 +11,28 @@ import { Car, Grid, List, MapPin, Phone, Search } from 'lucide-react';
 import '../components styles/MainApp.css';
 
 const MainApp: React.FC = () => {
-  console.log('MainApp component rendering...');
-  
   const { products, productsCount, loading, error, searchProducts, filterProducts } = useProducts();
   const { t } = useTranslation();
   useCategories();
-  
-  console.log('Products:', products, 'Count:', productsCount, 'Loading:', loading, 'Error:', error);
   
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [hasInitialized, setHasInitialized] = useState(false);
   
   const [filters, setFilters] = useState({
     category: '',
     priceRange: [0, 1000000] as [number, number]
   });
 
-  // Memoize filter parameters to prevent unnecessary re-renders
+  // Use refs to prevent infinite loops
+  const lastSearchQuery = useRef('');
+  const lastSelectedCategory = useRef('');
+  const lastFilters = useRef(filters);
+
+  // Memoize filter parameters
   const filterParams = useMemo(() => {
     const params = {
       category: selectedCategory || filters.category || undefined,
@@ -39,80 +41,37 @@ const MainApp: React.FC = () => {
       search: searchQuery || undefined,
     };
     
-    // Remove undefined values
     return Object.fromEntries(
       Object.entries(params).filter(([_, value]) => value !== undefined)
     );
   }, [searchQuery, selectedCategory, filters.category, filters.priceRange]);
 
-  // Use useCallback to prevent function recreation on every render
-  const applyFilters = useCallback(async () => {
-    try {
-      // Don't apply filters during initial loading
-      if (loading) {
-        console.log('Skipping filter application - still loading');
-        return;
-      }
-
-      console.log('Applying filters:', filterParams);
-      
-      if (Object.keys(filterParams).length > 0) {
-        await filterProducts(filterParams);
-      }
-    } catch (error) {
-      console.error('Error applying filters:', error);
-    }
-  }, [filterParams, loading, filterProducts]);
-
-  // Track if we've made an API call for the current filter parameters
-  const [lastFilterParams, setLastFilterParams] = useState({});
-  const [hasSearched, setHasSearched] = useState(false);
-
-  // Apply filters when filterParams change (but not loading state)
+  // Initialize products on mount only
   React.useEffect(() => {
-    console.log('Filter effect triggered', { filterParams, loading, hasSearched });
-    
-    // Only apply filters if we're not in search mode and have filter parameters
-    if (!loading && !searchQuery && Object.keys(filterParams).length > 0) {
-      const filterParamsString = JSON.stringify(filterParams);
-      const lastFilterParamsString = JSON.stringify(lastFilterParams);
-      
-      if (filterParamsString !== lastFilterParamsString) {
-        console.log('Filter parameters changed, applying filters');
-        setLastFilterParams(filterParams);
-        setHasSearched(true);
-        applyFilters();
-      } else {
-        console.log('Filter parameters unchanged, skipping API call');
-      }
-    } else if (Object.keys(filterParams).length === 0 && hasSearched && !searchQuery) {
-      // Reset when filters are cleared
-      console.log('Filters cleared, resetting search state');
-      setHasSearched(false);
-      setLastFilterParams({});
+    if (!hasInitialized && !loading) {
+      console.log('Initializing MainApp - loading initial products');
+      setHasInitialized(true);
     }
-  }, [filterParams, loading, applyFilters, lastFilterParams, hasSearched, searchQuery]);
-
-  // Load all products on initial mount
-  React.useEffect(() => {
-    console.log('Initial load effect triggered');
-    if (!loading && !hasSearched && !searchQuery && Object.keys(filterParams).length === 0) {
-      console.log('Loading all products on initial mount');
-      // This will trigger the products hook to load all products
-      setHasSearched(true);
-    }
-  }, [loading, hasSearched, searchQuery, filterParams]);
+  }, [hasInitialized, loading]);
 
   const handleSearch = useCallback(async (query: string) => {
     console.log('Search initiated:', query);
+    
+    // Prevent duplicate searches
+    if (lastSearchQuery.current === query) {
+      return;
+    }
+    lastSearchQuery.current = query;
+    
     try {
       const trimmedQuery = query.trim();
       if (!trimmedQuery) {
-        // If empty search, reset to show all products or clear results
         setSearchQuery('');
         setSelectedCategory('');
-        setHasSearched(false);
-        setLastFilterParams({});
+        setFilters({
+          category: '',
+          priceRange: [0, 1000000]
+        });
         return;
       }
       
@@ -123,38 +82,48 @@ const MainApp: React.FC = () => {
         priceRange: [0, 1000000]
       });
       
-      // Call search directly instead of using filter effect
       await searchProducts(trimmedQuery);
-      setHasSearched(true);
       
     } catch (error) {
       console.error('Search error:', error);
     }
   }, [searchProducts]);
 
-  const handleCategoryClick = useCallback((category: string) => {
+  const handleCategoryClick = useCallback(async (category: string) => {
     console.log('Category clicked:', category);
-    setSearchQuery(''); // Clear search when selecting category
+    
+    // Prevent duplicate category clicks
+    if (lastSelectedCategory.current === category) {
+      return;
+    }
+    lastSelectedCategory.current = category;
+    
+    setSearchQuery('');
     setSelectedCategory(category);
     setFilters(prev => ({ ...prev, category }));
-    setHasSearched(false); // Reset search state to use filter effect
-  }, []);
+    
+    try {
+      await filterProducts({ category });
+    } catch (error) {
+      console.error('Category filter error:', error);
+    }
+  }, [filterProducts]);
 
   const clearFilters = useCallback(() => {
     console.log('Clearing all filters');
+    lastSearchQuery.current = '';
+    lastSelectedCategory.current = '';
+    
     setSearchQuery('');
     setSelectedCategory('');
     setFilters({
       category: '',
       priceRange: [0, 1000000]
     });
-    setHasSearched(false);
-    setLastFilterParams({});
   }, []);
 
-  // Add a loading state check
-  if (loading && (!products || products.length === 0)) {
-    console.log('Still loading...');
+  // Loading state
+  if (loading && (!products || products.length === 0) && !hasInitialized) {
     return (
       <div className="main-app__loading">
         <div className="main-app__loading-content">
@@ -165,9 +134,8 @@ const MainApp: React.FC = () => {
     );
   }
 
-  // Show error state if there's an error and no products
+  // Error state
   if (error && (!products || products.length === 0)) {
-    console.log('Error state:', error);
     return (
       <div className="main-app__error">
         <div className="main-app__error-content">
@@ -187,8 +155,6 @@ const MainApp: React.FC = () => {
     );
   }
 
-  console.log('Rendering main app with products:', products?.length || 0);
-
   return (
     <div className="main-app">
       <Header
@@ -198,7 +164,7 @@ const MainApp: React.FC = () => {
       />
 
       <main className="main-app__container">
-        {/* Hero Section - Enhanced for Mobile */}
+        {/* Hero Section */}
         {!searchQuery && !selectedCategory && (
           <div className="main-app__hero">
             <div className="main-app__hero-overlay"></div>
@@ -231,7 +197,7 @@ const MainApp: React.FC = () => {
           </div>
         )}
 
-        {/* Enhanced Toolbar for Mobile */}
+        {/* Toolbar */}
         <div className="main-app__toolbar">
           <div className="main-app__toolbar-left">
             <div className="main-app__toolbar-stats">
@@ -288,12 +254,12 @@ const MainApp: React.FC = () => {
         </div>
 
         {/* Products Grid/List */}
-        {loading && hasSearched ? (
+        {loading ? (
           <div className="main-app__products-loading">
             <div className="main-app__spinner"></div>
             <p className="main-app__products-loading-text">{t('common.loading')}</p>
           </div>
-        ) : (productsCount || 0) === 0 && hasSearched ? (
+        ) : (productsCount || 0) === 0 && (searchQuery || selectedCategory) ? (
           <div className="main-app__no-results">
             <div className="main-app__no-results-icon">
               <Search />
@@ -309,7 +275,7 @@ const MainApp: React.FC = () => {
               {t('products.view.all')}
             </button>
           </div>
-        ) : hasSearched || (productsCount || 0) > 0 ? (
+        ) : (productsCount || 0) > 0 ? (
           <div className={`main-app__products-grid ${
             viewMode === 'grid' 
               ? 'main-app__products-grid--grid' 
@@ -324,7 +290,7 @@ const MainApp: React.FC = () => {
               />
             ))}
           </div>
-        ) : !hasSearched ? (
+        ) : (
           <div className="main-app__ready-search">
             <div className="main-app__ready-search-icon">
               <Search />
@@ -334,10 +300,10 @@ const MainApp: React.FC = () => {
               {t('products.ready.description')}
             </p>
           </div>
-        ) : null}
+        )}
       </main>
 
-      {/* Enhanced Product Modal */}
+      {/* Product Modal */}
       {selectedProduct && (
         <ProductModal
           product={selectedProduct}
@@ -346,13 +312,13 @@ const MainApp: React.FC = () => {
         />
       )}
 
-      {/* Enhanced Cart */}
+      {/* Cart */}
       <Cart
         isOpen={isCartOpen}
         onClose={() => setIsCartOpen(false)}
       />
 
-      {/* Enhanced Footer for Mobile */}
+      {/* Footer */}
       <footer className="main-app__footer">
         <div className="main-app__footer-container">
           <div className="main-app__footer-content">
