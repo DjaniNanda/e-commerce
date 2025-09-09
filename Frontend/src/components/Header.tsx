@@ -79,37 +79,37 @@ const Header: React.FC<{
 
   return (
     <div className="header-wrapper">
-      <header className="header">
+      <header className="header-main">
         {/* Top bar */}
-        <div className="top-bar">
+        <div className="header-topbar">
           <div className="container">
-            <div className="top-bar-content">
-              <div className="top-bar-left">
-                <div className="top-bar-item">
-                  <MapPin className="icon icon-pulse" />
-                  <span className="font-medium">{t('header.delivery')}</span>
+            <div className="topbar-content">
+              <div className="topbar-left">
+                <div className="topbar-item">
+                  <MapPin className="topbar-icon topbar-icon-pulse" />
+                  <span className="topbar-text">{t('header.delivery')}</span>
                 </div>
-                <div className="top-bar-item top-bar-item-hidden-mobile">
-                  <Clock className="icon" />
+                <div className="topbar-item topbar-item-hidden-mobile">
+                  <Clock className="topbar-icon" />
                   <span>{t('header.hours')}</span>
                 </div>
               </div>
-              <div className="top-bar-right">
+              <div className="topbar-right">
                 {/* Language Switcher */}
-                <div className="language-switcher">
-                  <Globe className="icon" />
+                <div className="topbar-item">
+                  <Globe className="topbar-icon" />
                   <select
                     value={language}
                     onChange={(e) => setLanguage(e.target.value as 'fr' | 'en')}
                     className="language-select"
                   >
-                    <option value="fr">FR</option>
-                    <option value="en">EN</option>
+                    <option value="fr" className="language-option">FR</option>
+                    <option value="en" className="language-option">EN</option>
                   </select>
                 </div>
-                <div className="top-bar-item">
-                  <Phone className="icon" />
-                  <span className="font-medium">+237 6XX XXX XXX</span>
+                <div className="topbar-item">
+                  <Phone className="topbar-icon" />
+                  <span className="topbar-phone">+237 6XX XXX XXX</span>
                 </div>
               </div>
             </div>
@@ -117,31 +117,33 @@ const Header: React.FC<{
         </div>
 
         {/* Main header */}
-        <div className="main-header">
+        <div className="header-content">
           <div className="container">
-            <div className="main-header-content">
+            <div className="header-inner">
               {/* Logo */}
               <div 
                 className="logo-section"
                 onClick={() => navigate('/')}
               >
                 <div className="logo-container">
-                  <div className="logo-icon">
-                    <Car className="car-icon" />
+                  <div className="logo-icon-wrapper">
+                    <Car className="logo-icon" />
                   </div>
-                  <div className="logo-pulse"></div>
+                  <div className="logo-accent"></div>
                 </div>
-                <div className="logo-text">
-                  <h1 className="brand-name">AUTO-BUSINESS</h1>
-                  <p className="tagline">{t('header.tagline')}</p>
+                <div>
+                  <h1 className="logo-title">
+                    AUTO-BUSINESS
+                  </h1>
+                  <p className="logo-tagline">{t('header.tagline')}</p>
                 </div>
               </div>
 
               {/* Search bar - Desktop only */}
               {!isAdminPage && (
-                <div className="search-container-desktop">
-                  <div className="search-wrapper">
-                    <div className="search-icon-container">
+                <div className="search-desktop">
+                  <div className="search-container">
+                    <div className="search-icon-wrapper">
                       <Search className="search-icon" />
                     </div>
                     <input
@@ -181,7 +183,7 @@ const Header: React.FC<{
                     <button
                       onClick={(e) => handleSearch(e)}
                       disabled={!searchQuery.trim()}
-                      className={`search-button ${!searchQuery.trim() ? 'search-button-disabled' : ''}`}
+                      className="search-button"
                     >
                       {t('header.search.button')}
                     </button>
@@ -211,8 +213,8 @@ const Header: React.FC<{
                   className="mobile-menu-button"
                 >
                   <div className="menu-icon-container">
-                    <Menu className={`menu-icon ${isMenuOpen ? 'menu-icon-hidden' : ''}`} />
-                    <X className={`close-icon ${isMenuOpen ? '' : 'close-icon-hidden'}`} />
+                    <Menu className={`menu-icon ${isMenuOpen ? 'menu-icon-hidden' : 'menu-icon-visible'}`} />
+                    <X className={`close-icon ${isMenuOpen ? 'close-icon-visible' : 'close-icon-hidden'}`} />
                   </div>
                 </button>
               </div>
@@ -220,10 +222,10 @@ const Header: React.FC<{
 
             {/* Search bar - Mobile */}
             {!isAdminPage && (
-              <div className="search-container-mobile">
-                <div className="search-wrapper-mobile">
-                  <div className="search-icon-container-mobile">
-                    <Search className="search-icon-mobile" />
+              <div className="search-mobile">
+                <div className="search-mobile-container">
+                  <div className="search-mobile-icon-wrapper">
+                    <Search className="search-mobile-icon" />
                   </div>
                   <input
                     type="text"
@@ -231,14 +233,14 @@ const Header: React.FC<{
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && handleSearch(e)}
-                    className="search-input-mobile"
+                    className="search-mobile-input"
                   />
                   <button
                     onClick={(e) => handleSearch(e)}
                     disabled={!searchQuery.trim()}
-                    className={`search-button-mobile ${!searchQuery.trim() ? 'search-button-mobile-disabled' : ''}`}
+                    className="search-mobile-button"
                   >
-                    <Search className="search-button-icon-mobile" />
+                    <Search className="search-mobile-button-icon" />
                   </button>
                 </div>
               </div>
@@ -248,7 +250,7 @@ const Header: React.FC<{
 
         {/* Navigation */}
         {!isAdminPage && (
-          <nav className={`navigation ${isMenuOpen ? 'navigation-open' : ''}`}>
+          <nav className={`navigation ${isMenuOpen ? 'navigation-open' : 'navigation-closed'}`}>
             <div className="container">
               <div className="nav-desktop">
                 <div className="nav-left">
@@ -257,9 +259,9 @@ const Header: React.FC<{
                     onClick={() => setShowCategories(!showCategories)}
                     className="categories-button"
                   >
-                    <Menu className="categories-icon" />
+                    <Menu className="categories-button-icon" />
                     <span>{t('header.categories')}</span>
-                    <ChevronDown className={`chevron-icon ${showCategories ? 'chevron-rotated' : ''}`} />
+                    <ChevronDown className={`categories-chevron ${showCategories ? 'categories-chevron-rotated' : ''}`} />
                   </button>
 
                   <div className="nav-categories">
@@ -267,7 +269,7 @@ const Header: React.FC<{
                       <button
                         key={category.id}
                         onClick={() => handleCategoryClick(category.id)}
-                        className="nav-category-item"
+                        className="nav-category-button"
                       >
                         {category.name}
                       </button>
@@ -275,8 +277,8 @@ const Header: React.FC<{
                   </div>
                 </div>
 
-                <div className="nav-right">
-                  <span className="stock-indicator">●</span>
+                <div className="nav-stock-indicator">
+                  <span className="stock-dot">●</span>
                   <span className="stock-text">{t('header.stock')}</span>
                 </div>
               </div>
@@ -287,10 +289,10 @@ const Header: React.FC<{
                     <button
                       key={category.id}
                       onClick={() => handleCategoryClick(category.id)}
-                      className="mobile-category-item"
+                      className="mobile-category-button"
                     >
                       <div className="mobile-category-name">{category.name}</div>
-                      <div className="mobile-category-view">{t('products.view')} →</div>
+                      <div className="mobile-category-action">{t('products.view')} →</div>
                     </button>
                   ))}
                 </div>
@@ -305,7 +307,7 @@ const Header: React.FC<{
         <>
           {/* Backdrop */}
           <div
-            className="dropdown-backdrop"
+            className="categories-backdrop"
             onClick={() => setShowCategories(false)}
           />
           
@@ -315,21 +317,19 @@ const Header: React.FC<{
             className="categories-dropdown"
           >
             <div className="container">
-              <div className="dropdown-content">
-                <div className="dropdown-categories">
-                  {categories.map((category) => (
-                    <button
-                      key={category.id}
-                      onClick={() => handleCategoryClick(category.id)}
-                      className="dropdown-category-item"
-                    >
-                      <div className="dropdown-category-name">
-                        {category.name}
-                      </div>
-                      <div className="dropdown-category-view">{t('products.view')} →</div>
-                    </button>
-                  ))}
-                </div>
+              <div className="categories-grid">
+                {categories.map((category) => (
+                  <button
+                    key={category.id}
+                    onClick={() => handleCategoryClick(category.id)}
+                    className="category-dropdown-item"
+                  >
+                    <div className="category-dropdown-name">
+                      {category.name}
+                    </div>
+                    <div className="category-dropdown-action">{t('products.view')} →</div>
+                  </button>
+                ))}
               </div>
             </div>
           </div>
