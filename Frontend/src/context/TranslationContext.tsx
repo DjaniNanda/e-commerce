@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 // Define the translation keys type
 type TranslationKey = 
@@ -87,10 +87,8 @@ interface TranslationContextType {
   language: 'fr' | 'en';
   setLanguage: (lang: 'fr' | 'en') => void;
   t: (key: TranslationKey) => string;
-  isTranslateReady: boolean;
 }
 
-// Keep your existing translations for UI elements
 const translations: Record<'fr' | 'en', Record<TranslationKey, string>> = {
   fr: {
     // Header
@@ -188,7 +186,7 @@ const translations: Record<'fr' | 'en', Record<TranslationKey, string>> = {
     'common.category': 'Catégorie',
   },
   en: {
-    // Header
+    // Same structure but Google Translate will override these anyway
     'header.search.placeholder': 'Search for auto parts...',
     'header.search.button': 'Search',
     'header.categories': 'Categories',
@@ -196,8 +194,6 @@ const translations: Record<'fr' | 'en', Record<TranslationKey, string>> = {
     'header.hours': 'Mon-Sun: 8:30 AM - 10:30 PM',
     'header.tagline': 'Premium quality auto parts',
     'header.stock': 'In stock - Fast delivery',
-    
-    // Hero Section
     'hero.title': 'Automotive Parts',
     'hero.subtitle': 'Premium Quality',
     'hero.description': 'Free delivery in Yaoundé • Cash on delivery • Guaranteed warranty',
@@ -205,8 +201,6 @@ const translations: Record<'fr' | 'en', Record<TranslationKey, string>> = {
     'hero.delivery': 'Fast delivery',
     'hero.quality': 'Guaranteed quality',
     'hero.service': '7/7 service',
-    
-    // Products
     'products.found': 'product found',
     'products.found.plural': 'products found',
     'products.search': 'Search',
@@ -221,8 +215,6 @@ const translations: Record<'fr' | 'en', Record<TranslationKey, string>> = {
     'products.view.all': 'View all products',
     'products.ready.search': 'Ready to search?',
     'products.ready.description': 'Use the search bar above or select a category to get started.',
-    
-    // Cart
     'cart.title': 'Cart',
     'cart.empty': 'Your cart is empty',
     'cart.empty.description': 'Discover our products and add them to your cart',
@@ -231,8 +223,6 @@ const translations: Record<'fr' | 'en', Record<TranslationKey, string>> = {
     'cart.free.delivery': 'Free delivery',
     'cart.payment.delivery': 'Cash on delivery',
     'cart.order': 'Place order',
-    
-    // Checkout
     'checkout.title': 'Complete order',
     'checkout.subtitle': 'Fill in your information to proceed',
     'checkout.personal.info': 'Personal information',
@@ -251,8 +241,6 @@ const translations: Record<'fr' | 'en', Record<TranslationKey, string>> = {
     'checkout.secure.order': 'Secure order',
     'checkout.confirm': 'Confirm order',
     'checkout.terms': 'By confirming, you accept our terms of sale',
-    
-    // Footer
     'footer.excellence': 'Automotive excellence',
     'footer.description': 'Your trusted partner for all your automotive parts in Cameroon. We are committed to providing premium quality products with exceptional service.',
     'footer.contact': 'Contact',
@@ -264,8 +252,6 @@ const translations: Record<'fr' | 'en', Record<TranslationKey, string>> = {
     'footer.privacy': 'Privacy Policy',
     'footer.terms': 'Terms of Use',
     'footer.support': 'Support',
-    
-    // Common
     'common.loading': 'Loading...',
     'common.error': 'Error',
     'common.retry': 'Retry',
@@ -284,181 +270,36 @@ const translations: Record<'fr' | 'en', Record<TranslationKey, string>> = {
   }
 };
 
-// Google Translate integration
-declare global {
-  interface Window {
-    google: any;
-    googleTranslateElementInit: () => void;
-  }
-}
-
 const TranslationContext = createContext<TranslationContextType | null>(null);
 
 export const TranslationProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [language, setLanguageState] = useState<'fr' | 'en'>('fr');
-  const [isTranslateReady, setIsTranslateReady] = useState(false);
-
-  // Initialize Google Translate
-  useEffect(() => {
-    const initializeGoogleTranslate = () => {
-      console.log('Initializing Google Translate...');
-      
-      // Set up the callback function
-      window.googleTranslateElementInit = () => {
-        console.log('Google Translate callback triggered');
-        try {
-          new window.google.translate.TranslateElement({
-            pageLanguage: 'fr',
-            includedLanguages: 'fr,en',
-            layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE,
-            autoDisplay: false,
-            multilanguagePage: true
-          }, 'google_translate_element');
-          
-          // Set ready flag after a short delay
-          setTimeout(() => {
-            const selectElement = document.querySelector('select.goog-te-combo') as HTMLSelectElement;
-            if (selectElement) {
-              console.log('Google Translate is ready');
-              setIsTranslateReady(true);
-            } else {
-              console.log('Google Translate select not found, retrying...');
-              // Retry after a longer delay
-              setTimeout(() => {
-                const retrySelect = document.querySelector('select.goog-te-combo') as HTMLSelectElement;
-                if (retrySelect) {
-                  console.log('Google Translate is ready (retry)');
-                  setIsTranslateReady(true);
-                }
-              }, 2000);
-            }
-          }, 1000);
-          
-        } catch (error) {
-          console.error('Error initializing Google Translate:', error);
-        }
-      };
-    };
-
-    const addGoogleTranslateScript = () => {
-      // Remove existing script if any
-      const existingScript = document.getElementById('google-translate-script');
-      if (existingScript) {
-        existingScript.remove();
-      }
-
-      const script = document.createElement('script');
-      script.id = 'google-translate-script';
-      script.type = 'text/javascript';
-      script.src = '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
-      script.async = true;
-      
-      script.onload = () => {
-        console.log('Google Translate script loaded successfully');
-      };
-      
-      script.onerror = () => {
-        console.error('Failed to load Google Translate script');
-      };
-      
-      document.head.appendChild(script);
-    };
-
-    // Initialize
-    initializeGoogleTranslate();
-    addGoogleTranslateScript();
-
-    return () => {
-      // Cleanup
-      const script = document.getElementById('google-translate-script');
-      if (script) {
-        script.remove();
-      }
-    };
-  }, []);
 
   const setLanguage = (lang: 'fr' | 'en') => {
-    console.log(`Attempting to change language to: ${lang}`);
+    console.log(`Changing language to: ${lang}`);
     setLanguageState(lang);
     
-    if (!isTranslateReady) {
-      console.log('Google Translate not ready yet, waiting...');
-      return;
-    }
-    
-    // Use multiple attempts to trigger Google Translate
-    const triggerTranslation = (attempt = 1) => {
-      const googleTranslateSelect = document.querySelector('select.goog-te-combo') as HTMLSelectElement;
-      
-      if (googleTranslateSelect) {
-        console.log(`Setting Google Translate to: ${lang} (attempt ${attempt})`);
-        
-        // Set the value
-        googleTranslateSelect.value = lang === 'en' ? 'en' : 'fr';
-        
-        // Trigger multiple events to ensure it works
-        const events = ['change', 'input', 'blur'];
-        events.forEach(eventType => {
-          const event = new Event(eventType, { bubbles: true });
-          googleTranslateSelect.dispatchEvent(event);
-        });
-        
-        // Also try with custom event
-        const changeEvent = new CustomEvent('change', { 
-          bubbles: true, 
-          detail: { value: googleTranslateSelect.value } 
-        });
-        googleTranslateSelect.dispatchEvent(changeEvent);
-        
-        console.log(`Language change triggered for: ${googleTranslateSelect.value}`);
-        
+    // Trigger Google Translate (from index.html)
+    setTimeout(() => {
+      const googleSelect = document.querySelector('select.goog-te-combo') as HTMLSelectElement;
+      if (googleSelect) {
+        console.log('Found Google Translate select, triggering change');
+        googleSelect.value = lang === 'en' ? 'en' : 'fr';
+        googleSelect.dispatchEvent(new Event('change'));
       } else {
-        console.log(`Google Translate select not found (attempt ${attempt})`);
-        
-        // Retry up to 5 times
-        if (attempt < 5) {
-          setTimeout(() => triggerTranslation(attempt + 1), 500);
-        } else {
-          console.error('Failed to find Google Translate select after 5 attempts');
-        }
+        console.log('Google Translate select not found');
       }
-    };
-    
-    // Start the translation process
-    setTimeout(() => triggerTranslation(), 100);
+    }, 500);
   };
 
   const t = (key: TranslationKey): string => {
-    // Return French by default - Google Translate will handle the translation
     return translations['fr'][key] || key;
   };
 
-  // Debug info
-  useEffect(() => {
-    console.log(`Current language state: ${language}, Translate ready: ${isTranslateReady}`);
-  }, [language, isTranslateReady]);
-
   return (
-    <>
-      {/* Google Translate Element - temporarily visible for debugging */}
-      <div 
-        id="google_translate_element" 
-        style={{ 
-          position: 'fixed', 
-          top: '10px', 
-          right: '10px', 
-          zIndex: 9999,
-          background: 'white',
-          padding: '5px',
-          border: '1px solid red',
-          fontSize: '12px'
-        }}
-      ></div>
-      
-      <TranslationContext.Provider value={{ language, setLanguage, t, isTranslateReady }}>
-        {children}
-      </TranslationContext.Provider>
-    </>
+    <TranslationContext.Provider value={{ language, setLanguage, t }}>
+      {children}
+    </TranslationContext.Provider>
   );
 };
 
