@@ -4,7 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useTranslation } from '../context/TranslationContext';
 import { useCategories } from '../hooks/useCategories';
-import './Header.css';
+import '../components styles/Header.css';
 
 const Header: React.FC<{
   onSearch?: (query: string) => void;
