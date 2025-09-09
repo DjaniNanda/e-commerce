@@ -58,10 +58,10 @@ const Cart: React.FC<{
     setShowCheckout(true);
   };
 
-   return (
+  return (
     <>
       <div className="cart-overlay">
-        <div className="cart-container">
+        <div className="cart-panel">
           {/* Header */}
           <div className="cart-header">
             <h2 className="cart-title">
@@ -80,14 +80,14 @@ const Cart: React.FC<{
             {state.items.length === 0 ? (
               <div className="cart-empty">
                 <div className="cart-empty-content">
-                  <div className="cart-empty-icon-container">
+                  <div className="cart-empty-icon-wrapper">
                     <ShoppingCart className="cart-empty-icon" />
                   </div>
                   <h3 className="cart-empty-title">{t('cart.empty')}</h3>
                   <p className="cart-empty-description">{t('cart.empty.description')}</p>
                   <button
                     onClick={onClose}
-                    className="cart-continue-shopping-button"
+                    className="cart-continue-button"
                   >
                     {t('cart.continue.shopping')}
                   </button>
@@ -97,10 +97,10 @@ const Cart: React.FC<{
               <>
                 {/* Cart Items - Scrollable */}
                 <div className="cart-items-container">
-                  <div className="cart-items">
+                  <div className="cart-items-list">
                     {state.items.map((item) => (
                       <div key={item.product.id} className="cart-item">
-                        <div className="cart-item-content">
+                        <div className="cart-item-info">
                           <div className="cart-item-image">
                             <img
                               src={item.product.images[0]}
@@ -116,30 +116,30 @@ const Cart: React.FC<{
                           </div>
                         </div>
                         
-                        <div className="cart-item-actions">
-                          <div className="cart-item-quantity">
+                        <div className="cart-item-controls">
+                          <div className="quantity-controls">
                             <button
                               onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
-                              className="cart-quantity-button"
+                              className="quantity-button"
                             >
-                              <Minus className="cart-quantity-icon" />
+                              <Minus className="quantity-icon" />
                             </button>
                             
-                            <span className="cart-quantity-display">{item.quantity}</span>
+                            <span className="quantity-display">{item.quantity}</span>
                             
                             <button
                               onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
-                              className="cart-quantity-button"
+                              className="quantity-button"
                             >
-                              <Plus className="cart-quantity-icon" />
+                              <Plus className="quantity-icon" />
                             </button>
                           </div>
                           
                           <button
                             onClick={() => removeItem(item.product.id)}
-                            className="cart-remove-button"
+                            className="remove-button"
                           >
-                            <Trash2 className="cart-remove-icon" />
+                            <Trash2 className="remove-icon" />
                           </button>
                         </div>
                       </div>
@@ -150,17 +150,17 @@ const Cart: React.FC<{
                 {/* Fixed Bottom Section - Always visible */}
                 <div className="cart-footer">
                   <div className="cart-footer-content">
-                    <div className="cart-total">
+                    <div className="cart-total-row">
                       <span className="cart-total-label">{t('cart.total')}:</span>
                       <span className="cart-total-amount">
                         {formatPrice(state.total)}
                       </span>
                     </div>
                     
-                    <div className="cart-delivery-info">
-                      <div className="cart-delivery-content">
+                    <div className="cart-benefits">
+                      <div className="cart-benefits-content">
                         <span>✓ {t('cart.free.delivery')}</span>
-                        <span className="cart-delivery-separator">•</span>
+                        <span className="cart-benefits-separator">•</span>
                         <span>✓ {t('cart.payment.delivery')}</span>
                       </div>
                     </div>
