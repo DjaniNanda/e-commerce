@@ -1,12 +1,96 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+
+// Define the translation keys type
+type TranslationKey = 
+  | 'header.search.placeholder'
+  | 'header.search.button'
+  | 'header.categories'
+  | 'header.delivery'
+  | 'header.hours'
+  | 'header.tagline'
+  | 'header.stock'
+  | 'hero.title'
+  | 'hero.subtitle'
+  | 'hero.description'
+  | 'hero.stock'
+  | 'hero.delivery'
+  | 'hero.quality'
+  | 'hero.service'
+  | 'products.found'
+  | 'products.found.plural'
+  | 'products.search'
+  | 'products.category'
+  | 'products.clear.filters'
+  | 'products.view'
+  | 'products.details'
+  | 'products.add'
+  | 'products.warranty'
+  | 'products.none.found'
+  | 'products.none.description'
+  | 'products.view.all'
+  | 'products.ready.search'
+  | 'products.ready.description'
+  | 'cart.title'
+  | 'cart.empty'
+  | 'cart.empty.description'
+  | 'cart.continue.shopping'
+  | 'cart.total'
+  | 'cart.free.delivery'
+  | 'cart.payment.delivery'
+  | 'cart.order'
+  | 'checkout.title'
+  | 'checkout.subtitle'
+  | 'checkout.personal.info'
+  | 'checkout.first.name'
+  | 'checkout.last.name'
+  | 'checkout.phone'
+  | 'checkout.delivery.address'
+  | 'checkout.city'
+  | 'checkout.quarter'
+  | 'checkout.exact.location'
+  | 'checkout.order.summary'
+  | 'checkout.payment.method'
+  | 'checkout.cash.delivery'
+  | 'checkout.free.delivery.yaounde'
+  | 'checkout.shipping.cameroon'
+  | 'checkout.secure.order'
+  | 'checkout.confirm'
+  | 'checkout.terms'
+  | 'footer.excellence'
+  | 'footer.description'
+  | 'footer.contact'
+  | 'footer.hours'
+  | 'footer.monday.friday'
+  | 'footer.saturday'
+  | 'footer.sunday'
+  | 'footer.rights'
+  | 'footer.privacy'
+  | 'footer.terms'
+  | 'footer.support'
+  | 'common.loading'
+  | 'common.error'
+  | 'common.retry'
+  | 'common.cancel'
+  | 'common.save'
+  | 'common.delete'
+  | 'common.edit'
+  | 'common.add'
+  | 'common.remove'
+  | 'common.quantity'
+  | 'common.price'
+  | 'common.total'
+  | 'common.name'
+  | 'common.description'
+  | 'common.category';
 
 interface TranslationContextType {
   language: 'fr' | 'en';
   setLanguage: (lang: 'fr' | 'en') => void;
-  t: (key: string) => string;
+  t: (key: TranslationKey) => string;
 }
 
-const translations = {
+// Keep your existing translations for UI elements
+const translations: Record<'fr' | 'en', Record<TranslationKey, string>> = {
   fr: {
     // Header
     'header.search.placeholder': 'Rechercher des pièces automobiles...',
@@ -199,19 +283,76 @@ const translations = {
   }
 };
 
+// Google Translate integration
+declare global {
+  interface Window {
+    google: any;
+    googleTranslateElementInit: () => void;
+  }
+}
+
 const TranslationContext = createContext<TranslationContextType | null>(null);
 
 export const TranslationProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [language, setLanguage] = useState<'fr' | 'en'>('fr');
+  const [language, setLanguageState] = useState<'fr' | 'en'>('fr');
 
-  const t = (key: string): string => {
-    return translations[language][key] || key;
+  // Initialize Google Translate
+  useEffect(() => {
+    const addGoogleTranslateScript = () => {
+      if (document.getElementById('google-translate-script')) {
+        return;
+      }
+
+      const script = document.createElement('script');
+      script.id = 'google-translate-script';
+      script.type = 'text/javascript';
+      script.src = '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+      document.head.appendChild(script);
+    };
+
+    const initializeGoogleTranslate = () => {
+      window.googleTranslateElementInit = () => {
+        new window.google.translate.TranslateElement({
+          pageLanguage: 'fr',
+          includedLanguages: 'fr,en',
+          layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE,
+          autoDisplay: false
+        }, 'google_translate_element');
+      };
+    };
+
+    initializeGoogleTranslate();
+    addGoogleTranslateScript();
+  }, []);
+
+  const setLanguage = (lang: 'fr' | 'en') => {
+    setLanguageState(lang);
+    
+    // Trigger Google Translate
+    setTimeout(() => {
+      const googleTranslateSelect = document.querySelector('select.goog-te-combo') as HTMLSelectElement;
+      if (googleTranslateSelect) {
+        googleTranslateSelect.value = lang === 'en' ? 'en' : 'fr';
+        googleTranslateSelect.dispatchEvent(new Event('change'));
+      }
+    }, 100);
+  };
+
+  const t = (key: TranslationKey): string => {
+    // Return French by default - Google Translate will handle the translation
+    // This way your backend data will also be translated
+    return translations['fr'][key] || key;
   };
 
   return (
-    <TranslationContext.Provider value={{ language, setLanguage, t }}>
-      {children}
-    </TranslationContext.Provider>
+    <>
+      {/* Hidden Google Translate Element */}
+      <div id="google_translate_element" style={{ display: 'none' }}></div>
+      
+      <TranslationContext.Provider value={{ language, setLanguage, t }}>
+        {children}
+      </TranslationContext.Provider>
+    </>
   );
 };
 
