@@ -1,0 +1,60 @@
+#google_translate_element {
+  display: none !important;
+}
+
+.goog-te-banner-frame {
+  display: none !important;
+}
+
+.goog-te-banner-frame.skiptranslate {
+  display: none !important;
+}
+
+body {
+  top: 0px !important;
+}
+
+.goog-te-gadget {
+  display: none !important;
+}
+
+.goog-logo-link {
+  display: none !important;
+}
+
+.goog-te-gadget > span > a {
+  display: none !important;
+}
+
+/* Style the language selector in your header */
+.language-select {
+  background: transparent;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
+@media (min-width: 768px) {
+  .language-select {
+    font-size: 0.875rem;
+  }
+}
+
+.language-select option {
+  background-color: white;
+  color: black;
+}
+
+.language-select:focus {
+  outline: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 0.25rem;
+}
+
+/* Optional: Translation loading indicator */
+.translating {
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
