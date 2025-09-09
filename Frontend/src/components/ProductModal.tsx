@@ -7,7 +7,7 @@ import '../components styles/ProductModal.css';
 
 // Translation wrapper component for backend content
 const TranslatableText: React.FC<{ 
-  children: string; 
+  children: React.ReactNode; 
   className?: string;
   element?: 'span' | 'h1' | 'h2' | 'h3' | 'h4' | 'p' | 'div' | 'li';
 }> = ({ children, className = '', element = 'span' }) => {
