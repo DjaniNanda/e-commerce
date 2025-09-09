@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 
 // Define the translation keys type
 type TranslationKey = 
@@ -186,7 +186,7 @@ const translations: Record<'fr' | 'en', Record<TranslationKey, string>> = {
     'common.category': 'Catégorie',
   },
   en: {
-    // Same structure but Google Translate will override these anyway
+    // Header
     'header.search.placeholder': 'Search for auto parts...',
     'header.search.button': 'Search',
     'header.categories': 'Categories',
@@ -194,6 +194,8 @@ const translations: Record<'fr' | 'en', Record<TranslationKey, string>> = {
     'header.hours': 'Mon-Sun: 8:30 AM - 10:30 PM',
     'header.tagline': 'Premium quality auto parts',
     'header.stock': 'In stock - Fast delivery',
+    
+    // Hero Section
     'hero.title': 'Automotive Parts',
     'hero.subtitle': 'Premium Quality',
     'hero.description': 'Free delivery in Yaoundé • Cash on delivery • Guaranteed warranty',
@@ -201,6 +203,8 @@ const translations: Record<'fr' | 'en', Record<TranslationKey, string>> = {
     'hero.delivery': 'Fast delivery',
     'hero.quality': 'Guaranteed quality',
     'hero.service': '7/7 service',
+    
+    // Products
     'products.found': 'product found',
     'products.found.plural': 'products found',
     'products.search': 'Search',
@@ -215,6 +219,8 @@ const translations: Record<'fr' | 'en', Record<TranslationKey, string>> = {
     'products.view.all': 'View all products',
     'products.ready.search': 'Ready to search?',
     'products.ready.description': 'Use the search bar above or select a category to get started.',
+    
+    // Cart
     'cart.title': 'Cart',
     'cart.empty': 'Your cart is empty',
     'cart.empty.description': 'Discover our products and add them to your cart',
@@ -223,6 +229,8 @@ const translations: Record<'fr' | 'en', Record<TranslationKey, string>> = {
     'cart.free.delivery': 'Free delivery',
     'cart.payment.delivery': 'Cash on delivery',
     'cart.order': 'Place order',
+    
+    // Checkout
     'checkout.title': 'Complete order',
     'checkout.subtitle': 'Fill in your information to proceed',
     'checkout.personal.info': 'Personal information',
@@ -241,6 +249,8 @@ const translations: Record<'fr' | 'en', Record<TranslationKey, string>> = {
     'checkout.secure.order': 'Secure order',
     'checkout.confirm': 'Confirm order',
     'checkout.terms': 'By confirming, you accept our terms of sale',
+    
+    // Footer
     'footer.excellence': 'Automotive excellence',
     'footer.description': 'Your trusted partner for all your automotive parts in Cameroon. We are committed to providing premium quality products with exceptional service.',
     'footer.contact': 'Contact',
@@ -252,6 +262,8 @@ const translations: Record<'fr' | 'en', Record<TranslationKey, string>> = {
     'footer.privacy': 'Privacy Policy',
     'footer.terms': 'Terms of Use',
     'footer.support': 'Support',
+    
+    // Common
     'common.loading': 'Loading...',
     'common.error': 'Error',
     'common.retry': 'Retry',
@@ -272,28 +284,67 @@ const translations: Record<'fr' | 'en', Record<TranslationKey, string>> = {
 
 const TranslationContext = createContext<TranslationContextType | null>(null);
 
+// Function to trigger Google Translate with better timing
+const triggerGoogleTranslate = (targetLang: 'fr' | 'en') => {
+  const attemptTranslation = (attempts = 0) => {
+    const maxAttempts = 10;
+    const googleSelect = document.querySelector('select.goog-te-combo') as HTMLSelectElement;
+    
+    if (googleSelect) {
+      console.log(`Found Google Translate select, changing to ${targetLang}`);
+      const targetValue = targetLang === 'en' ? 'en' : 'fr';
+      
+      if (googleSelect.value !== targetValue) {
+        googleSelect.value = targetValue;
+        googleSelect.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+    } else if (attempts < maxAttempts) {
+      console.log(`Google Translate select not found, attempt ${attempts + 1}/${maxAttempts}`);
+      setTimeout(() => attemptTranslation(attempts + 1), 1000);
+    } else {
+      console.log('Google Translate select not found after maximum attempts');
+    }
+  };
+  
+  attemptTranslation();
+};
+
 export const TranslationProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [language, setLanguageState] = useState<'fr' | 'en'>('fr');
+
+  // Listen for Google Translate changes
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      const googleSelect = document.querySelector('select.goog-te-combo') as HTMLSelectElement;
+      if (googleSelect && googleSelect.value) {
+        const detectedLang = googleSelect.value === 'en' ? 'en' : 'fr';
+        if (detectedLang !== language) {
+          setLanguageState(detectedLang);
+        }
+      }
+    });
+
+    observer.observe(document.body, { 
+      childList: true, 
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['value']
+    });
+
+    return () => observer.disconnect();
+  }, [language]);
 
   const setLanguage = (lang: 'fr' | 'en') => {
     console.log(`Changing language to: ${lang}`);
     setLanguageState(lang);
     
-    // Trigger Google Translate (from index.html)
-    setTimeout(() => {
-      const googleSelect = document.querySelector('select.goog-te-combo') as HTMLSelectElement;
-      if (googleSelect) {
-        console.log('Found Google Translate select, triggering change');
-        googleSelect.value = lang === 'en' ? 'en' : 'fr';
-        googleSelect.dispatchEvent(new Event('change'));
-      } else {
-        console.log('Google Translate select not found');
-      }
-    }, 500);
+    // Trigger Google Translate with better error handling
+    triggerGoogleTranslate(lang);
   };
 
   const t = (key: TranslationKey): string => {
-    return translations['fr'][key] || key;
+    // FIX: Use the current language instead of always 'fr'
+    return translations[language][key] || translations['fr'][key] || key;
   };
 
   return (
