@@ -87,6 +87,7 @@ interface TranslationContextType {
   language: 'fr' | 'en';
   setLanguage: (lang: 'fr' | 'en') => void;
   t: (key: TranslationKey) => string;
+  isTranslateReady: boolean;
 }
 
 // Keep your existing translations for UI elements
@@ -295,61 +296,166 @@ const TranslationContext = createContext<TranslationContextType | null>(null);
 
 export const TranslationProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [language, setLanguageState] = useState<'fr' | 'en'>('fr');
+  const [isTranslateReady, setIsTranslateReady] = useState(false);
 
   // Initialize Google Translate
   useEffect(() => {
+    const initializeGoogleTranslate = () => {
+      console.log('Initializing Google Translate...');
+      
+      // Set up the callback function
+      window.googleTranslateElementInit = () => {
+        console.log('Google Translate callback triggered');
+        try {
+          new window.google.translate.TranslateElement({
+            pageLanguage: 'fr',
+            includedLanguages: 'fr,en',
+            layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE,
+            autoDisplay: false,
+            multilanguagePage: true
+          }, 'google_translate_element');
+          
+          // Set ready flag after a short delay
+          setTimeout(() => {
+            const selectElement = document.querySelector('select.goog-te-combo') as HTMLSelectElement;
+            if (selectElement) {
+              console.log('Google Translate is ready');
+              setIsTranslateReady(true);
+            } else {
+              console.log('Google Translate select not found, retrying...');
+              // Retry after a longer delay
+              setTimeout(() => {
+                const retrySelect = document.querySelector('select.goog-te-combo') as HTMLSelectElement;
+                if (retrySelect) {
+                  console.log('Google Translate is ready (retry)');
+                  setIsTranslateReady(true);
+                }
+              }, 2000);
+            }
+          }, 1000);
+          
+        } catch (error) {
+          console.error('Error initializing Google Translate:', error);
+        }
+      };
+    };
+
     const addGoogleTranslateScript = () => {
-      if (document.getElementById('google-translate-script')) {
-        return;
+      // Remove existing script if any
+      const existingScript = document.getElementById('google-translate-script');
+      if (existingScript) {
+        existingScript.remove();
       }
 
       const script = document.createElement('script');
       script.id = 'google-translate-script';
       script.type = 'text/javascript';
       script.src = '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+      script.async = true;
+      
+      script.onload = () => {
+        console.log('Google Translate script loaded successfully');
+      };
+      
+      script.onerror = () => {
+        console.error('Failed to load Google Translate script');
+      };
+      
       document.head.appendChild(script);
     };
 
-    const initializeGoogleTranslate = () => {
-      window.googleTranslateElementInit = () => {
-        new window.google.translate.TranslateElement({
-          pageLanguage: 'fr',
-          includedLanguages: 'fr,en',
-          layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE,
-          autoDisplay: false
-        }, 'google_translate_element');
-      };
-    };
-
+    // Initialize
     initializeGoogleTranslate();
     addGoogleTranslateScript();
+
+    return () => {
+      // Cleanup
+      const script = document.getElementById('google-translate-script');
+      if (script) {
+        script.remove();
+      }
+    };
   }, []);
 
   const setLanguage = (lang: 'fr' | 'en') => {
+    console.log(`Attempting to change language to: ${lang}`);
     setLanguageState(lang);
     
-    // Trigger Google Translate
-    setTimeout(() => {
+    if (!isTranslateReady) {
+      console.log('Google Translate not ready yet, waiting...');
+      return;
+    }
+    
+    // Use multiple attempts to trigger Google Translate
+    const triggerTranslation = (attempt = 1) => {
       const googleTranslateSelect = document.querySelector('select.goog-te-combo') as HTMLSelectElement;
+      
       if (googleTranslateSelect) {
+        console.log(`Setting Google Translate to: ${lang} (attempt ${attempt})`);
+        
+        // Set the value
         googleTranslateSelect.value = lang === 'en' ? 'en' : 'fr';
-        googleTranslateSelect.dispatchEvent(new Event('change'));
+        
+        // Trigger multiple events to ensure it works
+        const events = ['change', 'input', 'blur'];
+        events.forEach(eventType => {
+          const event = new Event(eventType, { bubbles: true });
+          googleTranslateSelect.dispatchEvent(event);
+        });
+        
+        // Also try with custom event
+        const changeEvent = new CustomEvent('change', { 
+          bubbles: true, 
+          detail: { value: googleTranslateSelect.value } 
+        });
+        googleTranslateSelect.dispatchEvent(changeEvent);
+        
+        console.log(`Language change triggered for: ${googleTranslateSelect.value}`);
+        
+      } else {
+        console.log(`Google Translate select not found (attempt ${attempt})`);
+        
+        // Retry up to 5 times
+        if (attempt < 5) {
+          setTimeout(() => triggerTranslation(attempt + 1), 500);
+        } else {
+          console.error('Failed to find Google Translate select after 5 attempts');
+        }
       }
-    }, 100);
+    };
+    
+    // Start the translation process
+    setTimeout(() => triggerTranslation(), 100);
   };
 
   const t = (key: TranslationKey): string => {
     // Return French by default - Google Translate will handle the translation
-    // This way your backend data will also be translated
     return translations['fr'][key] || key;
   };
 
+  // Debug info
+  useEffect(() => {
+    console.log(`Current language state: ${language}, Translate ready: ${isTranslateReady}`);
+  }, [language, isTranslateReady]);
+
   return (
     <>
-      {/* Hidden Google Translate Element */}
-      <div id="google_translate_element" style={{ display: 'none' }}></div>
+      {/* Google Translate Element - temporarily visible for debugging */}
+      <div 
+        id="google_translate_element" 
+        style={{ 
+          position: 'fixed', 
+          top: '10px', 
+          right: '10px', 
+          zIndex: 9999,
+          background: 'white',
+          padding: '5px',
+          border: '1px solid red',
+          fontSize: '12px'
+        }}
+      ></div>
       
-      <TranslationContext.Provider value={{ language, setLanguage, t }}>
+      <TranslationContext.Provider value={{ language, setLanguage, t, isTranslateReady }}>
         {children}
       </TranslationContext.Provider>
     </>
