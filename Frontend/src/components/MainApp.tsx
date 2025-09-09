@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo, useRef } from 'react';
+import React, { useEffect, useState, useCallback, useMemo, useRef } from 'react';
 import Header from './Header';
 import ProductCard from './ProductCard';
 import ProductModal from './ProductModal';
@@ -10,9 +10,90 @@ import { Product } from '../types';
 import { Car, Grid, List, MapPin, Phone, Search } from 'lucide-react';
 import '../components styles/MainApp.css';
 
+// Translation utilities (create these in utils/translationUtils.ts)
+const triggerGoogleTranslate = (targetLanguage: 'fr' | 'en' = 'en') => {
+  // Remove temporary notranslate classes
+  const elements = document.querySelectorAll('.notranslate-temp');
+  elements.forEach(el => {
+    el.classList.remove('notranslate-temp');
+    if (targetLanguage === 'en') {
+      el.classList.add('translate-content');
+    } else {
+      el.classList.remove('translate-content');
+    }
+  });
+
+  // Trigger Google Translate
+  if (window.google && window.google.translate) {
+    const googleSelect = document.querySelector('select.goog-te-combo') as HTMLSelectElement;
+    if (googleSelect) {
+      const targetValue = targetLanguage === 'en' ? 'en' : 'fr';
+      
+      if (googleSelect.value !== targetValue) {
+        googleSelect.value = targetValue;
+        googleSelect.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+    }
+  }
+};
+
+const waitForGoogleTranslate = (callback: () => void, maxAttempts = 10) => {
+  let attempts = 0;
+  
+  const checkReady = () => {
+    attempts++;
+    
+    const googleSelect = document.querySelector('select.goog-te-combo') as HTMLSelectElement;
+    
+    if (googleSelect || attempts >= maxAttempts) {
+      callback();
+    } else {
+      setTimeout(checkReady, 1000);
+    }
+  };
+  
+  checkReady();
+};
+
+const initTranslationForDynamicContent = () => {
+  // Create a MutationObserver to watch for new content
+  const observer = new MutationObserver((mutations) => {
+    let hasNewTranslatableContent = false;
+    
+    mutations.forEach((mutation) => {
+      mutation.addedNodes.forEach((node) => {
+        if (node.nodeType === Node.ELEMENT_NODE) {
+          const element = node as Element;
+          if (element.querySelector('[data-translate="true"]') || element.hasAttribute('data-translate')) {
+            hasNewTranslatableContent = true;
+          }
+        }
+      });
+    });
+    
+    if (hasNewTranslatableContent) {
+      // Debounce the translation trigger
+      clearTimeout((window as any).translationTimeout);
+      (window as any).translationTimeout = setTimeout(() => {
+        const googleSelect = document.querySelector('select.goog-te-combo') as HTMLSelectElement;
+        const currentLang = (googleSelect && googleSelect.value === 'en') ? 'en' : 'fr';
+        triggerGoogleTranslate(currentLang);
+      }, 500);
+    }
+  });
+  
+  // Start observing
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true
+  });
+  
+  return observer;
+};
+
 const MainApp: React.FC = () => {
   const { products, productsCount, loading, error, searchProducts, filterProducts } = useProducts();
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   useCategories();
   
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -32,6 +113,40 @@ const MainApp: React.FC = () => {
   const lastSelectedCategory = useRef('');
   const lastFilters = useRef(filters);
 
+  // Initialize translation support for dynamic content
+  useEffect(() => {
+    console.log('Initializing translation support for dynamic content');
+    const observer = initTranslationForDynamicContent();
+    
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
+  // Trigger translation when language changes
+  useEffect(() => {
+    console.log('Language changed to:', language);
+    
+    if (products && products.length > 0) {
+      waitForGoogleTranslate(() => {
+        console.log('Triggering translation for language change');
+        triggerGoogleTranslate(language);
+      });
+    }
+  }, [language, products]);
+
+  // Trigger translation when products change (new search results, etc.)
+  useEffect(() => {
+    if (products && products.length > 0) {
+      console.log('Products updated, triggering translation after delay');
+      const timeoutId = setTimeout(() => {
+        triggerGoogleTranslate(language);
+      }, 300); // Small delay to ensure DOM is updated
+      
+      return () => clearTimeout(timeoutId);
+    }
+  }, [products, language]);
+
   // Memoize filter parameters
   const filterParams = useMemo(() => {
     const params = {
@@ -47,7 +162,7 @@ const MainApp: React.FC = () => {
   }, [searchQuery, selectedCategory, filters.category, filters.priceRange]);
 
   // Initialize products on mount only
-  React.useEffect(() => {
+  useEffect(() => {
     if (!hasInitialized && !loading) {
       console.log('Initializing MainApp - loading initial products');
       setHasInitialized(true);
@@ -215,7 +330,7 @@ const MainApp: React.FC = () => {
                 )}
                 {selectedCategory && (
                   <span className="main-app__filter-tag main-app__filter-tag--category">
-                    {t('products.category')}: {selectedCategory}
+                    {t('products.category')}: <span data-translate="true">{selectedCategory}</span>
                   </span>
                 )}
                 <button
@@ -360,7 +475,7 @@ const MainApp: React.FC = () => {
                 </div>
                 <div className="main-app__footer-contact-item">
                   <MapPin className="main-app__footer-contact-icon" />
-                  <span className="main-app__footer-contact-text">Yaoundé, Cameroun</span>
+                  <span className="main-app__footer-contact-text" data-translate="true">Yaoundé, Cameroun</span>
                 </div>
               </div>
             </div>
