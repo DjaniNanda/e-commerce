@@ -87,6 +87,7 @@ interface TranslationContextType {
   language: 'fr' | 'en';
   setLanguage: (lang: 'fr' | 'en') => void;
   t: (key: TranslationKey) => string;
+  isGoogleTranslateReady: boolean;
 }
 
 const translations: Record<'fr' | 'en', Record<TranslationKey, string>> = {
@@ -284,11 +285,35 @@ const translations: Record<'fr' | 'en', Record<TranslationKey, string>> = {
 
 const TranslationContext = createContext<TranslationContextType | null>(null);
 
-// Function to trigger Google Translate with better timing
-const triggerGoogleTranslate = (targetLang: 'fr' | 'en') => {
-  const attemptTranslation = (attempts = 0) => {
-    const maxAttempts = 10;
-    const googleSelect = document.querySelector('select.goog-te-combo') as HTMLSelectElement;
+// Improved Google Translate integration
+const findGoogleTranslateSelect = (): HTMLSelectElement | null => {
+  // Try multiple selectors that Google Translate might use
+  const selectors = [
+    'select.goog-te-combo',
+    '.goog-te-combo',
+    'select[name="google_translate_element"]',
+    '#google_translate_element select',
+    '.goog-te-gadget select'
+  ];
+  
+  for (const selector of selectors) {
+    const element = document.querySelector(selector) as HTMLSelectElement;
+    if (element) {
+      console.log(`Found Google Translate select with selector: ${selector}`);
+      return element;
+    }
+  }
+  
+  return null;
+};
+
+const triggerGoogleTranslateImproved = (targetLang: 'fr' | 'en') => {
+  const maxAttempts = 15;
+  let attempts = 0;
+  
+  const attemptTranslation = () => {
+    attempts++;
+    const googleSelect = findGoogleTranslateSelect();
     
     if (googleSelect) {
       console.log(`Found Google Translate select, changing to ${targetLang}`);
@@ -296,29 +321,106 @@ const triggerGoogleTranslate = (targetLang: 'fr' | 'en') => {
       
       if (googleSelect.value !== targetValue) {
         googleSelect.value = targetValue;
-        googleSelect.dispatchEvent(new Event('change', { bubbles: true }));
+        
+        // Try multiple event types to ensure translation triggers
+        ['change', 'input', 'click'].forEach(eventType => {
+          googleSelect.dispatchEvent(new Event(eventType, { bubbles: true }));
+        });
+        
+        // Also try triggering on the parent elements
+        const parent = googleSelect.parentElement;
+        if (parent) {
+          parent.dispatchEvent(new Event('change', { bubbles: true }));
+        }
       }
+      
+      return true;
     } else if (attempts < maxAttempts) {
-      console.log(`Google Translate select not found, attempt ${attempts + 1}/${maxAttempts}`);
-      setTimeout(() => attemptTranslation(attempts + 1), 1000);
+      console.log(`Google Translate select not found, attempt ${attempts}/${maxAttempts}`);
+      setTimeout(attemptTranslation, 1500); // Longer delay between attempts
+      return false;
     } else {
       console.log('Google Translate select not found after maximum attempts');
+      
+      // Alternative approach: try to trigger translation through the API
+      if ((window as any).google && (window as any).google.translate) {
+        try {
+          console.log('Attempting alternative Google Translate trigger via API');
+          const translateElement = (window as any).google.translate.TranslateElement;
+          if (translateElement) {
+            // Force re-initialization
+            const element = document.getElementById('google_translate_element');
+            if (element) {
+              element.innerHTML = '';
+              new translateElement({
+                pageLanguage: 'fr',
+                includedLanguages: 'fr,en',
+                layout: translateElement.InlineLayout.SIMPLE,
+                autoDisplay: false
+              }, 'google_translate_element');
+            }
+          }
+        } catch (error) {
+          console.error('Alternative translation trigger failed:', error);
+        }
+      }
+      
+      return false;
     }
   };
   
+  // Start the attempt process
   attemptTranslation();
 };
 
 export const TranslationProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [language, setLanguageState] = useState<'fr' | 'en'>('fr');
+  const [isGoogleTranslateReady, setIsGoogleTranslateReady] = useState(false);
 
-  // Listen for Google Translate changes
+  // Listen for Google Translate readiness
   useEffect(() => {
+    const checkGoogleTranslateReady = () => {
+      const googleSelect = findGoogleTranslateSelect();
+      if (googleSelect && !isGoogleTranslateReady) {
+        console.log('Google Translate is now ready');
+        setIsGoogleTranslateReady(true);
+      }
+    };
+
+    // Check immediately
+    checkGoogleTranslateReady();
+    
+    // Also listen for the custom ready event from the HTML
+    const handleGoogleTranslateReady = () => {
+      console.log('Received Google Translate ready event');
+      setTimeout(checkGoogleTranslateReady, 1000);
+    };
+    
+    window.addEventListener('googleTranslateReady', handleGoogleTranslateReady);
+    
+    // Periodic check for the first 30 seconds
+    const interval = setInterval(checkGoogleTranslateReady, 2000);
+    const timeout = setTimeout(() => {
+      clearInterval(interval);
+    }, 30000);
+
+    return () => {
+      window.removeEventListener('googleTranslateReady', handleGoogleTranslateReady);
+      clearInterval(interval);
+      clearTimeout(timeout);
+    };
+  }, [isGoogleTranslateReady]);
+
+  // Monitor language changes from Google Translate
+  useEffect(() => {
+    if (!isGoogleTranslateReady) return;
+
     const observer = new MutationObserver(() => {
-      const googleSelect = document.querySelector('select.goog-te-combo') as HTMLSelectElement;
+      const googleSelect = findGoogleTranslateSelect();
       if (googleSelect && googleSelect.value) {
         const detectedLang = googleSelect.value === 'en' ? 'en' : 'fr';
         if (detectedLang !== language) {
+          console.log(`Detected language change from Google Translate: ${detectedLang}`);
           setLanguageState(detectedLang);
         }
       }
@@ -332,23 +434,34 @@ export const TranslationProvider: React.FC<{ children: ReactNode }> = ({ childre
     });
 
     return () => observer.disconnect();
-  }, [language]);
+  }, [language, isGoogleTranslateReady]);
 
   const setLanguage = (lang: 'fr' | 'en') => {
     console.log(`Changing language to: ${lang}`);
     setLanguageState(lang);
     
-    // Trigger Google Translate with better error handling
-    triggerGoogleTranslate(lang);
+    if (isGoogleTranslateReady) {
+      triggerGoogleTranslateImproved(lang);
+    } else {
+      console.log('Google Translate not ready yet, queuing language change');
+      // Queue the language change for when Google Translate is ready
+      const checkAndTrigger = () => {
+        if (isGoogleTranslateReady) {
+          triggerGoogleTranslateImproved(lang);
+        } else {
+          setTimeout(checkAndTrigger, 1000);
+        }
+      };
+      checkAndTrigger();
+    }
   };
 
   const t = (key: TranslationKey): string => {
-    // FIX: Use the current language instead of always 'fr'
     return translations[language][key] || translations['fr'][key] || key;
   };
 
   return (
-    <TranslationContext.Provider value={{ language, setLanguage, t }}>
+    <TranslationContext.Provider value={{ language, setLanguage, t, isGoogleTranslateReady }}>
       {children}
     </TranslationContext.Provider>
   );
