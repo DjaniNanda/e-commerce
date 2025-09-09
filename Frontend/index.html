@@ -1,53 +1,96 @@
 <!doctype html>
-<html lang="en">
+<html lang="fr">
   <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Site E-commerce AUTO-BUSINESS - Pièces Automobiles</title>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
 
-<div id="google_translate_element"></div>
+    <!-- Google Translate Element - Hidden but accessible -->
+    <div id="google_translate_element" style="display: none;"></div>
 
-<script type="text/javascript">
-function googleTranslateElementInit() {
-  new google.translate.TranslateElement({
-    pageLanguage: 'fr',
-    includedLanguages: 'fr,en',
-    layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-    autoDisplay: false
-  }, 'google_translate_element');
-}
-</script>
+    <script type="text/javascript">
+      // Global flag to track if Google Translate is ready
+      window.googleTranslateReady = false;
+      
+      function googleTranslateElementInit() {
+        try {
+          new google.translate.TranslateElement({
+            pageLanguage: 'fr',
+            includedLanguages: 'fr,en',
+            layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+            autoDisplay: false,
+            multilanguagePage: true
+          }, 'google_translate_element');
+          
+          // Mark as ready after a short delay
+          setTimeout(() => {
+            window.googleTranslateReady = true;
+            console.log('Google Translate initialized and ready');
+            
+            // Trigger a custom event to notify React
+            window.dispatchEvent(new CustomEvent('googleTranslateReady'));
+          }, 2000);
+          
+        } catch (error) {
+          console.error('Error initializing Google Translate:', error);
+        }
+      }
+      
+      // Load Google Translate script
+      window.googleTranslateElementInit = googleTranslateElementInit;
+    </script>
 
-<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    <script type="text/javascript" 
+            src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
+            onerror="console.error('Failed to load Google Translate script')">
+    </script>
 
-<style>
-/* Hide Google Translate branding */
-#google_translate_element {
-  position: fixed;
-  top: 10px;
-  right: 10px;
-  z-index: 9999;
-  background: white;
-  padding: 5px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-/* Later you can hide it with display: none when it works */
-.goog-te-banner-frame {
-  display: none !important;
-}
-
-.goog-te-banner-frame.skiptranslate {
-  display: none !important;
-}
-
-body {
-  top: 0px !important;
-}
-</style>
-
+    <style>
+      /* Hide Google Translate branding and elements */
+      #google_translate_element {
+        position: fixed;
+        top: -9999px;
+        left: -9999px;
+        z-index: -1;
+        visibility: hidden;
+        opacity: 0;
+      }
+      
+      /* Hide Google Translate banner */
+      .goog-te-banner-frame {
+        display: none !important;
+      }
+      
+      .goog-te-banner-frame.skiptranslate {
+        display: none !important;
+      }
+      
+      /* Prevent body margin changes */
+      body {
+        top: 0px !important;
+        margin-top: 0px !important;
+      }
+      
+      /* Hide the combo box but keep it functional */
+      .goog-te-combo {
+        position: absolute;
+        left: -9999px;
+        visibility: hidden;
+      }
+      
+      /* Style translated content better */
+      .goog-trans-control {
+        display: none !important;
+      }
+      
+      /* Remove Google Translate iframe */
+      iframe.goog-te-banner-frame {
+        display: none !important;
+      }
+    </style>
   </body>
 </html>
