@@ -1,5 +1,7 @@
-#google_translate_element {
-  display: none !important;
+.notranslate-temp {
+}
+
+.translate-content {
 }
 
 .goog-te-banner-frame {
@@ -10,51 +12,85 @@
   display: none !important;
 }
 
+/* Hide the Google Translate combo box but keep it functional */
+.goog-te-combo {
+  position: absolute !important;
+  left: -9999px !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+/* Prevent body displacement */
 body {
   top: 0px !important;
+  margin-top: 0px !important;
 }
 
-.goog-te-gadget {
+/* Style improvements for translated content */
+.goog-trans-control {
   display: none !important;
 }
 
-.goog-logo-link {
+/* Remove iframe from view */
+iframe.goog-te-banner-frame {
   display: none !important;
 }
 
-.goog-te-gadget > span > a {
-  display: none !important;
+/* Ensure translated text maintains proper styling */
+[data-translate="true"] {
+  transition: opacity 0.3s ease;
 }
 
-/* Style the language selector in your header */
+/* Loading state for translation */
+.translating {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+/* Language switcher improvements */
 .language-select {
-  background: transparent;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   color: white;
-  font-size: 0.75rem;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
   font-weight: 500;
-  border: none;
-  outline: none;
   cursor: pointer;
+  transition: all 0.3s ease;
 }
 
-@media (min-width: 768px) {
-  .language-select {
-    font-size: 0.875rem;
-  }
-}
-
-.language-select option {
-  background-color: white;
-  color: black;
+.language-select:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
 }
 
 .language-select:focus {
-  outline: 1px solid rgba(255, 255, 255, 0.5);
-  border-radius: 0.25rem;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
 }
 
-/* Optional: Translation loading indicator */
-.translating {
-  opacity: 0.7;
-  transition: opacity 0.3s ease;
+/* Hide Google Translate elements we don't want */
+.goog-te-ftab {
+  display: none !important;
+}
+
+.goog-te-balloon-frame {
+  display: none !important;
+}
+
+/* Product card translation adjustments */
+.product-card [data-translate="true"] {
+  display: block;
+  width: 100%;
+}
+
+/* Modal translation adjustments */
+.modal-container [data-translate="true"] {
+  display: inline-block;
+}
+
+/* Prevent layout shift during translation */
+[data-translate="true"]:empty {
+  min-height: 1em;
 }
