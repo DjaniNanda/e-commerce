@@ -7,7 +7,7 @@ import '../components styles/ProductCard.css';
 
 // Translation wrapper component for backend content
 const TranslatableText: React.FC<{ 
-  children: string; 
+  children: React.ReactNode; 
   className?: string;
   element?: 'span' | 'h3' | 'p' | 'div';
 }> = ({ children, className = '', element = 'span' }) => {
