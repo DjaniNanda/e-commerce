@@ -4,7 +4,7 @@ import { useCart } from '../context/CartContext';
 import { useTranslation } from '../context/TranslationContext';
 import CheckoutForm from './CheckoutForm';
 import OrderConfirmation from './OrderConfirmation';
-import './Cart.css';
+import '../components styles/Cart.css';
 
 const Cart: React.FC<{
   isOpen: boolean;
