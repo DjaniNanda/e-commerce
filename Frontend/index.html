@@ -18,7 +18,9 @@
       
       function googleTranslateElementInit() {
         try {
-          new google.translate.TranslateElement({
+          console.log('Initializing Google Translate...');
+          
+          const translateElement = new google.translate.TranslateElement({
             pageLanguage: 'fr',
             includedLanguages: 'fr,en',
             layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
@@ -26,22 +28,61 @@
             multilanguagePage: true
           }, 'google_translate_element');
           
-          // Mark as ready after a short delay
-          setTimeout(() => {
-            window.googleTranslateReady = true;
-            console.log('Google Translate initialized and ready');
+          console.log('Google Translate element created');
+          
+          // Check for the select element periodically
+          let checkCount = 0;
+          const maxChecks = 20;
+          
+          const checkForSelect = () => {
+            checkCount++;
+            const selectors = [
+              'select.goog-te-combo',
+              '.goog-te-combo',
+              '#google_translate_element select',
+              '.goog-te-gadget select'
+            ];
             
-            // Trigger a custom event to notify React
-            window.dispatchEvent(new CustomEvent('googleTranslateReady'));
-          }, 2000);
+            let selectFound = false;
+            for (const selector of selectors) {
+              const selectElement = document.querySelector(selector);
+              if (selectElement) {
+                console.log(`Google Translate select found with selector: ${selector}`);
+                selectFound = true;
+                break;
+              }
+            }
+            
+            if (selectFound || checkCount >= maxChecks) {
+              window.googleTranslateReady = true;
+              console.log('Google Translate initialized and ready');
+              
+              // Trigger a custom event to notify React
+              window.dispatchEvent(new CustomEvent('googleTranslateReady'));
+            } else {
+              console.log(`Checking for Google Translate select... attempt ${checkCount}/${maxChecks}`);
+              setTimeout(checkForSelect, 500);
+            }
+          };
+          
+          // Start checking after a short delay
+          setTimeout(checkForSelect, 1000);
           
         } catch (error) {
           console.error('Error initializing Google Translate:', error);
         }
       }
       
-      // Load Google Translate script
+      // Ensure the function is globally available
       window.googleTranslateElementInit = googleTranslateElementInit;
+      
+      // Fallback: if the script doesn't call our function, try calling it manually
+      setTimeout(() => {
+        if (!window.googleTranslateReady && typeof google !== 'undefined' && google.translate) {
+          console.log('Manually triggering Google Translate initialization');
+          googleTranslateElementInit();
+        }
+      }, 5000);
     </script>
 
     <script type="text/javascript" 
