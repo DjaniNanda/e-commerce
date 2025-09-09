@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Search, ShoppingCart, Menu, X, Car, MapPin, Clock, Phone, ChevronDown, Settings, Globe } from 'lucide-react';
+import { Search, ShoppingCart, Menu, X, Car, MapPin, Clock, Phone, ChevronDown, Globe } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useTranslation } from '../context/TranslationContext';
 import { useCategories } from '../hooks/useCategories';
-import '../components styles/Header.css';
+import './Header.css';
 
 const Header: React.FC<{
   onSearch?: (query: string) => void;
@@ -19,6 +19,7 @@ const Header: React.FC<{
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [showCategories, setShowCategories] = useState(false);
+  
   const { state } = useCart();
   const { categories } = useCategories();
   const { language, setLanguage, t } = useTranslation();
@@ -56,7 +57,6 @@ const Header: React.FC<{
     if (trimmedQuery) {
       onSearch(trimmedQuery);
     } else {
-      // If empty search, trigger a reset
       onSearch('');
     }
   };
@@ -103,8 +103,8 @@ const Header: React.FC<{
                     onChange={(e) => setLanguage(e.target.value as 'fr' | 'en')}
                     className="language-select"
                   >
-                    <option value="fr" className="language-option">FR</option>
-                    <option value="en" className="language-option">EN</option>
+                    <option value="fr">FR</option>
+                    <option value="en">EN</option>
                   </select>
                 </div>
                 <div className="topbar-item">
@@ -220,7 +220,7 @@ const Header: React.FC<{
               </div>
             </div>
 
-            {/* Search bar - Mobile */}
+            {/* Mobile Search */}
             {!isAdminPage && (
               <div className="search-mobile">
                 <div className="search-mobile-container">
@@ -271,6 +271,7 @@ const Header: React.FC<{
                         onClick={() => handleCategoryClick(category.id)}
                         className="nav-category-button"
                       >
+                        {/* This will be translated by Google Translate if it comes from backend */}
                         {category.name}
                       </button>
                     ))}
@@ -291,7 +292,10 @@ const Header: React.FC<{
                       onClick={() => handleCategoryClick(category.id)}
                       className="mobile-category-button"
                     >
-                      <div className="mobile-category-name">{category.name}</div>
+                      <div className="mobile-category-name">
+                        {/* Backend category names will be automatically translated */}
+                        {category.name}
+                      </div>
                       <div className="mobile-category-action">{t('products.view')} →</div>
                     </button>
                   ))}
@@ -305,13 +309,11 @@ const Header: React.FC<{
       {/* Categories Dropdown */}
       {showCategories && !isAdminPage && (
         <>
-          {/* Backdrop */}
           <div
             className="categories-backdrop"
             onClick={() => setShowCategories(false)}
           />
           
-          {/* Dropdown */}
           <div
             ref={categoriesDropdownRef}
             className="categories-dropdown"
@@ -325,6 +327,7 @@ const Header: React.FC<{
                     className="category-dropdown-item"
                   >
                     <div className="category-dropdown-name">
+                      {/* Backend data - will be automatically translated by Google */}
                       {category.name}
                     </div>
                     <div className="category-dropdown-action">{t('products.view')} →</div>
