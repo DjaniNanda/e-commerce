@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { X, Plus, Minus, Trash2, ShoppingCart } from 'lucide-react';
 import { useCart } from '../context/CartContext';
-import { useTranslation } from '../context/TranslationContext';
 import CheckoutForm from './CheckoutForm';
 import OrderConfirmation from './OrderConfirmation';
 import '../components styles/Cart.css';
@@ -11,7 +10,6 @@ const Cart: React.FC<{
   onClose: () => void;
 }> = ({ isOpen, onClose }) => {
   const { state, dispatch } = useCart();
-  const { t } = useTranslation();
   const [showCheckout, setShowCheckout] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [orderData, setOrderData] = useState<any>(null);
@@ -52,7 +50,7 @@ const Cart: React.FC<{
   const handleCheckoutClick = () => {
     console.log('Checkout button clicked, current items:', state.items);
     if (state.items.length === 0) {
-      alert(t('cart.empty'));
+      alert('Votre panier est vide');
       return;
     }
     setShowCheckout(true);
@@ -66,7 +64,7 @@ const Cart: React.FC<{
           <div className="cart-header">
             <h2 className="cart-title">
               <ShoppingCart className="cart-title-icon" />
-              {t('cart.title')} ({state.items.reduce((sum, item) => sum + item.quantity, 0)})
+              Panier ({state.items.reduce((sum, item) => sum + item.quantity, 0)})
             </h2>
             <button
               onClick={onClose}
@@ -83,13 +81,13 @@ const Cart: React.FC<{
                   <div className="cart-empty-icon-wrapper">
                     <ShoppingCart className="cart-empty-icon" />
                   </div>
-                  <h3 className="cart-empty-title">{t('cart.empty')}</h3>
-                  <p className="cart-empty-description">{t('cart.empty.description')}</p>
+                  <h3 className="cart-empty-title">Votre panier est vide</h3>
+                  <p className="cart-empty-description">Découvrez nos produits et ajoutez-les à votre panier</p>
                   <button
                     onClick={onClose}
                     className="cart-continue-button"
                   >
-                    {t('cart.continue.shopping')}
+                    Continuer les achats
                   </button>
                 </div>
               </div>
@@ -151,7 +149,7 @@ const Cart: React.FC<{
                 <div className="cart-footer">
                   <div className="cart-footer-content">
                     <div className="cart-total-row">
-                      <span className="cart-total-label">{t('cart.total')}:</span>
+                      <span className="cart-total-label">Total:</span>
                       <span className="cart-total-amount">
                         {formatPrice(state.total)}
                       </span>
@@ -159,9 +157,9 @@ const Cart: React.FC<{
                     
                     <div className="cart-benefits">
                       <div className="cart-benefits-content">
-                        <span>✓ {t('cart.free.delivery')}</span>
+                        <span>✓ Livraison gratuite</span>
                         <span className="cart-benefits-separator">•</span>
-                        <span>✓ {t('cart.payment.delivery')}</span>
+                        <span>✓ Paiement à la livraison</span>
                       </div>
                     </div>
 
@@ -169,7 +167,7 @@ const Cart: React.FC<{
                       onClick={handleCheckoutClick}
                       className="cart-checkout-button"
                     >
-                      {t('cart.order')}
+                      Passer commande
                     </button>
                   </div>
                 </div>
