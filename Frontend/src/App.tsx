@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { CartProvider } from './context/CartContext';
-import './components/styles/google-translate.css';
+import './components styles/google-translate.css';
 
 import MainApp from './components/MainApp';
 import AdminPanel from './components/AdminPanel';
