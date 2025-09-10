@@ -1,28 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { ShoppingCart, Eye, Heart } from 'lucide-react';
 import { Product } from '../types';
 import { useCart } from '../context/CartContext';
-import { useTranslation } from '../context/TranslationContext';
 import '../components styles/ProductCard.css';
-
-// Translation wrapper component for backend content
-const TranslatableText: React.FC<{ 
-  children: React.ReactNode; 
-  className?: string;
-  element?: 'span' | 'h3' | 'p' | 'div';
-}> = ({ children, className = '', element = 'span' }) => {
-  const Element = element;
-  
-  return (
-    <Element 
-      className={`${className} notranslate-temp`}
-      data-translate="true"
-      suppressHydrationWarning
-    >
-      {children}
-    </Element>
-  );
-};
 
 const ProductCard: React.FC<{
   product: Product;
@@ -30,45 +10,9 @@ const ProductCard: React.FC<{
   viewMode?: 'grid' | 'list';
 }> = ({ product, onViewDetails, viewMode = 'grid' }) => {
   const { dispatch } = useCart();
-  const { t, language } = useTranslation();
   const [isHovered, setIsHovered] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
   const [imageError, setImageError] = useState(false);
-
-  // Force Google Translate to re-scan when language changes or product data updates
-  useEffect(() => {
-    const triggerTranslation = () => {
-      // Remove temporary notranslate class to allow translation
-      const elements = document.querySelectorAll('.notranslate-temp');
-      elements.forEach(el => {
-        el.classList.remove('notranslate-temp');
-        if (language === 'en') {
-          el.classList.add('translate-content');
-        } else {
-          el.classList.remove('translate-content');
-        }
-      });
-
-      // Trigger Google Translate re-scan for new content
-      if (window.google && window.google.translate) {
-        setTimeout(() => {
-          const googleSelect = document.querySelector('select.goog-te-combo') as HTMLSelectElement;
-          if (googleSelect) {
-            // Force re-translation by toggling language
-            const currentValue = googleSelect.value;
-            const targetValue = language === 'en' ? 'en' : 'fr';
-            
-            if (currentValue !== targetValue) {
-              googleSelect.value = targetValue;
-              googleSelect.dispatchEvent(new Event('change', { bubbles: true }));
-            }
-          }
-        }, 100);
-      }
-    };
-
-    triggerTranslation();
-  }, [product, language]);
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -118,7 +62,7 @@ const ProductCard: React.FC<{
           </div>
           {product.warranty && (
             <div className="product-card__warranty-badge product-card__warranty-badge--list">
-              <TranslatableText>{t('products.warranty')} {product.warranty}</TranslatableText>
+              Garantie {product.warranty}
             </div>
           )}
         </div>
@@ -126,22 +70,16 @@ const ProductCard: React.FC<{
         <div className="product-card__content product-card__content--list">
           <div>
             <div className="product-card__header product-card__header--list">
-              <TranslatableText 
-                element="h3" 
-                className="product-card__title product-card__title--list"
-              >
+              <h3 className="product-card__title product-card__title--list">
                 {product.name}
-              </TranslatableText>
-              <TranslatableText className="product-card__category product-card__category--list">
+              </h3>
+              <span className="product-card__category product-card__category--list">
                 {product.category}
-              </TranslatableText>
+              </span>
             </div>
-            <TranslatableText 
-              element="p" 
-              className="product-card__description"
-            >
+            <p className="product-card__description">
               {product.description}
-            </TranslatableText>
+            </p>
           </div>
           
           <div className="product-card__buttons product-card__buttons--list">
@@ -158,14 +96,14 @@ const ProductCard: React.FC<{
                 className="product-card__btn product-card__btn--secondary product-card__btn--list"
               >
                 <Eye className="product-card__btn-icon product-card__btn-icon--list" />
-                {t('products.details')}
+                Détails
               </button>
               <button
                 onClick={handleAddToCart}
                 className="product-card__btn product-card__btn--primary product-card__btn--list"
               >
                 <ShoppingCart className="product-card__btn-icon product-card__btn-icon--list" />
-                {t('products.add')}
+                Ajouter
               </button>
             </div>
           </div>
@@ -206,7 +144,7 @@ const ProductCard: React.FC<{
 
         {product.warranty && (
           <div className="product-card__warranty-badge">
-            <TranslatableText>{t('products.warranty')} {product.warranty}</TranslatableText>
+            Garantie {product.warranty}
           </div>
         )}
 
@@ -217,15 +155,12 @@ const ProductCard: React.FC<{
 
       <div className="product-card__content product-card__content--grid">
         <div className="product-card__header">
-          <TranslatableText 
-            element="h3" 
-            className="product-card__title product-card__title--grid"
-          >
+          <h3 className="product-card__title product-card__title--grid">
             {product.name}
-          </TranslatableText>
-          <TranslatableText className="product-card__category product-card__category--grid">
+          </h3>
+          <span className="product-card__category product-card__category--grid">
             {product.category}
-          </TranslatableText>
+          </span>
         </div>
 
         <div className="product-card__price product-card__price--grid">
@@ -241,14 +176,14 @@ const ProductCard: React.FC<{
             className="product-card__btn product-card__btn--secondary product-card__btn--grid"
           >
             <Eye className="product-card__btn-icon product-card__btn-icon--grid" />
-            {t('products.details')}
+            Détails
           </button>
           <button
             onClick={handleAddToCart}
             className="product-card__btn product-card__btn--primary product-card__btn--grid"
           >
             <ShoppingCart className="product-card__btn-icon product-card__btn-icon--grid" />
-            {t('products.add')}
+            Ajouter
           </button>
         </div>
       </div>
