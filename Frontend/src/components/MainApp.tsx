@@ -3,97 +3,14 @@ import Header from './Header';
 import ProductCard from './ProductCard';
 import ProductModal from './ProductModal';
 import Cart from './Cart';
-import { useTranslation } from '../context/TranslationContext';
 import { useProducts } from '../hooks/useProducts';
 import { useCategories } from '../hooks/useCategories';
 import { Product } from '../types';
 import { Car, Grid, List, MapPin, Phone, Search } from 'lucide-react';
 import '../components styles/MainApp.css';
 
-// Translation utilities (create these in utils/translationUtils.ts)
-const triggerGoogleTranslate = (targetLanguage: 'fr' | 'en' = 'en') => {
-  // Remove temporary notranslate classes
-  const elements = document.querySelectorAll('.notranslate-temp');
-  elements.forEach(el => {
-    el.classList.remove('notranslate-temp');
-    if (targetLanguage === 'en') {
-      el.classList.add('translate-content');
-    } else {
-      el.classList.remove('translate-content');
-    }
-  });
-
-  // Trigger Google Translate
-  if (window.google && window.google.translate) {
-    const googleSelect = document.querySelector('select.goog-te-combo') as HTMLSelectElement;
-    if (googleSelect) {
-      const targetValue = targetLanguage === 'en' ? 'en' : 'fr';
-      
-      if (googleSelect.value !== targetValue) {
-        googleSelect.value = targetValue;
-        googleSelect.dispatchEvent(new Event('change', { bubbles: true }));
-      }
-    }
-  }
-};
-
-const waitForGoogleTranslate = (callback: () => void, maxAttempts = 10) => {
-  let attempts = 0;
-  
-  const checkReady = () => {
-    attempts++;
-    
-    const googleSelect = document.querySelector('select.goog-te-combo') as HTMLSelectElement;
-    
-    if (googleSelect || attempts >= maxAttempts) {
-      callback();
-    } else {
-      setTimeout(checkReady, 1000);
-    }
-  };
-  
-  checkReady();
-};
-
-const initTranslationForDynamicContent = () => {
-  // Create a MutationObserver to watch for new content
-  const observer = new MutationObserver((mutations) => {
-    let hasNewTranslatableContent = false;
-    
-    mutations.forEach((mutation) => {
-      mutation.addedNodes.forEach((node) => {
-        if (node.nodeType === Node.ELEMENT_NODE) {
-          const element = node as Element;
-          if (element.querySelector('[data-translate="true"]') || element.hasAttribute('data-translate')) {
-            hasNewTranslatableContent = true;
-          }
-        }
-      });
-    });
-    
-    if (hasNewTranslatableContent) {
-      // Debounce the translation trigger
-      clearTimeout((window as any).translationTimeout);
-      (window as any).translationTimeout = setTimeout(() => {
-        const googleSelect = document.querySelector('select.goog-te-combo') as HTMLSelectElement;
-        const currentLang = (googleSelect && googleSelect.value === 'en') ? 'en' : 'fr';
-        triggerGoogleTranslate(currentLang);
-      }, 500);
-    }
-  });
-  
-  // Start observing
-  observer.observe(document.body, {
-    childList: true,
-    subtree: true
-  });
-  
-  return observer;
-};
-
 const MainApp: React.FC = () => {
   const { products, productsCount, loading, error, searchProducts, filterProducts } = useProducts();
-  const { t, language } = useTranslation();
   useCategories();
   
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -112,40 +29,6 @@ const MainApp: React.FC = () => {
   const lastSearchQuery = useRef('');
   const lastSelectedCategory = useRef('');
   const lastFilters = useRef(filters);
-
-  // Initialize translation support for dynamic content
-  useEffect(() => {
-    console.log('Initializing translation support for dynamic content');
-    const observer = initTranslationForDynamicContent();
-    
-    return () => {
-      observer.disconnect();
-    };
-  }, []);
-
-  // Trigger translation when language changes
-  useEffect(() => {
-    console.log('Language changed to:', language);
-    
-    if (products && products.length > 0) {
-      waitForGoogleTranslate(() => {
-        console.log('Triggering translation for language change');
-        triggerGoogleTranslate(language);
-      });
-    }
-  }, [language, products]);
-
-  // Trigger translation when products change (new search results, etc.)
-  useEffect(() => {
-    if (products && products.length > 0) {
-      console.log('Products updated, triggering translation after delay');
-      const timeoutId = setTimeout(() => {
-        triggerGoogleTranslate(language);
-      }, 300); // Small delay to ensure DOM is updated
-      
-      return () => clearTimeout(timeoutId);
-    }
-  }, [products, language]);
 
   // Memoize filter parameters
   const filterParams = useMemo(() => {
@@ -243,7 +126,7 @@ const MainApp: React.FC = () => {
       <div className="main-app__loading">
         <div className="main-app__loading-content">
           <div className="main-app__spinner"></div>
-          <p className="main-app__loading-text">{t('common.loading')}</p>
+          <p className="main-app__loading-text">Chargement...</p>
         </div>
       </div>
     );
@@ -263,7 +146,7 @@ const MainApp: React.FC = () => {
             onClick={() => window.location.reload()}
             className="main-app__error-button"
           >
-            {t('common.retry')}
+            Réessayer
           </button>
         </div>
       </div>
@@ -287,20 +170,20 @@ const MainApp: React.FC = () => {
             <div className="main-app__hero-decoration--bottom"></div>
             <div className="main-app__hero-content">
               <h2 className="main-app__hero-title">
-                {t('hero.title')}
+                Les meilleures pièces automobiles
                 <span className="main-app__hero-subtitle">
-                  {t('hero.subtitle')}
+                  au meilleur prix
                 </span>
               </h2>
               <p className="main-app__hero-description">
-                {t('hero.description')}
+                Découvrez notre vaste catalogue de pièces détachées automobiles de qualité premium pour toutes marques et modèles.
               </p>
               <div className="main-app__hero-features">
                 {[
-                  { icon: "✓", text: t('hero.stock') },
-                  { icon: "⚡", text: t('hero.delivery') },
-                  { icon: "💎", text: t('hero.quality') },
-                  { icon: "🛡️", text: t('hero.service') }
+                  { icon: "✓", text: "Plus de 10 000 pièces en stock" },
+                  { icon: "⚡", text: "Livraison rapide" },
+                  { icon: "💎", text: "Qualité garantie" },
+                  { icon: "🛡️", text: "Service client 7j/7" }
                 ].map((item, index) => (
                   <div key={index} className="main-app__hero-feature">
                     <span className="main-app__hero-feature-icon">{item.icon}</span>
@@ -318,33 +201,33 @@ const MainApp: React.FC = () => {
             <div className="main-app__toolbar-stats">
               <span className="main-app__toolbar-count">{productsCount || 0}</span>
               <span className="main-app__toolbar-label">
-                {(productsCount || 0) === 1 ? t('products.found') : t('products.found.plural')}
+                {(productsCount || 0) === 1 ? 'produit trouvé' : 'produits trouvés'}
               </span>
             </div>
             {(searchQuery || selectedCategory) && (
               <div className="main-app__toolbar-filters">
                 {searchQuery && (
                   <span className="main-app__filter-tag main-app__filter-tag--search">
-                    {t('products.search')}: "{searchQuery}"
+                    Recherche: "{searchQuery}"
                   </span>
                 )}
                 {selectedCategory && (
                   <span className="main-app__filter-tag main-app__filter-tag--category">
-                    {t('products.category')}: <span data-translate="true">{selectedCategory}</span>
+                    Catégorie: {selectedCategory}
                   </span>
                 )}
                 <button
                   onClick={clearFilters}
                   className="main-app__clear-filters"
                 >
-                  {t('products.clear.filters')}
+                  Effacer les filtres
                 </button>
               </div>
             )}
           </div>
 
           <div className="main-app__toolbar-right">
-            <span className="main-app__view-label">{t('products.view')}:</span>
+            <span className="main-app__view-label">Affichage:</span>
             <button
               onClick={() => setViewMode('grid')}
               className={`main-app__view-button ${
@@ -372,22 +255,22 @@ const MainApp: React.FC = () => {
         {loading ? (
           <div className="main-app__products-loading">
             <div className="main-app__spinner"></div>
-            <p className="main-app__products-loading-text">{t('common.loading')}</p>
+            <p className="main-app__products-loading-text">Chargement des produits...</p>
           </div>
         ) : (productsCount || 0) === 0 && (searchQuery || selectedCategory) ? (
           <div className="main-app__no-results">
             <div className="main-app__no-results-icon">
               <Search />
             </div>
-            <h3 className="main-app__no-results-title">{t('products.none.found')}</h3>
+            <h3 className="main-app__no-results-title">Aucun produit trouvé</h3>
             <p className="main-app__no-results-description">
-              {t('products.none.description')}
+              Essayez de modifier vos critères de recherche ou explorez nos catégories.
             </p>
             <button
               onClick={clearFilters}
               className="main-app__no-results-button"
             >
-              {t('products.view.all')}
+              Voir tous les produits
             </button>
           </div>
         ) : (productsCount || 0) > 0 ? (
@@ -410,9 +293,9 @@ const MainApp: React.FC = () => {
             <div className="main-app__ready-search-icon">
               <Search />
             </div>
-            <h3 className="main-app__ready-search-title">{t('products.ready.search')}</h3>
+            <h3 className="main-app__ready-search-title">Prêt à rechercher</h3>
             <p className="main-app__ready-search-description">
-              {t('products.ready.description')}
+              Utilisez la barre de recherche ou parcourez nos catégories pour trouver les pièces dont vous avez besoin.
             </p>
           </div>
         )}
@@ -444,11 +327,11 @@ const MainApp: React.FC = () => {
                 </div>
                 <div>
                   <h3 className="main-app__footer-brand-name">AUTO-BUSINESS</h3>
-                  <p className="main-app__footer-brand-tagline">{t('footer.excellence')}</p>
+                  <p className="main-app__footer-brand-tagline">L'excellence automobile</p>
                 </div>
               </div>
               <p className="main-app__footer-description">
-                {t('footer.description')}
+                Votre partenaire de confiance pour toutes vos pièces automobiles. Qualité, fiabilité et service client exceptionnel depuis plus de 10 ans.
               </p>
               <div className="main-app__footer-social">
                 {['📧', '📱', '🌐'].map((icon, index) => (
@@ -463,7 +346,7 @@ const MainApp: React.FC = () => {
             </div>
 
             <div className="main-app__footer-section">
-              <h4>{t('footer.contact')}</h4>
+              <h4>Contact</h4>
               <div className="main-app__footer-contact">
                 <div className="main-app__footer-contact-item">
                   <Phone className="main-app__footer-contact-icon" />
@@ -475,24 +358,24 @@ const MainApp: React.FC = () => {
                 </div>
                 <div className="main-app__footer-contact-item">
                   <MapPin className="main-app__footer-contact-icon" />
-                  <span className="main-app__footer-contact-text" data-translate="true">Yaoundé, Cameroun</span>
+                  <span className="main-app__footer-contact-text">Yaoundé, Cameroun</span>
                 </div>
               </div>
             </div>
             
             <div className="main-app__footer-section">
-              <h4>{t('footer.hours')}</h4>
+              <h4>Horaires d'ouverture</h4>
               <div className="main-app__footer-hours">
                 <div className="main-app__footer-hours-item">
-                  <span>{t('footer.monday.friday')}:</span>
+                  <span>Lundi - Vendredi:</span>
                   <span className="main-app__footer-hours-time">8h30 - 22h30</span>
                 </div>
                 <div className="main-app__footer-hours-item">
-                  <span>{t('footer.saturday')}:</span>
+                  <span>Samedi:</span>
                   <span className="main-app__footer-hours-time">8h30 - 22h30</span>
                 </div>
                 <div className="main-app__footer-hours-item">
-                  <span>{t('footer.sunday')}:</span>
+                  <span>Dimanche:</span>
                   <span className="main-app__footer-hours-time">8h30 - 22h30</span>
                 </div>
               </div>
@@ -502,12 +385,12 @@ const MainApp: React.FC = () => {
           <div className="main-app__footer-bottom">
             <div className="main-app__footer-bottom-content">
               <p className="main-app__footer-copyright">
-                &copy; 2025 AUTO-BUSINESS. {t('footer.rights')}.
+                &copy; 2025 AUTO-BUSINESS. Tous droits réservés.
               </p>
               <div className="main-app__footer-links">
-                <button className="main-app__footer-link">{t('footer.privacy')}</button>
-                <button className="main-app__footer-link">{t('footer.terms')}</button>
-                <button className="main-app__footer-link">{t('footer.support')}</button>
+                <button className="main-app__footer-link">Politique de confidentialité</button>
+                <button className="main-app__footer-link">Conditions d'utilisation</button>
+                <button className="main-app__footer-link">Support</button>
               </div>
             </div>
           </div>
