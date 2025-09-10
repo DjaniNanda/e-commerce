@@ -64,7 +64,7 @@ const Cart: React.FC<{
           <div className="cart-header">
             <h2 className="cart-title">
               <ShoppingCart className="cart-title-icon" />
-              Panier ({state.items.reduce((sum, item) => sum + item.quantity, 0)})
+              Mon panier ({state.items.reduce((sum, item) => sum + item.quantity, 0)})
             </h2>
             <button
               onClick={onClose}
@@ -82,12 +82,12 @@ const Cart: React.FC<{
                     <ShoppingCart className="cart-empty-icon" />
                   </div>
                   <h3 className="cart-empty-title">Votre panier est vide</h3>
-                  <p className="cart-empty-description">Découvrez nos produits et ajoutez-les à votre panier</p>
+                  <p className="cart-empty-description">Ajoutez des produits pour commencer vos achats</p>
                   <button
                     onClick={onClose}
                     className="cart-continue-button"
                   >
-                    Continuer les achats
+                    Continuer mes achats
                   </button>
                 </div>
               </div>
@@ -167,7 +167,7 @@ const Cart: React.FC<{
                       onClick={handleCheckoutClick}
                       className="cart-checkout-button"
                     >
-                      Passer commande
+                      Passer ma commande
                     </button>
                   </div>
                 </div>
