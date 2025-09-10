@@ -1,22 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Search, ShoppingCart, Menu, X, Car, MapPin, Clock, Phone, ChevronDown, Globe } from 'lucide-react';
+import { Search, ShoppingCart, Menu, X, Car, MapPin, Clock, Phone, ChevronDown} from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useCategories } from '../hooks/useCategories';
 import '../components styles/Header.css';
 
-// Google Translate utility functions
-const triggerGoogleTranslate = (targetLanguage: 'fr' | 'en') => {
-  const googleSelect = document.querySelector('select.goog-te-combo') as HTMLSelectElement;
-  if (googleSelect) {
-    const targetValue = targetLanguage === 'en' ? 'en' : 'fr';
-    
-    if (googleSelect.value !== targetValue) {
-      googleSelect.value = targetValue;
-      googleSelect.dispatchEvent(new Event('change', { bubbles: true }));
-    }
-  }
-};
 
 const Header: React.FC<{
   onSearch?: (query: string) => void;
@@ -31,7 +19,6 @@ const Header: React.FC<{
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [showCategories, setShowCategories] = useState(false);
-  const [currentLanguage, setCurrentLanguage] = useState<'fr' | 'en'>('fr');
   
   const { state } = useCart();
   const { categories } = useCategories();
@@ -63,11 +50,6 @@ const Header: React.FC<{
     };
   }, [showCategories]);
 
-  const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newLanguage = e.target.value as 'fr' | 'en';
-    setCurrentLanguage(newLanguage);
-    triggerGoogleTranslate(newLanguage);
-  };
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -113,18 +95,6 @@ const Header: React.FC<{
                 </div>
               </div>
               <div className="topbar-right">
-                {/* Language Switcher */}
-                <div className="topbar-item">
-                  <Globe className="topbar-icon" />
-                  <select
-                    value={currentLanguage}
-                    onChange={handleLanguageChange}
-                    className="language-select"
-                  >
-                    <option value="fr">FR</option>
-                    <option value="en">EN</option>
-                  </select>
-                </div>
                 <div className="topbar-item">
                   <Phone className="topbar-icon" />
                   <span className="topbar-phone">+237 6XX XXX XXX</span>
