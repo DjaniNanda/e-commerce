@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { X, MapPin, Phone, User, CreditCard, Package, Shield } from 'lucide-react';
 import { useCart } from '../context/CartContext';
-import { useTranslation } from '../context/TranslationContext';
 import { orderService } from '../services/orderService';
 import '../components styles/CheckoutForm.css';
 
@@ -13,7 +12,6 @@ interface CheckoutFormProps {
 
 const CheckoutForm: React.FC<CheckoutFormProps> = ({ isOpen, onClose, onSubmit }) => {
   const { state } = useCart();
-  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -36,17 +34,17 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ isOpen, onClose, onSubmit }
     const newErrors: Record<string, string> = {};
 
     if (!formData.firstName.trim()) {
-      newErrors.firstName = t('checkout.first.name') + ' requis';
+      newErrors.firstName = 'Prénom requis';
     }
 
     if (!formData.lastName.trim()) {
-      newErrors.lastName = t('checkout.last.name') + ' requis';
+      newErrors.lastName = 'Nom requis';
     }
 
     if (!formData.phone.trim()) {
-      newErrors.phone = t('checkout.phone') + ' requis';
+      newErrors.phone = 'Téléphone requis';
     } else if (!/^[0-9+\-\s()]{8,}$/.test(formData.phone)) {
-      newErrors.phone = t('checkout.phone') + ' invalide';
+      newErrors.phone = 'Téléphone invalide';
     }
 
     if (!formData.address.trim()) {
@@ -54,7 +52,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ isOpen, onClose, onSubmit }
     }
 
     if (!formData.quarter.trim()) {
-      newErrors.quarter = t('checkout.quarter') + ' requis';
+      newErrors.quarter = 'Quartier requis';
     }
 
     setErrors(newErrors);
@@ -110,8 +108,8 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ isOpen, onClose, onSubmit }
         {/* Header */}
         <div className="checkout-header">
           <div>
-            <h2 className="checkout-title">{t('checkout.title')}</h2>
-            <p className="checkout-subtitle">{t('checkout.subtitle')}</p>
+            <h2 className="checkout-title">Finaliser ma commande</h2>
+            <p className="checkout-subtitle">Remplissez vos informations de livraison</p>
           </div>
           <button
             onClick={onClose}
@@ -132,13 +130,13 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ isOpen, onClose, onSubmit }
                     <div className="section-icon section-icon-blue">
                       <User className="icon" />
                     </div>
-                    {t('checkout.personal.info')}
+                    Informations personnelles
                   </h3>
                   
                   <div className="input-grid">
                     <div className="input-group">
                       <label className="input-label">
-                        {t('checkout.first.name')} *
+                        Prénom *
                       </label>
                       <input
                         type="text"
@@ -146,7 +144,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ isOpen, onClose, onSubmit }
                         value={formData.firstName}
                         onChange={handleInputChange}
                         className={`form-input ${errors.firstName ? 'form-input-error' : ''}`}
-                        placeholder={t('checkout.first.name')}
+                        placeholder="Votre prénom"
                       />
                       {errors.firstName && (
                         <p className="error-message">
@@ -158,7 +156,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ isOpen, onClose, onSubmit }
 
                     <div className="input-group">
                       <label className="input-label">
-                        {t('checkout.last.name')} *
+                        Nom *
                       </label>
                       <input
                         type="text"
@@ -166,7 +164,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ isOpen, onClose, onSubmit }
                         value={formData.lastName}
                         onChange={handleInputChange}
                         className={`form-input ${errors.lastName ? 'form-input-error' : ''}`}
-                        placeholder={t('checkout.last.name')}
+                        placeholder="Votre nom"
                       />
                       {errors.lastName && (
                         <p className="error-message">
@@ -180,7 +178,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ isOpen, onClose, onSubmit }
                   <div className="phone-input-group">
                     <label className="input-label-with-icon">
                       <Phone className="label-icon" />
-                      {t('checkout.phone')} *
+                      Téléphone *
                     </label>
                     <input
                       type="tel"
@@ -205,13 +203,13 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ isOpen, onClose, onSubmit }
                     <div className="section-icon section-icon-green">
                       <MapPin className="icon" />
                     </div>
-                    {t('checkout.delivery.address')}
+                    Adresse de livraison
                   </h3>
 
                   <div className="input-grid address-grid">
                     <div className="input-group">
                       <label className="input-label">
-                        {t('checkout.city')} *
+                        Ville *
                       </label>
                       <select
                         name="city"
@@ -227,7 +225,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ isOpen, onClose, onSubmit }
 
                     <div className="input-group">
                       <label className="input-label">
-                        {t('checkout.quarter')} *
+                        Quartier *
                       </label>
                       <input
                         type="text"
@@ -235,7 +233,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ isOpen, onClose, onSubmit }
                         value={formData.quarter}
                         onChange={handleInputChange}
                         className={`form-input ${errors.quarter ? 'form-input-error' : ''}`}
-                        placeholder={t('checkout.quarter')}
+                        placeholder="Votre quartier"
                       />
                       {errors.quarter && (
                         <p className="error-message">
@@ -248,7 +246,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ isOpen, onClose, onSubmit }
 
                   <div className="input-group">
                     <label className="input-label">
-                      {t('checkout.exact.location')} *
+                      Localisation exacte *
                     </label>
                     <input
                       type="text"
@@ -275,7 +273,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ isOpen, onClose, onSubmit }
                   <div className="order-summary-header">
                     <h3 className="order-summary-title">
                       <Package className="order-icon" />
-                      {t('checkout.order.summary')}
+                      Résumé de la commande
                     </h3>
                   </div>
                   
@@ -298,7 +296,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ isOpen, onClose, onSubmit }
                     
                     <div className="order-total">
                       <div className="order-total-row">
-                        <span className="order-total-label">{t('common.total')}:</span>
+                        <span className="order-total-label">Total:</span>
                         <span className="order-total-amount">{formatPrice(state.total)}</span>
                       </div>
                     </div>
@@ -309,20 +307,20 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ isOpen, onClose, onSubmit }
                 <div className="payment-info">
                   <h4 className="payment-title">
                     <CreditCard className="payment-icon" />
-                    {t('checkout.payment.method')}
+                    Mode de paiement
                   </h4>
                   <div className="payment-options">
                     <div className="payment-option">
                       <div className="payment-dot payment-dot-blue"></div>
-                      <span>{t('checkout.cash.delivery')}</span>
+                      <span>Paiement à la livraison</span>
                     </div>
                     <div className="payment-option">
                       <div className="payment-dot payment-dot-green"></div>
-                      <span>{t('checkout.free.delivery.yaounde')}</span>
+                      <span>Livraison gratuite à Yaoundé</span>
                     </div>
                     <div className="payment-option">
                       <div className="payment-dot payment-dot-orange"></div>
-                      <span>{t('checkout.shipping.cameroon')}</span>
+                      <span>Expédition dans tout le Cameroun</span>
                     </div>
                   </div>
                 </div>
@@ -331,7 +329,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ isOpen, onClose, onSubmit }
                 <div className="security-badge">
                   <div className="security-content">
                     <Shield className="security-icon" />
-                    <span className="security-text">{t('checkout.secure.order')}</span>
+                    <span className="security-text">Commande sécurisée</span>
                   </div>
                 </div>
               </div>
@@ -352,12 +350,12 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ isOpen, onClose, onSubmit }
                 ) : (
                   <>
                     <Shield className="submit-icon" />
-                    {t('checkout.confirm')}
+                    Confirmer ma commande
                   </>
                 )}
               </button>
               <p className="terms-text">
-                {t('checkout.terms')}
+                En passant cette commande, vous acceptez nos conditions d'utilisation et notre politique de confidentialité.
               </p>
             </div>
           </form>
