@@ -2,9 +2,21 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Search, ShoppingCart, Menu, X, Car, MapPin, Clock, Phone, ChevronDown, Globe } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
-import { useTranslation } from '../context/TranslationContext';
 import { useCategories } from '../hooks/useCategories';
 import '../components styles/Header.css';
+
+// Google Translate utility functions
+const triggerGoogleTranslate = (targetLanguage: 'fr' | 'en') => {
+  const googleSelect = document.querySelector('select.goog-te-combo') as HTMLSelectElement;
+  if (googleSelect) {
+    const targetValue = targetLanguage === 'en' ? 'en' : 'fr';
+    
+    if (googleSelect.value !== targetValue) {
+      googleSelect.value = targetValue;
+      googleSelect.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+  }
+};
 
 const Header: React.FC<{
   onSearch?: (query: string) => void;
@@ -19,10 +31,10 @@ const Header: React.FC<{
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [showCategories, setShowCategories] = useState(false);
+  const [currentLanguage, setCurrentLanguage] = useState<'fr' | 'en'>('fr');
   
   const { state } = useCart();
   const { categories } = useCategories();
-  const { language, setLanguage, t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -50,6 +62,12 @@ const Header: React.FC<{
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [showCategories]);
+
+  const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newLanguage = e.target.value as 'fr' | 'en';
+    setCurrentLanguage(newLanguage);
+    triggerGoogleTranslate(newLanguage);
+  };
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -87,11 +105,11 @@ const Header: React.FC<{
               <div className="topbar-left">
                 <div className="topbar-item">
                   <MapPin className="topbar-icon topbar-icon-pulse" />
-                  <span className="topbar-text">{t('header.delivery')}</span>
+                  <span className="topbar-text">Livraison gratuite à Yaoundé</span>
                 </div>
                 <div className="topbar-item topbar-item-hidden-mobile">
                   <Clock className="topbar-icon" />
-                  <span>{t('header.hours')}</span>
+                  <span>Ouvert 8h30-22h30</span>
                 </div>
               </div>
               <div className="topbar-right">
@@ -99,8 +117,8 @@ const Header: React.FC<{
                 <div className="topbar-item">
                   <Globe className="topbar-icon" />
                   <select
-                    value={language}
-                    onChange={(e) => setLanguage(e.target.value as 'fr' | 'en')}
+                    value={currentLanguage}
+                    onChange={handleLanguageChange}
                     className="language-select"
                   >
                     <option value="fr">FR</option>
@@ -135,7 +153,7 @@ const Header: React.FC<{
                   <h1 className="logo-title">
                     AUTO-BUSINESS
                   </h1>
-                  <p className="logo-tagline">{t('header.tagline')}</p>
+                  <p className="logo-tagline">Pièces détachées automobiles</p>
                 </div>
               </div>
 
@@ -149,7 +167,7 @@ const Header: React.FC<{
                     <input
                       ref={searchInputRef}
                       type="text"
-                      placeholder={t('header.search.placeholder')}
+                      placeholder="Rechercher des pièces auto..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       onFocus={() => setIsSearchFocused(true)}
@@ -185,7 +203,7 @@ const Header: React.FC<{
                       disabled={!searchQuery.trim()}
                       className="search-button"
                     >
-                      {t('header.search.button')}
+                      Rechercher
                     </button>
                   </div>
                 </div>
@@ -229,7 +247,7 @@ const Header: React.FC<{
                   </div>
                   <input
                     type="text"
-                    placeholder={t('header.search.placeholder')}
+                    placeholder="Rechercher des pièces auto..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && handleSearch(e)}
@@ -260,7 +278,7 @@ const Header: React.FC<{
                     className="categories-button"
                   >
                     <Menu className="categories-button-icon" />
-                    <span>{t('header.categories')}</span>
+                    <span>Toutes les catégories</span>
                     <ChevronDown className={`categories-chevron ${showCategories ? 'categories-chevron-rotated' : ''}`} />
                   </button>
 
@@ -271,7 +289,6 @@ const Header: React.FC<{
                         onClick={() => handleCategoryClick(category.id)}
                         className="nav-category-button"
                       >
-                        {/* This will be translated by Google Translate if it comes from backend */}
                         {category.name}
                       </button>
                     ))}
@@ -280,7 +297,7 @@ const Header: React.FC<{
 
                 <div className="nav-stock-indicator">
                   <span className="stock-dot">●</span>
-                  <span className="stock-text">{t('header.stock')}</span>
+                  <span className="stock-text">Plus de 10 000 pièces en stock</span>
                 </div>
               </div>
 
@@ -293,10 +310,9 @@ const Header: React.FC<{
                       className="mobile-category-button"
                     >
                       <div className="mobile-category-name">
-                        {/* Backend category names will be automatically translated */}
                         {category.name}
                       </div>
-                      <div className="mobile-category-action">{t('products.view')} →</div>
+                      <div className="mobile-category-action">Voir →</div>
                     </button>
                   ))}
                 </div>
@@ -327,10 +343,9 @@ const Header: React.FC<{
                     className="category-dropdown-item"
                   >
                     <div className="category-dropdown-name">
-                      {/* Backend data - will be automatically translated by Google */}
                       {category.name}
                     </div>
-                    <div className="category-dropdown-action">{t('products.view')} →</div>
+                    <div className="category-dropdown-action">Voir →</div>
                   </button>
                 ))}
               </div>
