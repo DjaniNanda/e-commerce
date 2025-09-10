@@ -4,26 +4,17 @@
 .translate-content {
 }
 
-.goog-te-banner-frame {
+.goog-te-banner-frame,
+.goog-te-menu-frame {
   display: none !important;
 }
 
-.goog-te-banner-frame.skiptranslate {
-  display: none !important;
-}
-
-/* Hide the Google Translate combo box but keep it functional */
 .goog-te-combo {
-  position: absolute !important;
-  left: -9999px !important;
-  visibility: hidden !important;
-  pointer-events: none !important;
+  display: none !important;
 }
 
-/* Prevent body displacement */
 body {
-  top: 0px !important;
-  margin-top: 0px !important;
+  top: 0 !important;
 }
 
 /* Style improvements for translated content */
