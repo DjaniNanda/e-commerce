@@ -1,7 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { CartProvider } from './context/CartContext';
-import { TranslationProvider } from './context/TranslationContext';
 import MainApp from './components/MainApp';
 import AdminPanel from './components/AdminPanel';
 import ProductDetails from './components/admin/ProductDetails';
@@ -10,7 +9,7 @@ import ProductForm from './components/admin/ProductForm';
 
 function App() {
   return (
-    <TranslationProvider>
+    
       <CartProvider>
         <Router>
           <Routes>
@@ -29,7 +28,6 @@ function App() {
           </Routes>
         </Router>
       </CartProvider>
-    </TranslationProvider>
   );
 }
 
