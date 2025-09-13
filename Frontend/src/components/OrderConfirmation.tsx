@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { CheckCircle, Phone, MapPin, Package, Clock, Truck, CreditCard } from 'lucide-react';
+import '../components styles/OrderConfirmation.css';
 
 interface OrderConfirmationProps {
   isOpen: boolean;
@@ -8,216 +9,272 @@ interface OrderConfirmationProps {
 }
 
 const OrderConfirmation: React.FC<OrderConfirmationProps> = ({ isOpen, onClose, orderData }) => {
+  const modalRef = useRef<HTMLDivElement>(null);
+  const continueButtonRef = useRef<HTMLButtonElement>(null);
+
+  // Prevent body scroll when modal is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+      // Focus continue button after animation
+      setTimeout(() => {
+        continueButtonRef.current?.focus();
+      }, 400);
+      
+      return () => {
+        document.body.style.overflow = 'unset';
+      };
+    }
+  }, [isOpen]);
+
+  // Handle keyboard navigation
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
+  const formatPrice = useCallback((price: number) => {
+    return new Intl.NumberFormat('fr-FR').format(price) + ' FCFA';
+  }, []);
+
+  const handleOverlayClick = useCallback((e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  }, [onClose]);
+
+  const handleContinueClick = useCallback(() => {
+    onClose();
+  }, [onClose]);
+
   if (!isOpen || !orderData) return null;
 
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('fr-FR').format(price) + ' FCFA';
-  };
-
-
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[95vh] overflow-hidden">
+    <div className="order-confirmation-overlay" onClick={handleOverlayClick}>
+      <div 
+        ref={modalRef}
+        className="order-confirmation-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="confirmation-title"
+        aria-describedby="confirmation-description"
+      >
         
         {/* Success Header */}
-        <div className="bg-gradient-to-r from-green-500 to-green-600 p-8 text-center text-white">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-white/20 rounded-full mb-6 backdrop-blur-sm">
-            <CheckCircle className="h-12 w-12" />
+        <header className="success-header">
+          <div className="success-icon-container">
+            <CheckCircle className="success-icon" aria-hidden="true" />
           </div>
-          <h2 className="text-3xl font-bold mb-2">Commande confirmée !</h2>
-          <p className="text-green-100 text-lg">
+          <h1 id="confirmation-title" className="success-title">Commande confirmée !</h1>
+          <p id="confirmation-description" className="success-subtitle">
             Votre Commande • Enregistrée avec succès
           </p>
-        </div>
+        </header>
 
-        <div className="overflow-y-auto max-h-[calc(95vh-200px)]">
-          <div className="p-8">
+        <div className="order-content">
+          <div className="order-content-inner">
             
             {/* Call Confirmation Alert */}
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-6 mb-8">
-              <div className="flex items-start">
-                <div className="bg-blue-100 p-3 rounded-full mr-4">
-                  <Phone className="h-6 w-6 text-blue-600" />
+            <section className="call-alert" role="region" aria-labelledby="call-alert-title">
+              <div className="call-alert-content">
+                <div className="call-alert-icon">
+                  <Phone className="call-alert-icon-svg" aria-hidden="true" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-blue-900 text-lg mb-2">Confirmation par appel</h3>
-                  <p className="text-blue-800">
+                  <h2 id="call-alert-title" className="call-alert-title">Confirmation par appel</h2>
+                  <p className="call-alert-text">
                     Notre équipe vous contactera au numéro{' '}
-                    <span className="font-semibold bg-blue-200 px-2 py-1 rounded">
+                    <span className="phone-highlight">
                       {orderData.customerInfo.phone}
                     </span>{' '}
                     dans les prochaines minutes pour confirmer votre commande et les détails de livraison.
                   </p>
                 </div>
               </div>
-            </div>
+            </section>
 
-            <div className="grid lg:grid-cols-2 gap-8">
+            <div className="order-grid">
               {/* Left Column - Order Details */}
-              <div className="space-y-6">
+              <div className="order-section">
                 
                 {/* Customer Info */}
-                <div className="bg-gray-50 border-2 border-gray-200 rounded-xl p-6">
-                  <h4 className="font-bold text-gray-800 text-lg mb-4 flex items-center">
-                    <div className="bg-blue-100 p-2 rounded-lg mr-3">
-                      <Phone className="h-5 w-5 text-blue-600" />
+                <section className="info-card" aria-labelledby="customer-info-title">
+                  <h3 id="customer-info-title" className="info-card-header">
+                    <div className="info-card-icon info-card-icon--blue">
+                      <Phone aria-hidden="true" />
                     </div>
                     Informations client
-                  </h4>
-                  <div className="space-y-3">
-                    <div className="flex items-center">
-                      <span className="text-gray-600 font-medium w-24">Nom:</span>
-                      <span className="text-gray-800 font-semibold">
+                  </h3>
+                  <div className="customer-info">
+                    <div className="customer-info-row">
+                      <span className="customer-info-label">Nom:</span>
+                      <span className="customer-info-value">
                         {orderData.customerInfo.firstName} {orderData.customerInfo.lastName}
                       </span>
                     </div>
-                    <div className="flex items-center">
-                      <span className="text-gray-600 font-medium w-24">Téléphone:</span>
-                      <span className="text-gray-800 font-semibold bg-gray-200 px-3 py-1 rounded-lg">
+                    <div className="customer-info-row">
+                      <span className="customer-info-label">Téléphone:</span>
+                      <span className="customer-info-value customer-info-phone">
                         {orderData.customerInfo.phone}
                       </span>
                     </div>
                   </div>
-                </div>
+                </section>
 
                 {/* Delivery Address */}
-                <div className="bg-gray-50 border-2 border-gray-200 rounded-xl p-6">
-                  <h4 className="font-bold text-gray-800 text-lg mb-4 flex items-center">
-                    <div className="bg-green-100 p-2 rounded-lg mr-3">
-                      <MapPin className="h-5 w-5 text-green-600" />
+                <section className="info-card" aria-labelledby="address-title">
+                  <h3 id="address-title" className="info-card-header">
+                    <div className="info-card-icon info-card-icon--green">
+                      <MapPin aria-hidden="true" />
                     </div>
                     Adresse de livraison
-                  </h4>
-                  <div className="bg-white rounded-lg p-4 border border-gray-200">
-                    <p className="text-gray-800 font-semibold mb-1">{orderData.customerInfo.address}</p>
-                    <p className="text-gray-600">
+                  </h3>
+                  <div className="address-card">
+                    <p className="address-main">{orderData.customerInfo.address}</p>
+                    <p className="address-details">
                       {orderData.customerInfo.quarter}, {orderData.customerInfo.city}
                     </p>
                   </div>
-                </div>
+                </section>
               </div>
 
               {/* Right Column - Order Summary */}
-              <div className="space-y-6">
+              <div className="order-section">
                 
                 {/* Order Items */}
-                <div className="bg-white border-2 border-gray-200 rounded-xl overflow-hidden">
-                  <div className="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b border-gray-200">
-                    <h4 className="font-bold text-gray-800 text-lg flex items-center">
-                      <Package className="h-5 w-5 mr-2" />
+                <section className="order-summary" aria-labelledby="order-summary-title">
+                  <header className="order-summary-header">
+                    <h3 id="order-summary-title" className="order-summary-title">
+                      <Package aria-hidden="true" />
                       Articles commandés
-                    </h4>
-                  </div>
-                  <div className="p-6">
-                    <div className="space-y-4 mb-6">
+                    </h3>
+                  </header>
+                  <div className="order-summary-content">
+                    <ul className="order-items" role="list">
                       {orderData.items.map((item: any) => (
-                        <div key={item.product.id} className="flex justify-between items-start p-4 bg-gray-50 rounded-lg">
-                          <div className="flex-1">
-                            <p className="font-semibold text-gray-800 leading-tight">{item.product.name}</p>
-                            <p className="text-sm text-gray-500 mt-1">Quantité: {item.quantity}</p>
+                        <li key={item.product.id} className="order-item">
+                          <div className="order-item-details">
+                            <h4 className="order-item-name">{item.product.name}</h4>
+                            <p className="order-item-quantity">Quantité: {item.quantity}</p>
                           </div>
-                          <div className="text-right ml-4">
-                            <p className="font-bold text-gray-800 text-lg">
+                          <div className="order-item-price">
+                            <p className="order-item-total">
                               {formatPrice(item.product.price * item.quantity)}
                             </p>
                           </div>
-                        </div>
+                        </li>
                       ))}
-                    </div>
+                    </ul>
                     
-                    <div className="border-t-2 border-gray-200 pt-6">
-                      <div className="flex justify-between items-center bg-blue-50 p-4 rounded-xl">
-                        <span className="text-xl font-bold text-gray-800">Total:</span>
-                        <span className="text-3xl font-bold text-blue-600">{formatPrice(orderData.total)}</span>
+                    <div className="order-total">
+                      <div className="order-total-row">
+                        <span className="order-total-label">Total:</span>
+                        <span 
+                          className="order-total-amount"
+                          aria-label={`Total de la commande: ${formatPrice(orderData.total)}`}
+                        >
+                          {formatPrice(orderData.total)}
+                        </span>
                       </div>
                     </div>
                   </div>
-                </div>
+                </section>
               </div>
             </div>
 
             {/* Process Timeline */}
-            <div className="mt-8 bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-6">
-              <h4 className="font-bold text-blue-900 text-lg mb-6 flex items-center">
-                <Clock className="h-5 w-5 mr-2" />
+            <section className="process-timeline" aria-labelledby="timeline-title">
+              <h3 id="timeline-title" className="timeline-title">
+                <Clock aria-hidden="true" />
                 Prochaines étapes
-              </h4>
+              </h3>
               
-              <div className="grid md:grid-cols-4 gap-4">
-                <div className="text-center">
-                  <div className="bg-green-100 p-4 rounded-full mx-auto w-16 h-16 flex items-center justify-center mb-3">
-                    <CheckCircle className="h-8 w-8 text-green-600" />
+              <div className="timeline-steps" role="list">
+                <div className="timeline-step" role="listitem">
+                  <div className="timeline-step-icon timeline-step-icon--completed">
+                    <CheckCircle aria-hidden="true" />
                   </div>
-                  <h5 className="font-semibold text-gray-800 mb-1">Enregistrée</h5>
-                  <p className="text-xs text-gray-600">Commande reçue</p>
+                  <h4 className="timeline-step-title">Enregistrée</h4>
+                  <p className="timeline-step-description">Commande reçue</p>
                 </div>
                 
-                <div className="text-center">
-                  <div className="bg-blue-100 p-4 rounded-full mx-auto w-16 h-16 flex items-center justify-center mb-3 animate-pulse">
-                    <Phone className="h-8 w-8 text-blue-600" />
+                <div className="timeline-step" role="listitem">
+                  <div className="timeline-step-icon timeline-step-icon--active">
+                    <Phone aria-hidden="true" />
                   </div>
-                  <h5 className="font-semibold text-gray-800 mb-1">Appel</h5>
-                  <p className="text-xs text-gray-600">Confirmation en cours</p>
+                  <h4 className="timeline-step-title">Appel</h4>
+                  <p className="timeline-step-description">Confirmation en cours</p>
                 </div>
                 
-                <div className="text-center opacity-75">
-                  <div className="bg-orange-100 p-4 rounded-full mx-auto w-16 h-16 flex items-center justify-center mb-3">
-                    <Truck className="h-8 w-8 text-orange-600" />
+                <div className="timeline-step" role="listitem">
+                  <div className="timeline-step-icon timeline-step-icon--pending">
+                    <Truck aria-hidden="true" />
                   </div>
-                  <h5 className="font-semibold text-gray-800 mb-1">Livraison</h5>
-                  <p className="text-xs text-gray-600">24-48h à Yaoundé</p>
+                  <h4 className="timeline-step-title">Livraison</h4>
+                  <p className="timeline-step-description">24-48h à Yaoundé</p>
                 </div>
                 
-                <div className="text-center opacity-75">
-                  <div className="bg-purple-100 p-4 rounded-full mx-auto w-16 h-16 flex items-center justify-center mb-3">
-                    <CreditCard className="h-8 w-8 text-purple-600" />
+                <div className="timeline-step" role="listitem">
+                  <div className="timeline-step-icon timeline-step-icon--future">
+                    <CreditCard aria-hidden="true" />
                   </div>
-                  <h5 className="font-semibold text-gray-800 mb-1">Paiement</h5>
-                  <p className="text-xs text-gray-600">À la réception</p>
+                  <h4 className="timeline-step-title">Paiement</h4>
+                  <p className="timeline-step-description">À la réception</p>
                 </div>
               </div>
-            </div>
+            </section>
 
             {/* Important Notice */}
-            <div className="mt-8 bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-xl p-6">
-              <div className="flex items-start">
-                <div className="bg-yellow-100 p-3 rounded-full mr-4">
-                  <Phone className="h-6 w-6 text-yellow-600" />
+            <section className="important-notice" role="region" aria-labelledby="notice-title">
+              <div className="notice-content">
+                <div className="notice-icon">
+                  <Phone aria-hidden="true" />
                 </div>
                 <div>
-                  <h4 className="font-bold text-yellow-900 mb-2">Restez disponible !</h4>
-                  <p className="text-yellow-800">
+                  <h3 id="notice-title" className="notice-title">Restez disponible !</h3>
+                  <p className="notice-text">
                     Assurez-vous que votre téléphone soit accessible. Notre équipe vous appellera 
-                    dans les <span className="font-semibold">15-30 prochaines minutes</span> pour 
+                    dans les <span className="notice-highlight">15-30 prochaines minutes</span> pour 
                     confirmer les détails de votre commande et organiser la livraison.
                   </p>
                 </div>
               </div>
-            </div>
+            </section>
 
             {/* Contact Info */}
-            <div className="mt-8 bg-gradient-to-r from-gray-50 to-gray-100 border border-gray-200 rounded-xl p-6 text-center">
-              <h4 className="font-bold text-gray-800 mb-3">Besoin d'aide ?</h4>
-              <p className="text-gray-600 mb-4">
+            <section className="contact-info" aria-labelledby="contact-title">
+              <h3 id="contact-title" className="contact-title">Besoin d'aide ?</h3>
+              <p className="contact-description">
                 Pour toute question concernant votre commande, contactez notre service client :
               </p>
-              <div className="inline-flex items-center bg-white px-6 py-3 rounded-xl border border-gray-200 shadow-sm">
-                <Phone className="h-5 w-5 text-blue-600 mr-2" />
-                <span className="font-bold text-blue-600 text-lg">+237 XXX XXX XXX</span>
+              <div className="contact-phone">
+                <Phone aria-hidden="true" />
+                <span className="contact-phone-number">+237 XXX XXX XXX</span>
               </div>
-            </div>
+            </section>
 
             {/* Action Button */}
-            <div className="mt-8 text-center mb-4">
+            <div className="action-section">
               <button
-                onClick={onClose}
-                className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-12 py-4 rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all duration-300 font-bold text-lg shadow-lg hover:shadow-xl transform hover:scale-105 inline-flex items-center"
+                ref={continueButtonRef}
+                onClick={handleContinueClick}
+                className="continue-button"
+                type="button"
+                aria-describedby="thank-you-text"
               >
-                <Package className="h-5 w-5 mr-3" />
+                <Package aria-hidden="true" />
                 Continuer mes achats
               </button>
               
-              <p className="text-gray-500 text-sm mt-4">
+              <p id="thank-you-text" className="thank-you-text">
                 Merci pour votre confiance ! 🙏
               </p>
             </div>
