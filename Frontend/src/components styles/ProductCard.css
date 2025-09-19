@@ -1,4 +1,4 @@
-/* ProductCard.css - Fully Responsive */
+/* ProductCard.css - Fully Responsive - Version Optimisée Desktop */
 
 /* Base styles - Mobile first approach */
 .product-card {
@@ -108,21 +108,22 @@
   }
 }
 
+/* MODIFIÉ : Hauteurs réduites pour desktop */
 @media (min-width: 640px) {
   .product-card__image-container--grid {
-    height: 16rem;
+    height: 14rem;
   }
 }
 
 @media (min-width: 768px) {
   .product-card__image-container--grid {
-    height: 18rem;
+    height: 15rem;
   }
 }
 
 @media (min-width: 1024px) {
   .product-card__image-container--grid {
-    height: 20rem;
+    height: 16rem;
   }
 }
 
@@ -322,9 +323,10 @@
   }
 }
 
+/* MODIFIÉ : Padding réduit pour desktop */
 @media (min-width: 768px) {
   .product-card__content {
-    padding: 1.5rem;
+    padding: 1.25rem;
   }
 }
 
@@ -356,7 +358,7 @@
 
 @media (min-width: 768px) {
   .product-card__content--grid {
-    padding: 1.5rem;
+    padding: 1.25rem;
   }
 }
 
@@ -454,15 +456,16 @@
   }
 }
 
+/* MODIFIÉ : Tailles de police réduites pour desktop */
 @media (min-width: 768px) {
   .product-card__title--grid {
-    font-size: 1.5rem;
+    font-size: 1.375rem;
   }
 }
 
 @media (min-width: 1024px) {
   .product-card__title--grid {
-    font-size: 1.625rem;
+    font-size: 1.5rem;
   }
 }
 
@@ -600,15 +603,16 @@
   }
 }
 
+/* MODIFIÉ : Tailles de prix réduites pour desktop */
 @media (min-width: 768px) {
   .product-card__price--grid {
-    font-size: 2rem;
+    font-size: 1.75rem;
   }
 }
 
 @media (min-width: 1024px) {
   .product-card__price--grid {
-    font-size: 2.25rem;
+    font-size: 2rem;
   }
 }
 
