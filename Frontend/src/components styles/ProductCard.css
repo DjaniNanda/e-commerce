@@ -123,6 +123,7 @@
 @media (min-width: 1024px) {
   .product-card__image-container--grid {
     height: 16rem;
+    width: 50rem;
   }
 }
 
