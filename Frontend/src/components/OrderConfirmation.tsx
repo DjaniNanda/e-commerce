@@ -257,7 +257,12 @@ const OrderConfirmation: React.FC<OrderConfirmationProps> = ({ isOpen, onClose, 
               </p>
               <div className="contact-phone">
                 <Phone aria-hidden="true" />
-                <span className="contact-phone-number">+237 XXX XXX XXX</span>
+                <a 
+                  href="tel:+237699849474" 
+                  className="contact-phone-number hover:text-blue-700 transition-colors"
+                >
+                  +237 699 849 474
+                </a>
               </div>
             </section>
 

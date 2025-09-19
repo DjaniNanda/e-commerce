@@ -262,7 +262,12 @@ const MainApp: React.FC = () => {
               <div className="main-app__footer-contact">
                 <div className="main-app__footer-contact-item">
                   <Phone className="main-app__footer-contact-icon" />
-                  <span className="main-app__footer-contact-text">+237 XXX XXX XXX</span>
+                  <a 
+                    href="tel:+237699849474" 
+                    className="main-app__footer-contact-text hover:text-blue-300 transition-colors cursor-pointer"
+                  >
+                    +237 699 849 474
+                  </a>
                 </div>
                 <div className="main-app__footer-contact-item">
                   <span className="main-app__footer-contact-icon">📧</span>
