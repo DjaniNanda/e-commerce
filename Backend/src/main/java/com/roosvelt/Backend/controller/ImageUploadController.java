@@ -4,53 +4,60 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import io.imagekit.sdk.ImageKit;
+import io.imagekit.sdk.config.Configuration;
+import io.imagekit.sdk.models.FileCreateRequest;
+import io.imagekit.sdk.models.results.Result;
+import io.imagekit.sdk.exceptions.BadRequestException;
+import io.imagekit.sdk.exceptions.UnknownException;
+
+import jakarta.annotation.PostConstruct;
 
 import java.util.Arrays;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api")
 public class ImageUploadController {
 
-    @Value("${imgbb.api.key}")
-    private String imgbbApiKey;
+    @Value("${imagekit.public.key}")
+    private String imagekitPublicKey;
 
-    private static final String IMGBB_API_URL = "https://api.imgbb.com/1/upload";
+    @Value("${imagekit.private.key}")
+    private String imagekitPrivateKey;
+
+    @Value("${imagekit.url.endpoint}")
+    private String imagekitUrlEndpoint;
+
     private static final List<String> ALLOWED_EXTENSIONS = Arrays.asList("jpg", "jpeg", "png", "gif", "webp");
     private static final long MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
-    private final RestTemplate restTemplate = new RestTemplate();
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private ImageKit imageKit;
+
+    @PostConstruct
+    public void initializeImageKit() {
+        Configuration config = new Configuration(imagekitPublicKey, imagekitPrivateKey, imagekitUrlEndpoint);
+        this.imageKit = ImageKit.getInstance();
+    }
 
     @PostMapping("/upload-image")
     public ResponseEntity<?> uploadImage(@RequestParam("image") MultipartFile file) {
         try {
-            // Validate file
             if (file.isEmpty()) {
                 return ResponseEntity.badRequest()
                         .body(createErrorResponse("Aucun fichier sélectionné"));
             }
 
-            // Check file size
             if (file.getSize() > MAX_FILE_SIZE) {
                 return ResponseEntity.badRequest()
                         .body(createErrorResponse("La taille du fichier ne doit pas dépasser 5MB"));
             }
 
-            // Get original filename and validate extension
             String originalFileName = file.getOriginalFilename();
             if (originalFileName == null || originalFileName.isEmpty()) {
                 return ResponseEntity.badRequest()
@@ -63,47 +70,28 @@ public class ImageUploadController {
                         .body(createErrorResponse("Type de fichier non supporté. Utilisez: " + String.join(", ", ALLOWED_EXTENSIONS)));
             }
 
-            // Convert file to base64
-            String base64Image = Base64.getEncoder().encodeToString(file.getBytes());
+            String uniqueFileName = UUID.randomUUID().toString() + "_" + originalFileName;
 
-            // Prepare request
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+            FileCreateRequest fileCreateRequest = new FileCreateRequest(file.getBytes(), uniqueFileName);
+            fileCreateRequest.setFolder("/");
+            fileCreateRequest.setUseUniqueFileName(false);
 
-            MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-            body.add("key", imgbbApiKey);
-            body.add("image", base64Image);
-            body.add("name", getFileNameWithoutExtension(originalFileName));
+            Result result = imageKit.upload(fileCreateRequest);
 
-            HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+            if (result != null) {
+                Map<String, Object> responseMap = new HashMap<>();
+                responseMap.put("success", true);
+                responseMap.put("imagePath", result.getUrl());
+                responseMap.put("fileId", result.getFileId());
+                responseMap.put("fileName", originalFileName);
+                responseMap.put("size", file.getSize());
+                responseMap.put("height", result.getHeight());
+                responseMap.put("width", result.getWidth());
 
-            // Upload to ImgBB
-            ResponseEntity<String> response = restTemplate.postForEntity(IMGBB_API_URL, requestEntity, String.class);
-
-            if (response.getStatusCode().is2xxSuccessful()) {
-                JsonNode jsonResponse = objectMapper.readTree(response.getBody());
-
-                if (jsonResponse.get("success").asBoolean()) {
-                    JsonNode data = jsonResponse.get("data");
-
-                    String imageUrl = data.get("url").asText();
-                    String deleteUrl = data.get("delete_url").asText();
-
-                    Map<String, Object> responseMap = new HashMap<>();
-                    responseMap.put("success", true);
-                    responseMap.put("imagePath", imageUrl); // This is what your frontend will use
-                    responseMap.put("deleteUrl", deleteUrl); // Store this in your database if you want to delete later
-                    responseMap.put("fileName", originalFileName);
-                    responseMap.put("size", file.getSize());
-
-                    return ResponseEntity.ok(responseMap);
-                } else {
-                    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                            .body(createErrorResponse("Erreur ImgBB: " + jsonResponse.get("error").get("message").asText()));
-                }
+                return ResponseEntity.ok(responseMap);
             } else {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                        .body(createErrorResponse("Erreur de communication avec ImgBB"));
+                        .body(createErrorResponse("Erreur lors de l'upload sur ImageKit"));
             }
 
         } catch (Exception e) {
@@ -113,15 +101,12 @@ public class ImageUploadController {
         }
     }
 
-    // Optional: Delete image (Note: ImgBB free tier has limited delete functionality)
     @DeleteMapping("/delete-image")
-    public ResponseEntity<?> deleteImage(@RequestParam("deleteUrl") String deleteUrl) {
+    public ResponseEntity<?> deleteImage(@RequestParam("fileId") String fileId) {
         try {
-            // For ImgBB, you would typically call the delete URL directly
-            // But this requires the full delete URL which includes a hash
-            ResponseEntity<String> response = restTemplate.getForEntity(deleteUrl, String.class);
+            Result result = imageKit.deleteFile(fileId);
 
-            if (response.getStatusCode().is2xxSuccessful()) {
+            if (result != null) {
                 return ResponseEntity.ok(Map.of("success", true, "message", "Image supprimée avec succès"));
             } else {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -129,19 +114,15 @@ public class ImageUploadController {
             }
 
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(createErrorResponse("Erreur lors de la suppression"));
+                    .body(createErrorResponse("Erreur lors de la suppression: " + e.getMessage()));
         }
     }
 
     private String getFileExtension(String fileName) {
         int lastDotIndex = fileName.lastIndexOf('.');
         return (lastDotIndex == -1) ? "" : fileName.substring(lastDotIndex + 1);
-    }
-
-    private String getFileNameWithoutExtension(String fileName) {
-        int lastDotIndex = fileName.lastIndexOf('.');
-        return (lastDotIndex == -1) ? fileName : fileName.substring(0, lastDotIndex);
     }
 
     private Map<String, Object> createErrorResponse(String message) {

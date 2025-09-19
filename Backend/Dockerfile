@@ -14,6 +14,6 @@ WORKDIR /app
 
 COPY --from=build /app/target/Backend-0.0.1-SNAPSHOT.jar .
 
-EXPOSE 7000
+EXPOSE 8080
 
 ENTRYPOINT ["java","-jar","/app/Backend-0.0.1-SNAPSHOT.jar"]
