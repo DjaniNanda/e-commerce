@@ -1,4 +1,4 @@
-/* ProductCard.css - Fully Responsive - Fixed Button Visibility */
+/* ProductCard.css - Fully Responsive */
 
 /* Base styles - Mobile first approach */
 .product-card {
@@ -11,9 +11,6 @@
   cursor: pointer;
   transform: translateY(0);
   position: relative;
-  display: flex;
-  flex-direction: column;
-  min-height: 420px; /* Ensure minimum height for content */
 }
 
 .product-card:hover {
@@ -31,7 +28,6 @@
   .product-card {
     border-radius: 0.875rem;
     transform: translateY(0);
-    min-height: 450px;
   }
   
   .product-card:hover {
@@ -42,7 +38,6 @@
 @media (min-width: 768px) {
   .product-card {
     border-radius: 1rem;
-    min-height: 480px;
   }
   
   .product-card:hover {
@@ -54,13 +49,11 @@
 .product-card--list {
   display: flex;
   flex-direction: column;
-  min-height: auto; /* Reset min-height for list view */
 }
 
 @media (min-width: 640px) {
   .product-card--list {
     flex-direction: row;
-    min-height: 200px; /* Minimum height for list view */
   }
 }
 
@@ -68,7 +61,6 @@
 .product-card__image-container {
   position: relative;
   overflow: hidden;
-  flex-shrink: 0; /* Prevent image container from shrinking */
 }
 
 .product-card__image-container--list {
@@ -108,7 +100,6 @@
   width: 100%;
   height: 12rem;
   background: linear-gradient(to bottom right, #f3f4f6, #e5e7eb);
-  flex-shrink: 0; /* Prevent shrinking */
 }
 
 @media (min-width: 480px) {
@@ -316,14 +307,13 @@
   }
 }
 
-/* Content area - KEY FIX: Better flex layout */
+/* Content area */
 .product-card__content {
   padding: 1rem;
   flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 0; /* Allow content to shrink if needed */
 }
 
 @media (min-width: 480px) {
@@ -368,24 +358,6 @@
   .product-card__content--grid {
     padding: 1.5rem;
   }
-}
-
-/* Content sections wrapper */
-.product-card__content-sections {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  min-height: 0;
-}
-
-.product-card__content-top {
-  flex: 1;
-  min-height: 0;
-}
-
-.product-card__content-bottom {
-  margin-top: auto;
-  padding-top: 1rem;
 }
 
 /* Header */
@@ -640,32 +612,22 @@
   }
 }
 
-/* Buttons container - KEY FIX: Ensure buttons always visible */
+/* Buttons container */
 .product-card__buttons {
   display: flex;
   gap: 0.5rem;
   margin-top: auto;
-  flex-shrink: 0; /* Prevent buttons from shrinking */
-  min-height: 3rem; /* Ensure minimum height for buttons */
 }
 
 @media (min-width: 480px) {
   .product-card__buttons {
     gap: 0.75rem;
-    min-height: 3.25rem;
-  }
-}
-
-@media (min-width: 768px) {
-  .product-card__buttons {
-    min-height: 3.5rem;
   }
 }
 
 .product-card__buttons--list {
   gap: 0.5rem;
   flex-direction: column;
-  min-height: auto; /* Reset for list view */
 }
 
 @media (min-width: 480px) {
@@ -679,7 +641,6 @@
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    min-height: 3rem;
   }
 }
 
@@ -708,7 +669,6 @@
   font-size: 0.875rem;
   touch-action: manipulation;
   min-height: 2.75rem;
-  white-space: nowrap; /* Prevent text wrapping */
 }
 
 @media (min-width: 480px) {
@@ -914,7 +874,6 @@
 @media (max-width: 375px) {
   .product-card {
     border-radius: 0.5rem;
-    min-height: 380px; /* Reduced for very small screens */
   }
   
   .product-card__content {
@@ -977,9 +936,5 @@
   .product-card__description {
     -webkit-line-clamp: 1;
     margin-bottom: 0.75rem;
-  }
-  
-  .product-card {
-    min-height: 320px; /* Reduced for landscape */
   }
 }

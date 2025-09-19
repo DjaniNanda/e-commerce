@@ -128,55 +128,51 @@ const ProductCard: React.FC<{
         </div>
         
         <div className="product-card__content product-card__content--list">
-          <div className="product-card__content-sections">
-            <div className="product-card__content-top">
-              <header className="product-card__header product-card__header--list">
-                <h3 className="product-card__title product-card__title--list">
-                  {product.name}
-                </h3>
-                <span 
-                  className="product-card__category product-card__category--list"
-                  role="badge"
-                >
-                  {product.category}
-                </span>
-              </header>
-              <p className="product-card__description">
-                {product.description}
-              </p>
+          <div>
+            <header className="product-card__header product-card__header--list">
+              <h3 className="product-card__title product-card__title--list">
+                {product.name}
+              </h3>
+              <span 
+                className="product-card__category product-card__category--list"
+                role="badge"
+              >
+                {product.category}
+              </span>
+            </header>
+            <p className="product-card__description">
+              {product.description}
+            </p>
+          </div>
+          
+          <div className="product-card__buttons product-card__buttons--list">
+            <div 
+              className="product-card__price product-card__price--list"
+              aria-label={`Prix: ${formatPrice(product.price)}`}
+            >
+              {formatPrice(product.price)}
             </div>
             
-            <div className="product-card__content-bottom">
-              <div className="product-card__buttons product-card__buttons--list">
-                <div 
-                  className="product-card__price product-card__price--list"
-                  aria-label={`Prix: ${formatPrice(product.price)}`}
-                >
-                  {formatPrice(product.price)}
-                </div>
-                
-                <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-                  <button
-                    onClick={handleViewDetails}
-                    className="product-card__btn product-card__btn--secondary product-card__btn--list"
-                    aria-label={`Voir les détails de ${product.name}`}
-                    type="button"
-                  >
-                    <Eye className="product-card__btn-icon product-card__btn-icon--list" aria-hidden="true" />
-                    Détails
-                  </button>
-                  <button
-                    onClick={handleAddToCart}
-                    className="product-card__btn product-card__btn--primary product-card__btn--list"
-                    aria-label={`Ajouter ${product.name} au panier`}
-                    disabled={isAddingToCart}
-                    type="button"
-                  >
-                    <ShoppingCart className="product-card__btn-icon product-card__btn-icon--list" aria-hidden="true" />
-                    {isAddingToCart ? 'Ajout...' : 'Ajouter'}
-                  </button>
-                </div>
-              </div>
+            <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+              <button
+                onClick={handleViewDetails}
+                className="product-card__btn product-card__btn--secondary product-card__btn--list"
+                aria-label={`Voir les détails de ${product.name}`}
+                type="button"
+              >
+                <Eye className="product-card__btn-icon product-card__btn-icon--list" aria-hidden="true" />
+                Détails
+              </button>
+              <button
+                onClick={handleAddToCart}
+                className="product-card__btn product-card__btn--primary product-card__btn--list"
+                aria-label={`Ajouter ${product.name} au panier`}
+                disabled={isAddingToCart}
+                type="button"
+              >
+                <ShoppingCart className="product-card__btn-icon product-card__btn-icon--list" aria-hidden="true" />
+                {isAddingToCart ? 'Ajout...' : 'Ajouter'}
+              </button>
             </div>
           </div>
         </div>
@@ -247,51 +243,45 @@ const ProductCard: React.FC<{
       </div>
 
       <div className="product-card__content product-card__content--grid">
-        <div className="product-card__content-sections">
-          <div className="product-card__content-top">
-            <header className="product-card__header">
-              <h3 className="product-card__title product-card__title--grid">
-                {product.name}
-              </h3>
-              <span 
-                className="product-card__category product-card__category--grid"
-                role="badge"
-              >
-                {product.category}
-              </span>
-            </header>
+        <header className="product-card__header">
+          <h3 className="product-card__title product-card__title--grid">
+            {product.name}
+          </h3>
+          <span 
+            className="product-card__category product-card__category--grid"
+            role="badge"
+          >
+            {product.category}
+          </span>
+        </header>
 
-            <div 
-              className="product-card__price product-card__price--grid"
-              aria-label={`Prix: ${formatPrice(product.price)}`}
-            >
-              {formatPrice(product.price)}
-            </div>
-          </div>
+        <div 
+          className="product-card__price product-card__price--grid"
+          aria-label={`Prix: ${formatPrice(product.price)}`}
+        >
+          {formatPrice(product.price)}
+        </div>
 
-          <div className="product-card__content-bottom">
-            <div className="product-card__buttons product-card__buttons--grid">
-              <button
-                onClick={handleViewDetails}
-                className="product-card__btn product-card__btn--secondary product-card__btn--grid"
-                aria-label={`Voir les détails de ${product.name}`}
-                type="button"
-              >
-                <Eye className="product-card__btn-icon product-card__btn-icon--grid" aria-hidden="true" />
-                Détails
-              </button>
-              <button
-                onClick={handleAddToCart}
-                className="product-card__btn product-card__btn--primary product-card__btn--grid"
-                aria-label={`Ajouter ${product.name} au panier`}
-                disabled={isAddingToCart}
-                type="button"
-              >
-                <ShoppingCart className="product-card__btn-icon product-card__btn-icon--grid" aria-hidden="true" />
-                {isAddingToCart ? 'Ajout...' : 'Ajouter'}
-              </button>
-            </div>
-          </div>
+        <div className="product-card__buttons product-card__buttons--grid">
+          <button
+            onClick={handleViewDetails}
+            className="product-card__btn product-card__btn--secondary product-card__btn--grid"
+            aria-label={`Voir les détails de ${product.name}`}
+            type="button"
+          >
+            <Eye className="product-card__btn-icon product-card__btn-icon--grid" aria-hidden="true" />
+            Détails
+          </button>
+          <button
+            onClick={handleAddToCart}
+            className="product-card__btn product-card__btn--primary product-card__btn--grid"
+            aria-label={`Ajouter ${product.name} au panier`}
+            disabled={isAddingToCart}
+            type="button"
+          >
+            <ShoppingCart className="product-card__btn-icon product-card__btn-icon--grid" aria-hidden="true" />
+            {isAddingToCart ? 'Ajout...' : 'Ajouter'}
+          </button>
         </div>
       </div>
     </article>
