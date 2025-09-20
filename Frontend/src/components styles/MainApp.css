@@ -1,4 +1,4 @@
-/* MainApp.css - Fully Responsive */
+/* MainApp.css - Fully Responsive avec tailles desktop optimisées */
 
 /* Base Layout - Mobile First */
 .main-app {
@@ -32,7 +32,7 @@
 
 @media (min-width: 1024px) {
   .main-app__container {
-    padding: 3rem 2rem;
+    padding: 2.5rem 1.75rem; /* Réduit de 3rem 2rem à 2.5rem 1.75rem */
   }
 }
 
@@ -90,6 +90,14 @@
   }
 }
 
+@media (min-width: 1024px) {
+  .main-app__spinner {
+    height: 3.5rem; /* Réduit de 4rem à 3.5rem */
+    width: 3.5rem; /* Réduit de 4rem à 3.5rem */
+    margin-bottom: 1.25rem; /* Réduit de 1.5rem à 1.25rem */
+  }
+}
+
 .main-app__loading-text {
   color: #6b7280;
   font-size: 1rem;
@@ -104,6 +112,12 @@
 @media (min-width: 768px) {
   .main-app__loading-text {
     font-size: 1.25rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .main-app__loading-text {
+    font-size: 1.125rem; /* Réduit de 1.25rem à 1.125rem */
   }
 }
 
@@ -137,6 +151,15 @@
   }
 }
 
+@media (min-width: 1024px) {
+  .main-app__error-icon {
+    width: 4.5rem; /* Réduit de 5rem à 4.5rem */
+    height: 4.5rem; /* Réduit de 5rem à 4.5rem */
+    margin-bottom: 1.25rem; /* Réduit de 1.5rem à 1.25rem */
+    font-size: 1.75rem; /* Réduit de 2rem à 1.75rem */
+  }
+}
+
 .main-app__error-title {
   font-size: 1.25rem;
   font-weight: 600;
@@ -158,6 +181,13 @@
   }
 }
 
+@media (min-width: 1024px) {
+  .main-app__error-title {
+    font-size: 1.375rem; /* Réduit de 1.5rem à 1.375rem */
+    margin-bottom: 0.875rem; /* Réduit de 1rem à 0.875rem */
+  }
+}
+
 .main-app__error-message {
   color: #6b7280;
   margin-bottom: 1.25rem;
@@ -176,6 +206,13 @@
   .main-app__error-message {
     font-size: 1.125rem;
     margin-bottom: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .main-app__error-message {
+    font-size: 1.0625rem; /* Réduit de 1.125rem à 1.0625rem */
+    margin-bottom: 1.25rem; /* Réduit de 1.5rem à 1.25rem */
   }
 }
 
@@ -206,6 +243,14 @@
     padding: 1.125rem 2.25rem;
     font-size: 1.125rem;
     min-height: 3.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .main-app__error-button {
+    padding: 1rem 2rem; /* Réduit le padding */
+    font-size: 1.0625rem; /* Réduit de 1.125rem à 1.0625rem */
+    min-height: 3.25rem; /* Réduit de 3.5rem à 3.25rem */
   }
 }
 
@@ -258,9 +303,9 @@
 
 @media (min-width: 1024px) {
   .main-app__hero {
-    padding: 4rem 4rem;
-    margin-bottom: 4rem;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    padding: 3rem 2.5rem; /* Réduit de 4rem 4rem à 3rem 2.5rem */
+    margin-bottom: 3rem; /* Réduit de 4rem à 3rem */
+    box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.2); /* Réduit l'ombre */
   }
 }
 
@@ -299,9 +344,9 @@
 
 @media (min-width: 1024px) {
   .main-app__hero-decoration--top {
-    width: 24rem;
-    height: 24rem;
-    transform: translate(12rem, -12rem);
+    width: 18rem; /* Réduit de 24rem à 18rem */
+    height: 18rem; /* Réduit de 24rem à 18rem */
+    transform: translate(9rem, -9rem); /* Ajusté en conséquence */
   }
 }
 
@@ -334,9 +379,9 @@
 
 @media (min-width: 1024px) {
   .main-app__hero-decoration--bottom {
-    width: 16rem;
-    height: 16rem;
-    transform: translate(-8rem, 8rem);
+    width: 12rem; /* Réduit de 16rem à 12rem */
+    height: 12rem; /* Réduit de 16rem à 12rem */
+    transform: translate(-6rem, 6rem); /* Ajusté en conséquence */
   }
 }
 
@@ -375,8 +420,8 @@
 
 @media (min-width: 1024px) {
   .main-app__hero-title {
-    font-size: 3.75rem;
-    margin-bottom: 2.5rem;
+    font-size: 3rem; /* Réduit de 3.75rem à 3rem */
+    margin-bottom: 2rem; /* Réduit de 2.5rem à 2rem */
   }
 }
 
@@ -425,15 +470,15 @@
 
 @media (min-width: 1024px) {
   .main-app__hero-description {
-    font-size: 1.5rem;
-    margin-bottom: 3rem;
-    max-width: 48rem;
+    font-size: 1.25rem; /* Réduit de 1.5rem à 1.25rem */
+    margin-bottom: 2.5rem; /* Réduit de 3rem à 2.5rem */
+    max-width: 42rem; /* Réduit de 48rem à 42rem */
   }
 }
 
 @media (min-width: 1280px) {
   .main-app__hero-description {
-    font-size: 1.875rem;
+    font-size: 1.375rem; /* Réduit de 1.875rem à 1.375rem */
   }
 }
 
@@ -469,7 +514,8 @@
 
 @media (min-width: 1024px) {
   .main-app__hero-features {
-    font-size: 1.125rem;
+    gap: 1.25rem; /* Réduit de 1.5rem à 1.25rem */
+    font-size: 1rem; /* Réduit de 1.125rem à 1rem */
   }
 }
 
@@ -500,7 +546,7 @@
 
 @media (min-width: 1024px) {
   .main-app__hero-feature {
-    padding: 1rem 2rem;
+    padding: 0.875rem 1.5rem; /* Réduit de 1rem 2rem à 0.875rem 1.5rem */
   }
 }
 
@@ -529,6 +575,13 @@
   .main-app__hero-feature-icon {
     margin-right: 0.75rem;
     font-size: 1.25rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .main-app__hero-feature-icon {
+    margin-right: 0.625rem; /* Réduit de 0.75rem à 0.625rem */
+    font-size: 1.125rem; /* Réduit de 1.25rem à 1.125rem */
   }
 }
 
@@ -580,8 +633,8 @@
 
 @media (min-width: 1024px) {
   .main-app__toolbar {
-    padding: 2.5rem;
-    margin-bottom: 3rem;
+    padding: 2rem; /* Réduit de 2.5rem à 2rem */
+    margin-bottom: 2.25rem; /* Réduit de 3rem à 2.25rem */
   }
 }
 
@@ -600,6 +653,12 @@
     width: auto;
     flex: 1;
     gap: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .main-app__toolbar-left {
+    gap: 1.25rem; /* Réduit de 1.5rem à 1.25rem */
   }
 }
 
@@ -630,7 +689,7 @@
 
 @media (min-width: 1024px) {
   .main-app__toolbar-count {
-    font-size: 2.5rem;
+    font-size: 2.125rem; /* Réduit de 2.5rem à 2.125rem */
   }
 }
 
@@ -648,6 +707,12 @@
 @media (min-width: 640px) {
   .main-app__toolbar-label {
     font-size: 1.25rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .main-app__toolbar-label {
+    font-size: 1.125rem; /* Réduit de 1.25rem à 1.125rem */
   }
 }
 
@@ -695,7 +760,8 @@
 
 @media (min-width: 1024px) {
   .main-app__filter-tag {
-    font-size: 1.125rem;
+    padding: 0.625rem 1.25rem; /* Réduit le padding */
+    font-size: 0.9375rem; /* Réduit de 1.125rem à 0.9375rem */
   }
 }
 
@@ -737,7 +803,7 @@
 
 @media (min-width: 1024px) {
   .main-app__clear-filters {
-    font-size: 1.125rem;
+    font-size: 0.9375rem; /* Réduit de 1.125rem à 0.9375rem */
   }
 }
 
@@ -771,6 +837,12 @@
   }
 }
 
+@media (min-width: 1024px) {
+  .main-app__toolbar-right {
+    gap: 0.875rem; /* Réduit de 1rem à 0.875rem */
+  }
+}
+
 .main-app__view-label {
   font-size: 0.875rem;
   color: #6b7280;
@@ -791,7 +863,7 @@
 
 @media (min-width: 1024px) {
   .main-app__view-label {
-    font-size: 1.125rem;
+    font-size: 0.9375rem; /* Réduit de 1.125rem à 0.9375rem */
   }
 }
 
@@ -829,9 +901,9 @@
 
 @media (min-width: 1024px) {
   .main-app__view-button {
-    padding: 1.25rem;
-    min-width: 3.75rem;
-    min-height: 3.75rem;
+    padding: 1rem; /* Réduit de 1.25rem à 1rem */
+    min-width: 3.25rem; /* Réduit de 3.75rem à 3.25rem */
+    min-height: 3.25rem; /* Réduit de 3.75rem à 3.25rem */
   }
 }
 
@@ -880,8 +952,8 @@
 
 @media (min-width: 1024px) {
   .main-app__view-icon {
-    height: 2rem;
-    width: 2rem;
+    height: 1.5rem; /* Réduit de 2rem à 1.5rem */
+    width: 1.5rem; /* Réduit de 2rem à 1.5rem */
   }
 }
 
@@ -905,7 +977,7 @@
 
 @media (min-width: 1024px) {
   .main-app__products-grid {
-    gap: 2rem;
+    gap: 1.5rem; /* Réduit de 2rem à 1.5rem */
   }
 }
 
@@ -955,7 +1027,7 @@
 
 @media (min-width: 1024px) {
   .main-app__products-loading {
-    padding: 6rem 1rem;
+    padding: 4.5rem 1rem; /* Réduit de 6rem à 4.5rem */
   }
 }
 
@@ -981,6 +1053,14 @@
   }
 }
 
+@media (min-width: 1024px) {
+  .main-app__products-loading .main-app__spinner {
+    height: 3.5rem; /* Réduit de 4rem à 3.5rem */
+    width: 3.5rem; /* Réduit de 4rem à 3.5rem */
+    margin-bottom: 1.25rem; /* Réduit de 1.5rem à 1.25rem */
+  }
+}
+
 .main-app__products-loading-text {
   color: #6b7280;
   font-size: 1rem;
@@ -995,6 +1075,12 @@
 @media (min-width: 768px) {
   .main-app__products-loading-text {
     font-size: 1.25rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .main-app__products-loading-text {
+    font-size: 1.125rem; /* Réduit de 1.25rem à 1.125rem */
   }
 }
 
@@ -1018,7 +1104,7 @@
 
 @media (min-width: 1024px) {
   .main-app__no-results {
-    padding: 6rem 1.5rem;
+    padding: 4.5rem 1.5rem; /* Réduit de 6rem à 4.5rem */
   }
 }
 
@@ -1049,6 +1135,14 @@
   }
 }
 
+@media (min-width: 1024px) {
+  .main-app__no-results-icon {
+    width: 7rem; /* Réduit de 8rem à 7rem */
+    height: 7rem; /* Réduit de 8rem à 7rem */
+    margin-bottom: 1.75rem; /* Réduit de 2rem à 1.75rem */
+  }
+}
+
 .main-app__no-results-icon svg {
   height: 2.5rem;
   width: 2.5rem;
@@ -1066,6 +1160,13 @@
   .main-app__no-results-icon svg {
     height: 3.5rem;
     width: 3.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .main-app__no-results-icon svg {
+    height: 3rem; /* Réduit de 3.5rem à 3rem */
+    width: 3rem; /* Réduit de 3.5rem à 3rem */
   }
 }
 
@@ -1087,6 +1188,13 @@
   .main-app__no-results-title {
     font-size: 1.875rem;
     margin-bottom: 1rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .main-app__no-results-title {
+    font-size: 1.625rem; /* Réduit de 1.875rem à 1.625rem */
+    margin-bottom: 0.875rem; /* Réduit de 1rem à 0.875rem */
   }
 }
 
@@ -1113,6 +1221,14 @@
     font-size: 1.125rem;
     max-width: 28rem;
     margin-bottom: 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .main-app__no-results-description {
+    font-size: 1.0625rem; /* Réduit de 1.125rem à 1.0625rem */
+    max-width: 26rem; /* Réduit de 28rem à 26rem */
+    margin-bottom: 1.75rem; /* Réduit de 2rem à 1.75rem */
   }
 }
 
@@ -1148,6 +1264,14 @@
   }
 }
 
+@media (min-width: 1024px) {
+  .main-app__no-results-button {
+    padding: 1rem 2rem; /* Réduit le padding */
+    font-size: 1.0625rem; /* Réduit de 1.125rem à 1.0625rem */
+    min-height: 3.25rem; /* Réduit de 3.5rem à 3.25rem */
+  }
+}
+
 .main-app__no-results-button:hover {
   background-color: #1d4ed8;
   transform: translateY(-1px);
@@ -1177,7 +1301,7 @@
 
 @media (min-width: 1024px) {
   .main-app__ready-search {
-    padding: 7rem 1.5rem;
+    padding: 5rem 1.5rem; /* Réduit de 7rem à 5rem */
   }
 }
 
@@ -1208,6 +1332,14 @@
   }
 }
 
+@media (min-width: 1024px) {
+  .main-app__ready-search-icon {
+    width: 8rem; /* Réduit de 10rem à 8rem */
+    height: 8rem; /* Réduit de 10rem à 8rem */
+    margin-bottom: 2rem; /* Réduit de 2.5rem à 2rem */
+  }
+}
+
 .main-app__ready-search-icon svg {
   height: 3.5rem;
   width: 3.5rem;
@@ -1225,6 +1357,13 @@
   .main-app__ready-search-icon svg {
     height: 4.5rem;
     width: 4.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .main-app__ready-search-icon svg {
+    height: 3.5rem; /* Réduit de 4.5rem à 3.5rem */
+    width: 3.5rem; /* Réduit de 4.5rem à 3.5rem */
   }
 }
 
@@ -1246,6 +1385,13 @@
   .main-app__ready-search-title {
     font-size: 2.25rem;
     margin-bottom: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .main-app__ready-search-title {
+    font-size: 2rem; /* Réduit de 2.25rem à 2rem */
+    margin-bottom: 1.25rem; /* Réduit de 1.5rem à 1.25rem */
   }
 }
 
@@ -1275,6 +1421,14 @@
   }
 }
 
+@media (min-width: 1024px) {
+  .main-app__ready-search-description {
+    font-size: 1.125rem; /* Réduit de 1.25rem à 1.125rem */
+    max-width: 26rem; /* Réduit de 28rem à 26rem */
+    margin-bottom: 2rem; /* Réduit de 2.5rem à 2rem */
+  }
+}
+
 /* Footer */
 .main-app__footer {
   background: linear-gradient(to right, #1f2937, #111827);
@@ -1299,8 +1453,8 @@
 
 @media (min-width: 1024px) {
   .main-app__footer {
-    padding: 6rem 0 4rem;
-    margin-top: 6rem;
+    padding: 4rem 0 2.5rem; /* Réduit de 6rem 4rem à 4rem 2.5rem */
+    margin-top: 4rem; /* Réduit de 6rem à 4rem */
   }
 }
 
@@ -1324,7 +1478,7 @@
 
 @media (min-width: 1024px) {
   .main-app__footer-container {
-    padding: 0 2rem;
+    padding: 0 1.75rem; /* Réduit de 2rem à 1.75rem */
   }
 }
 
@@ -1353,7 +1507,8 @@
 @media (min-width: 1024px) {
   .main-app__footer-content {
     grid-template-columns: repeat(4, 1fr);
-    margin-bottom: 5rem;
+    gap: 2.5rem; /* Réduit de 3rem à 2.5rem */
+    margin-bottom: 3.5rem; /* Réduit de 5rem à 3.5rem */
   }
 }
 
@@ -1396,7 +1551,8 @@
 
 @media (min-width: 1024px) {
   .main-app__footer-logo {
-    margin-bottom: 2.5rem;
+    gap: 1.125rem; /* Réduit de 1.25rem à 1.125rem */
+    margin-bottom: 1.75rem; /* Réduit de 2.5rem à 1.75rem */
   }
 }
 
@@ -1429,8 +1585,9 @@
 
 @media (min-width: 1024px) {
   .main-app__footer-logo-icon {
-    width: 5rem;
-    height: 5rem;
+    width: 4rem; /* Réduit de 5rem à 4rem */
+    height: 4rem; /* Réduit de 5rem à 4rem */
+    border-radius: 0.875rem; /* Réduit de 1rem à 0.875rem */
   }
 }
 
@@ -1456,8 +1613,8 @@
 
 @media (min-width: 1024px) {
   .main-app__footer-logo-icon svg {
-    height: 2.75rem;
-    width: 2.75rem;
+    height: 2.25rem; /* Réduit de 2.75rem à 2.25rem */
+    width: 2.25rem; /* Réduit de 2.75rem à 2.25rem */
   }
 }
 
@@ -1481,7 +1638,7 @@
 
 @media (min-width: 1024px) {
   .main-app__footer-brand-name {
-    font-size: 2.25rem;
+    font-size: 1.875rem; /* Réduit de 2.25rem à 1.875rem */
   }
 }
 
@@ -1505,7 +1662,7 @@
 
 @media (min-width: 1024px) {
   .main-app__footer-brand-tagline {
-    font-size: 1.125rem;
+    font-size: 0.9375rem; /* Réduit de 1.125rem à 0.9375rem */
   }
 }
 
@@ -1533,7 +1690,9 @@
 
 @media (min-width: 1024px) {
   .main-app__footer-description {
-    font-size: 1.25rem;
+    font-size: 1.0625rem; /* Réduit de 1.25rem à 1.0625rem */
+    max-width: 26rem; /* Réduit de 28rem à 26rem */
+    margin-bottom: 2rem; /* Réduit de 2.5rem à 2rem */
   }
 }
 
@@ -1551,6 +1710,12 @@
 @media (min-width: 768px) {
   .main-app__footer-social {
     gap: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .main-app__footer-social {
+    gap: 1.25rem; /* Réduit de 1.5rem à 1.25rem */
   }
 }
 
@@ -1588,9 +1753,9 @@
 
 @media (min-width: 1024px) {
   .main-app__footer-social-button {
-    width: 4rem;
-    height: 4rem;
-    font-size: 1.5rem;
+    width: 3.25rem; /* Réduit de 4rem à 3.25rem */
+    height: 3.25rem; /* Réduit de 4rem à 3.25rem */
+    font-size: 1.375rem; /* Réduit de 1.5rem à 1.375rem */
   }
 }
 
@@ -1625,8 +1790,8 @@
 
 @media (min-width: 1024px) {
   .main-app__footer-section h4 {
-    font-size: 1.5rem;
-    margin-bottom: 2.5rem;
+    font-size: 1.25rem; /* Réduit de 1.5rem à 1.25rem */
+    margin-bottom: 1.75rem; /* Réduit de 2.5rem à 1.75rem */
   }
 }
 
@@ -1657,7 +1822,8 @@
 
 @media (min-width: 1024px) {
   .main-app__footer-contact-item {
-    margin-bottom: 1.5rem;
+    gap: 1rem; /* Réduit de 1.25rem à 1rem */
+    margin-bottom: 1.125rem; /* Réduit de 1.5rem à 1.125rem */
   }
 }
 
@@ -1684,8 +1850,8 @@
 
 @media (min-width: 1024px) {
   .main-app__footer-contact-icon {
-    height: 2rem;
-    width: 2rem;
+    height: 1.5rem; /* Réduit de 2rem à 1.5rem */
+    width: 1.5rem; /* Réduit de 2rem à 1.5rem */
   }
 }
 
@@ -1707,7 +1873,7 @@
 
 @media (min-width: 1024px) {
   .main-app__footer-contact-text {
-    font-size: 1.25rem;
+    font-size: 1.0625rem; /* Réduit de 1.25rem à 1.0625rem */
   }
 }
 
@@ -1739,7 +1905,8 @@
 
 @media (min-width: 1024px) {
   .main-app__footer-hours-item {
-    font-size: 1.25rem;
+    font-size: 1.0625rem; /* Réduit de 1.25rem à 1.0625rem */
+    margin-bottom: 0.875rem; /* Réduit de 1rem à 0.875rem */
   }
 }
 
@@ -1768,7 +1935,7 @@
 
 @media (min-width: 1024px) {
   .main-app__footer-bottom {
-    padding-top: 3rem;
+    padding-top: 2.25rem; /* Réduit de 3rem à 2.25rem */
   }
 }
 
@@ -1789,6 +1956,7 @@
 @media (min-width: 1024px) {
   .main-app__footer-bottom-content {
     flex-direction: row;
+    gap: 1.25rem; /* Réduit de 1.5rem à 1.25rem */
   }
 }
 
@@ -1812,7 +1980,7 @@
 
 @media (min-width: 1024px) {
   .main-app__footer-copyright {
-    font-size: 1.125rem;
+    font-size: 0.9375rem; /* Réduit de 1.125rem à 0.9375rem */
     text-align: left;
   }
 }
@@ -1842,7 +2010,8 @@
 
 @media (min-width: 1024px) {
   .main-app__footer-links {
-    font-size: 1.125rem;
+    font-size: 0.9375rem; /* Réduit de 1.125rem à 0.9375rem */
+    gap: 1.75rem; /* Réduit de 2rem à 1.75rem */
   }
 }
 
@@ -1862,6 +2031,12 @@
 @media (min-width: 480px) {
   .main-app__footer-link {
     padding: 0.625rem 0.375rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .main-app__footer-link {
+    padding: 0.5rem 0.25rem; /* Réduit le padding */
   }
 }
 
