@@ -1,4 +1,4 @@
-/* ProductCard.css - Fully Responsive */
+/* ProductCard.css - Fully Responsive avec tailles desktop optimisées */
 
 /* Base styles - Mobile first approach */
 .product-card {
@@ -91,8 +91,8 @@
 
 @media (min-width: 1024px) {
   .product-card__image-container--list {
-    width: 16rem;
-    height: 12rem;
+    width: 14rem; /* Réduit de 16rem à 14rem */
+    height: 10rem; /* Réduit de 12rem à 10rem */
   }
 }
 
@@ -122,7 +122,7 @@
 
 @media (min-width: 1024px) {
   .product-card__image-container--grid {
-    height: 16rem;
+    height: 14rem; /* Réduit de 16rem à 14rem */
   }
 }
 
@@ -328,6 +328,13 @@
   }
 }
 
+/* DESKTOP - Réduction du padding */
+@media (min-width: 1024px) {
+  .product-card__content {
+    padding: 1.25rem; /* Réduit de 1.5rem à 1.25rem */
+  }
+}
+
 .product-card__content--list {
   padding: 1rem;
 }
@@ -341,6 +348,12 @@
 @media (min-width: 768px) {
   .product-card__content--list {
     padding: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .product-card__content--list {
+    padding: 1.25rem; /* Réduit de 1.5rem à 1.25rem */
   }
 }
 
@@ -360,6 +373,12 @@
   }
 }
 
+@media (min-width: 1024px) {
+  .product-card__content--grid {
+    padding: 1.25rem; /* Réduit de 1.5rem à 1.25rem */
+  }
+}
+
 /* Header */
 .product-card__header {
   margin-bottom: 0.75rem;
@@ -368,6 +387,12 @@
 @media (min-width: 480px) {
   .product-card__header {
     margin-bottom: 1rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .product-card__header {
+    margin-bottom: 0.75rem; /* Réduit de 1rem à 0.75rem */
   }
 }
 
@@ -390,6 +415,12 @@
 @media (min-width: 768px) {
   .product-card__header--list {
     margin-bottom: 0.75rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .product-card__header--list {
+    margin-bottom: 0.625rem; /* Réduit de 0.75rem à 0.625rem */
   }
 }
 
@@ -433,7 +464,7 @@
 
 @media (min-width: 1024px) {
   .product-card__title--list {
-    font-size: 1.375rem;
+    font-size: 1.125rem; /* Réduit de 1.375rem à 1.125rem */
   }
 }
 
@@ -462,7 +493,8 @@
 
 @media (min-width: 1024px) {
   .product-card__title--grid {
-    font-size: 1.625rem;
+    font-size: 1.25rem; /* Réduit de 1.625rem à 1.25rem */
+    margin-bottom: 0.375rem; /* Réduit la marge */
   }
 }
 
@@ -502,6 +534,13 @@
   }
 }
 
+@media (min-width: 1024px) {
+  .product-card__category--list {
+    font-size: 0.875rem; /* Réduit de 1rem à 0.875rem */
+    padding: 0.375rem 0.75rem; /* Réduit le padding */
+  }
+}
+
 .product-card__category--grid {
   font-size: 0.875rem;
 }
@@ -517,6 +556,13 @@
   .product-card__category--grid {
     font-size: 1.125rem;
     padding: 0.5rem 1rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .product-card__category--grid {
+    font-size: 0.875rem; /* Réduit de 1.125rem à 0.875rem */
+    padding: 0.375rem 0.75rem; /* Réduit le padding */
   }
 }
 
@@ -542,6 +588,13 @@
   .product-card__description {
     font-size: 1rem;
     margin-bottom: 1.25rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .product-card__description {
+    font-size: 0.875rem; /* Réduit de 1rem à 0.875rem */
+    margin-bottom: 1rem; /* Réduit de 1.25rem à 1rem */
   }
 }
 
@@ -579,7 +632,7 @@
 
 @media (min-width: 1024px) {
   .product-card__price--list {
-    font-size: 1.875rem;
+    font-size: 1.5rem; /* Réduit de 1.875rem à 1.5rem */
   }
 }
 
@@ -608,7 +661,8 @@
 
 @media (min-width: 1024px) {
   .product-card__price--grid {
-    font-size: 2.25rem;
+    font-size: 1.75rem; /* Réduit de 2.25rem à 1.75rem */
+    margin-bottom: 0.75rem; /* Réduit la marge */
   }
 }
 
@@ -622,6 +676,12 @@
 @media (min-width: 480px) {
   .product-card__buttons {
     gap: 0.75rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .product-card__buttons {
+    gap: 0.5rem; /* Réduit de 0.75rem à 0.5rem */
   }
 }
 
@@ -644,6 +704,12 @@
   }
 }
 
+@media (min-width: 1024px) {
+  .product-card__buttons--list {
+    gap: 0.5rem; /* Réduit de 0.75rem à 0.5rem */
+  }
+}
+
 .product-card__buttons--grid {
   gap: 0.5rem;
 }
@@ -651,6 +717,12 @@
 @media (min-width: 480px) {
   .product-card__buttons--grid {
     gap: 0.75rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .product-card__buttons--grid {
+    gap: 0.5rem; /* Réduit de 0.75rem à 0.5rem */
   }
 }
 
@@ -691,8 +763,9 @@
 
 @media (min-width: 1024px) {
   .product-card__btn {
-    font-size: 1.125rem;
-    min-height: 3.5rem;
+    font-size: 0.875rem; /* Réduit de 1.125rem à 0.875rem */
+    min-height: 3rem; /* Réduit de 3.5rem à 3rem */
+    padding: 0.75rem 1.25rem; /* Réduit le padding */
   }
 }
 
@@ -759,6 +832,15 @@
   }
 }
 
+@media (min-width: 1024px) {
+  .product-card__btn--list {
+    padding: 0.625rem 1rem; /* Réduit le padding */
+    font-size: 0.875rem; /* Réduit de 1rem à 0.875rem */
+    min-height: 2.75rem; /* Réduit de 3rem à 2.75rem */
+    min-width: 6rem; /* Réduit de 7rem à 6rem */
+  }
+}
+
 .product-card__btn--grid {
   padding: 0.75rem 1rem;
   font-size: 0.875rem;
@@ -783,8 +865,9 @@
 
 @media (min-width: 1024px) {
   .product-card__btn--grid {
-    font-size: 1.125rem;
-    min-height: 3.5rem;
+    font-size: 0.875rem; /* Réduit de 1.125rem à 0.875rem */
+    min-height: 3rem; /* Réduit de 3.5rem à 3rem */
+    padding: 0.75rem 1.25rem; /* Réduit le padding */
   }
 }
 
@@ -814,8 +897,9 @@
 
 @media (min-width: 1024px) {
   .product-card__btn-icon {
-    height: 1.5rem;
-    width: 1.5rem;
+    height: 1.125rem; /* Réduit de 1.5rem à 1.125rem */
+    width: 1.125rem; /* Réduit de 1.5rem à 1.125rem */
+    margin-right: 0.5rem; /* Réduit de 0.75rem à 0.5rem */
   }
 }
 
@@ -838,6 +922,14 @@
     height: 1.25rem;
     width: 1.25rem;
     margin-right: 0.625rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .product-card__btn-icon--list {
+    height: 1rem; /* Réduit de 1.25rem à 1rem */
+    width: 1rem; /* Réduit de 1.25rem à 1rem */
+    margin-right: 0.5rem; /* Réduit de 0.625rem à 0.5rem */
   }
 }
 
@@ -865,8 +957,9 @@
 
 @media (min-width: 1024px) {
   .product-card__btn-icon--grid {
-    height: 1.5rem;
-    width: 1.5rem;
+    height: 1.125rem; /* Réduit de 1.5rem à 1.125rem */
+    width: 1.125rem; /* Réduit de 1.5rem à 1.125rem */
+    margin-right: 0.5rem; /* Réduit de 0.75rem à 0.5rem */
   }
 }
 
