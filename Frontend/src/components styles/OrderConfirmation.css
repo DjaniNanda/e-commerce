@@ -1,4 +1,4 @@
-/* OrderConfirmation.css - Fully Responsive */
+/* OrderConfirmation.css - Fully Responsive avec tailles desktop optimisées */
 
 /* Modal Overlay - Mobile First */
 .order-confirmation-overlay {
@@ -64,14 +64,14 @@
 
 @media (min-width: 1024px) {
   .order-confirmation-modal {
-    max-width: 64rem;
-    border-radius: 1.5rem;
+    max-width: 55rem; /* Réduit de 64rem à 55rem */
+    border-radius: 1.25rem; /* Réduit de 1.5rem à 1.25rem */
   }
 }
 
 @media (min-width: 1280px) {
   .order-confirmation-modal {
-    max-width: 72rem;
+    max-width: 60rem; /* Réduit de 72rem à 60rem */
   }
 }
 
@@ -116,7 +116,7 @@
 
 @media (min-width: 1024px) {
   .success-header {
-    padding: 3.5rem 3rem;
+    padding: 2.5rem 2rem; /* Réduit de 3.5rem 3rem à 2.5rem 2rem */
   }
 }
 
@@ -181,9 +181,9 @@
 
 @media (min-width: 1024px) {
   .success-icon-container {
-    width: 6rem;
-    height: 6rem;
-    margin-bottom: 2.5rem;
+    width: 5rem; /* Réduit de 6rem à 5rem */
+    height: 5rem; /* Réduit de 6rem à 5rem */
+    margin-bottom: 1.5rem; /* Réduit de 2.5rem à 1.5rem */
   }
 }
 
@@ -215,8 +215,8 @@
 
 @media (min-width: 1024px) {
   .success-icon {
-    height: 3.5rem;
-    width: 3.5rem;
+    height: 2.75rem; /* Réduit de 3.5rem à 2.75rem */
+    width: 2.75rem; /* Réduit de 3.5rem à 2.75rem */
   }
 }
 
@@ -252,14 +252,14 @@
 
 @media (min-width: 1024px) {
   .success-title {
-    font-size: 2.5rem;
-    margin-bottom: 1.25rem;
+    font-size: 2rem; /* Réduit de 2.5rem à 2rem */
+    margin-bottom: 1rem; /* Réduit de 1.25rem à 1rem */
   }
 }
 
 @media (min-width: 1280px) {
   .success-title {
-    font-size: 3rem;
+    font-size: 2.25rem; /* Réduit de 3rem à 2.25rem */
   }
 }
 
@@ -291,13 +291,13 @@
 
 @media (min-width: 1024px) {
   .success-subtitle {
-    font-size: 1.25rem;
+    font-size: 1.125rem; /* Réduit de 1.25rem à 1.125rem */
   }
 }
 
 @media (min-width: 1280px) {
   .success-subtitle {
-    font-size: 1.375rem;
+    font-size: 1.25rem; /* Réduit de 1.375rem à 1.25rem */
   }
 }
 
@@ -327,7 +327,7 @@
 
 @media (min-width: 1024px) {
   .order-content {
-    max-height: calc(95vh - 14rem);
+    max-height: calc(95vh - 10rem); /* Réduit de 14rem à 10rem */
   }
 }
 
@@ -355,7 +355,7 @@
 
 @media (min-width: 1024px) {
   .order-content-inner {
-    padding: 3rem;
+    padding: 2rem; /* Réduit de 3rem à 2rem */
   }
 }
 
@@ -392,8 +392,8 @@
 
 @media (min-width: 1024px) {
   .call-alert {
-    padding: 2rem;
-    margin-bottom: 3rem;
+    padding: 1.5rem; /* Réduit de 2rem à 1.5rem */
+    margin-bottom: 2rem; /* Réduit de 3rem à 2rem */
   }
 }
 
@@ -423,7 +423,7 @@
 
 @media (min-width: 1024px) {
   .call-alert-content {
-    gap: 1.5rem;
+    gap: 1.25rem; /* Réduit de 1.5rem à 1.25rem */
   }
 }
 
@@ -446,6 +446,12 @@
   }
 }
 
+@media (min-width: 1024px) {
+  .call-alert-icon {
+    padding: 0.875rem; /* Réduit de 1rem à 0.875rem */
+  }
+}
+
 .call-alert-icon-svg {
   height: 1.25rem;
   width: 1.25rem;
@@ -463,6 +469,13 @@
   .call-alert-icon-svg {
     height: 1.5rem;
     width: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .call-alert-icon-svg {
+    height: 1.25rem; /* Réduit de 1.5rem à 1.25rem */
+    width: 1.25rem; /* Réduit de 1.5rem à 1.25rem */
   }
 }
 
@@ -497,8 +510,8 @@
 
 @media (min-width: 1024px) {
   .call-alert-title {
-    font-size: 1.25rem;
-    margin-bottom: 1rem;
+    font-size: 1.125rem; /* Réduit de 1.25rem à 1.125rem */
+    margin-bottom: 0.75rem; /* Réduit de 1rem à 0.75rem */
   }
 }
 
@@ -528,7 +541,7 @@
 
 @media (min-width: 1024px) {
   .call-alert-text {
-    font-size: 1.125rem;
+    font-size: 1rem; /* Réduit de 1.125rem à 1rem */
   }
 }
 
@@ -564,14 +577,14 @@
 @media (min-width: 1024px) {
   .order-grid {
     grid-template-columns: 1fr 1fr;
-    gap: 2rem;
+    gap: 1.75rem; /* Réduit de 2rem à 1.75rem */
     align-items: start;
   }
 }
 
 @media (min-width: 1280px) {
   .order-grid {
-    gap: 2.5rem;
+    gap: 2rem; /* Réduit de 2.5rem à 2rem */
   }
 }
 
@@ -601,7 +614,7 @@
 
 @media (min-width: 1024px) {
   .order-section {
-    gap: 2.5rem;
+    gap: 1.75rem; /* Réduit de 2.5rem à 1.75rem */
   }
 }
 
@@ -635,7 +648,7 @@
 
 @media (min-width: 1024px) {
   .info-card {
-    padding: 2rem;
+    padding: 1.5rem; /* Réduit de 2rem à 1.5rem */
   }
 }
 
@@ -672,8 +685,8 @@
 
 @media (min-width: 1024px) {
   .info-card-header {
-    font-size: 1.25rem;
-    margin-bottom: 1.5rem;
+    font-size: 1.125rem; /* Réduit de 1.25rem à 1.125rem */
+    margin-bottom: 1rem; /* Réduit de 1.5rem à 1rem */
   }
 }
 
@@ -697,6 +710,13 @@
     padding: 0.75rem;
     border-radius: 0.75rem;
     margin-right: 1rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .info-card-icon {
+    padding: 0.625rem; /* Réduit de 0.75rem à 0.625rem */
+    margin-right: 0.75rem; /* Réduit de 1rem à 0.75rem */
   }
 }
 
@@ -736,8 +756,8 @@
 
 @media (min-width: 1024px) {
   .info-card-icon svg {
-    height: 1.375rem;
-    width: 1.375rem;
+    height: 1.125rem; /* Réduit de 1.375rem à 1.125rem */
+    width: 1.125rem; /* Réduit de 1.375rem à 1.125rem */
   }
 }
 
@@ -765,6 +785,12 @@
 @media (min-width: 640px) {
   .customer-info {
     gap: 1rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .customer-info {
+    gap: 0.875rem; /* Réduit de 1rem à 0.875rem */
   }
 }
 
@@ -796,6 +822,13 @@
   }
 }
 
+@media (min-width: 1024px) {
+  .customer-info-label {
+    font-size: 0.875rem; /* Réduit de 1rem à 0.875rem */
+    min-width: 5.5rem; /* Réduit de 6rem à 5.5rem */
+  }
+}
+
 .customer-info-value {
   color: #1f2937;
   font-weight: 600;
@@ -811,6 +844,12 @@
 @media (min-width: 640px) {
   .customer-info-value {
     font-size: 1rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .customer-info-value {
+    font-size: 0.875rem; /* Réduit de 1rem à 0.875rem */
   }
 }
 
@@ -832,6 +871,13 @@
   .customer-info-phone {
     padding: 0.5rem 1rem;
     border-radius: 0.625rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .customer-info-phone {
+    padding: 0.375rem 0.75rem; /* Réduit le padding */
+    border-radius: 0.5rem; /* Réduit le border-radius */
   }
 }
 
@@ -865,7 +911,7 @@
 
 @media (min-width: 1024px) {
   .address-card {
-    padding: 1.5rem;
+    padding: 1.25rem; /* Réduit de 1.5rem à 1.25rem */
   }
 }
 
@@ -899,7 +945,8 @@
 
 @media (min-width: 1024px) {
   .address-main {
-    font-size: 1.125rem;
+    font-size: 1rem; /* Réduit de 1.125rem à 1rem */
+    margin-bottom: 0.375rem; /* Réduit la marge */
   }
 }
 
@@ -929,7 +976,7 @@
 
 @media (min-width: 1024px) {
   .address-details {
-    font-size: 1.0625rem;
+    font-size: 0.875rem; /* Réduit de 1.0625rem à 0.875rem */
   }
 }
 
@@ -979,7 +1026,7 @@
 
 @media (min-width: 1024px) {
   .order-summary-header {
-    padding: 2rem 2.5rem;
+    padding: 1.5rem 1.75rem; /* Réduit de 2rem 2.5rem à 1.5rem 1.75rem */
   }
 }
 
@@ -1013,7 +1060,7 @@
 
 @media (min-width: 1024px) {
   .order-summary-title {
-    font-size: 1.25rem;
+    font-size: 1.125rem; /* Réduit de 1.25rem à 1.125rem */
   }
 }
 
@@ -1048,8 +1095,9 @@
 
 @media (min-width: 1024px) {
   .order-summary-title svg {
-    height: 1.375rem;
-    width: 1.375rem;
+    height: 1.125rem; /* Réduit de 1.375rem à 1.125rem */
+    width: 1.125rem; /* Réduit de 1.375rem à 1.125rem */
+    margin-right: 0.625rem; /* Réduit de 0.75rem à 0.625rem */
   }
 }
 
@@ -1077,7 +1125,7 @@
 
 @media (min-width: 1024px) {
   .order-summary-content {
-    padding: 2.5rem;
+    padding: 1.75rem; /* Réduit de 2.5rem à 1.75rem */
   }
 }
 
@@ -1111,7 +1159,8 @@
 
 @media (min-width: 1024px) {
   .order-items {
-    gap: 1.5rem;
+    gap: 1.125rem; /* Réduit de 1.5rem à 1.125rem */
+    margin-bottom: 1.5rem; /* Réduit de 2rem à 1.5rem */
   }
 }
 
@@ -1150,8 +1199,8 @@
 
 @media (min-width: 1024px) {
   .order-item {
-    padding: 1.5rem;
-    gap: 1.5rem;
+    padding: 1.125rem; /* Réduit de 1.5rem à 1.125rem */
+    gap: 1rem; /* Réduit de 1.5rem à 1rem */
   }
 }
 
@@ -1191,7 +1240,8 @@
 
 @media (min-width: 1024px) {
   .order-item-name {
-    font-size: 1.125rem;
+    font-size: 1rem; /* Réduit de 1.125rem à 1rem */
+    margin-bottom: 0.375rem; /* Réduit la marge */
   }
 }
 
@@ -1221,7 +1271,7 @@
 
 @media (min-width: 1024px) {
   .order-item-quantity {
-    font-size: 1rem;
+    font-size: 0.875rem; /* Réduit de 1rem à 0.875rem */
   }
 }
 
@@ -1257,7 +1307,7 @@
 
 @media (min-width: 1024px) {
   .order-item-total {
-    font-size: 1.25rem;
+    font-size: 1.125rem; /* Réduit de 1.25rem à 1.125rem */
   }
 }
 
@@ -1276,6 +1326,12 @@
 @media (min-width: 640px) {
   .order-total {
     padding-top: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .order-total {
+    padding-top: 1.25rem; /* Réduit de 1.5rem à 1.25rem */
   }
 }
 
@@ -1311,7 +1367,7 @@
 
 @media (min-width: 1024px) {
   .order-total-row {
-    padding: 1.5rem;
+    padding: 1.25rem; /* Réduit de 1.5rem à 1.25rem */
   }
 }
 
@@ -1341,7 +1397,7 @@
 
 @media (min-width: 1024px) {
   .order-total-label {
-    font-size: 1.75rem;
+    font-size: 1.25rem; /* Réduit de 1.75rem à 1.25rem */
   }
 }
 
@@ -1371,13 +1427,13 @@
 
 @media (min-width: 1024px) {
   .order-total-amount {
-    font-size: 2.5rem;
+    font-size: 1.875rem; /* Réduit de 2.5rem à 1.875rem */
   }
 }
 
 @media (min-width: 1280px) {
   .order-total-amount {
-    font-size: 3rem;
+    font-size: 2.25rem; /* Réduit de 3rem à 2.25rem */
   }
 }
 
@@ -1412,7 +1468,7 @@
 
 @media (min-width: 1024px) {
   .process-timeline {
-    padding: 2rem;
+    padding: 1.5rem; /* Réduit de 2rem à 1.5rem */
   }
 }
 
@@ -1449,8 +1505,8 @@
 
 @media (min-width: 1024px) {
   .timeline-title {
-    font-size: 1.25rem;
-    margin-bottom: 1.75rem;
+    font-size: 1.125rem; /* Réduit de 1.25rem à 1.125rem */
+    margin-bottom: 1.25rem; /* Réduit de 1.75rem à 1.25rem */
   }
 }
 
@@ -1476,6 +1532,14 @@
   }
 }
 
+@media (min-width: 1024px) {
+  .timeline-title svg {
+    height: 1.125rem; /* Réduit de 1.25rem à 1.125rem */
+    width: 1.125rem; /* Réduit de 1.25rem à 1.125rem */
+    margin-right: 0.625rem; /* Réduit de 0.75rem à 0.625rem */
+  }
+}
+
 .timeline-steps {
   display: grid;
   grid-template-columns: 1fr;
@@ -1492,7 +1556,7 @@
 @media (min-width: 1024px) {
   .timeline-steps {
     grid-template-columns: repeat(4, 1fr);
-    gap: 1.5rem;
+    gap: 1.25rem; /* Réduit de 1.5rem à 1.25rem */
   }
 }
 
@@ -1536,8 +1600,9 @@
 
 @media (min-width: 1024px) {
   .timeline-step-icon {
-    width: 5rem;
-    height: 5rem;
+    width: 3.5rem; /* Réduit de 5rem à 3.5rem */
+    height: 3.5rem; /* Réduit de 5rem à 3.5rem */
+    margin-bottom: 0.75rem; /* Réduit de 1rem à 0.75rem */
   }
 }
 
@@ -1588,8 +1653,8 @@
 
 @media (min-width: 1024px) {
   .timeline-step-icon svg {
-    height: 2.5rem;
-    width: 2.5rem;
+    height: 1.75rem; /* Réduit de 2.5rem à 1.75rem */
+    width: 1.75rem; /* Réduit de 2.5rem à 1.75rem */
   }
 }
 
@@ -1638,7 +1703,8 @@
 
 @media (min-width: 1024px) {
   .timeline-step-title {
-    font-size: 1.125rem;
+    font-size: 0.875rem; /* Réduit de 1.125rem à 0.875rem */
+    margin-bottom: 0.25rem; /* Réduit la marge */
   }
 }
 
@@ -1668,7 +1734,7 @@
 
 @media (min-width: 1024px) {
   .timeline-step-description {
-    font-size: 1rem;
+    font-size: 0.8125rem; /* Réduit de 1rem à 0.8125rem */
   }
 }
 
@@ -1703,7 +1769,7 @@
 
 @media (min-width: 1024px) {
   .important-notice {
-    padding: 2rem;
+    padding: 1.5rem; /* Réduit de 2rem à 1.5rem */
   }
 }
 
@@ -1733,7 +1799,7 @@
 
 @media (min-width: 1024px) {
   .notice-content {
-    gap: 1.5rem;
+    gap: 1.25rem; /* Réduit de 1.5rem à 1.25rem */
   }
 }
 
@@ -1756,6 +1822,12 @@
   }
 }
 
+@media (min-width: 1024px) {
+  .notice-icon {
+    padding: 0.875rem; /* Réduit de 1rem à 0.875rem */
+  }
+}
+
 .notice-icon svg {
   height: 1.25rem;
   width: 1.25rem;
@@ -1773,6 +1845,13 @@
   .notice-icon svg {
     height: 1.5rem;
     width: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .notice-icon svg {
+    height: 1.25rem; /* Réduit de 1.5rem à 1.25rem */
+    width: 1.25rem; /* Réduit de 1.5rem à 1.25rem */
   }
 }
 
@@ -1805,7 +1884,8 @@
 
 @media (min-width: 1024px) {
   .notice-title {
-    font-size: 1.1875rem;
+    font-size: 1rem; /* Réduit de 1.1875rem à 1rem */
+    margin-bottom: 0.5rem; /* Réduit la marge */
   }
 }
 
@@ -1835,7 +1915,7 @@
 
 @media (min-width: 1024px) {
   .notice-text {
-    font-size: 1.125rem;
+    font-size: 0.875rem; /* Réduit de 1.125rem à 0.875rem */
   }
 }
 
@@ -1875,7 +1955,7 @@
 
 @media (min-width: 1024px) {
   .contact-info {
-    padding: 2rem;
+    padding: 1.5rem; /* Réduit de 2rem à 1.5rem */
   }
 }
 
@@ -1908,7 +1988,8 @@
 
 @media (min-width: 1024px) {
   .contact-title {
-    font-size: 1.1875rem;
+    font-size: 1rem; /* Réduit de 1.1875rem à 1rem */
+    margin-bottom: 0.75rem; /* Réduit la marge */
   }
 }
 
@@ -1941,7 +2022,8 @@
 
 @media (min-width: 1024px) {
   .contact-description {
-    font-size: 1.125rem;
+    font-size: 0.875rem; /* Réduit de 1.125rem à 0.875rem */
+    margin-bottom: 1rem; /* Réduit la marge */
   }
 }
 
@@ -1977,7 +2059,8 @@
 
 @media (min-width: 1024px) {
   .contact-phone {
-    padding: 1.25rem 2.25rem;
+    padding: 0.875rem 1.5rem; /* Réduit de 1.25rem 2.25rem à 0.875rem 1.5rem */
+    border-radius: 0.75rem; /* Réduit le border-radius */
   }
 }
 
@@ -2001,6 +2084,14 @@
     height: 1.25rem;
     width: 1.25rem;
     margin-right: 0.75rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .contact-phone svg {
+    height: 1.125rem; /* Réduit de 1.25rem à 1.125rem */
+    width: 1.125rem; /* Réduit de 1.25rem à 1.125rem */
+    margin-right: 0.5rem; /* Réduit de 0.75rem à 0.5rem */
   }
 }
 
@@ -2030,7 +2121,7 @@
 
 @media (min-width: 1024px) {
   .contact-phone-number {
-    font-size: 1.25rem;
+    font-size: 1rem; /* Réduit de 1.25rem à 1rem */
   }
 }
 
@@ -2050,6 +2141,12 @@
 @media (min-width: 640px) {
   .action-section {
     margin-bottom: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .action-section {
+    margin-bottom: 1.25rem; /* Réduit de 1.5rem à 1.25rem */
   }
 }
 
@@ -2095,8 +2192,9 @@
 
 @media (min-width: 1024px) {
   .continue-button {
-    padding: 1.5rem 3rem;
-    font-size: 1.25rem;
+    padding: 1rem 2rem; /* Réduit de 1.5rem 3rem à 1rem 2rem */
+    font-size: 1rem; /* Réduit de 1.25rem à 1rem */
+    border-radius: 0.75rem; /* Réduit le border-radius */
   }
 }
 
@@ -2142,9 +2240,9 @@
 
 @media (min-width: 1024px) {
   .continue-button svg {
-    height: 1.375rem;
-    width: 1.375rem;
-    margin-right: 1rem;
+    height: 1.125rem; /* Réduit de 1.375rem à 1.125rem */
+    width: 1.125rem; /* Réduit de 1.375rem à 1.125rem */
+    margin-right: 0.5rem; /* Réduit de 1rem à 0.5rem */
   }
 }
 
@@ -2177,7 +2275,8 @@
 
 @media (min-width: 1024px) {
   .thank-you-text {
-    font-size: 1.125rem;
+    font-size: 0.875rem; /* Réduit de 1.125rem à 0.875rem */
+    margin-top: 1rem; /* Réduit la marge */
   }
 }
 
