@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { Search, ShoppingCart, Menu, X, Car, MapPin, Clock, Phone, ChevronDown } from 'lucide-react';
+import { Search, ShoppingCart, Menu, X, MapPin, Clock, Phone, ChevronDown } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useCategories } from '../hooks/useCategories';
@@ -206,7 +206,11 @@ const Header: React.FC<HeaderProps> = ({
               >
                 <div className="logo-container">
                   <div className="logo-icon-wrapper">
-                    <Car className="logo-icon" />
+                    <img 
+                      src="/android-chrome-192x192.png" 
+                      alt="AUTO-BUSINESS Logo" 
+                      className="logo-icon logo-image"
+                    />
                   </div>
                   <div className="logo-accent"></div>
                 </div>
