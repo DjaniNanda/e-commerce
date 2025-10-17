@@ -41,8 +41,22 @@ public class ImageUploadController {
 
     @PostConstruct
     public void initializeImageKit() {
-        Configuration config = new Configuration(imagekitPublicKey, imagekitPrivateKey, imagekitUrlEndpoint);
-        this.imageKit = ImageKit.getInstance();
+        try {
+            System.out.println("=== ImageKit Configuration ===");
+            System.out.println("Public Key: " + imagekitPublicKey);
+            System.out.println("Private Key: " + (imagekitPrivateKey != null ? "***PROVIDED***" : "NULL"));
+            System.out.println("URL Endpoint: " + imagekitUrlEndpoint);
+
+            // ✅ CORRECT: Cette méthode existe dans le SDK
+            this.imageKit = ImageKit.getInstance();
+            Configuration config = new Configuration(imagekitPublicKey, imagekitPrivateKey, imagekitUrlEndpoint);
+            imageKit.setConfig(config);
+
+            System.out.println("✅ ImageKit initialized successfully");
+        } catch (Exception e) {
+            System.err.println("❌ Error initializing ImageKit: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     @PostMapping("/upload-image")
