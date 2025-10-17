@@ -316,8 +316,8 @@
 }
 
 .logo-icon-wrapper {
-  width: 3rem;
-  height: 3rem;
+  width: 4rem;
+  height: 4rem;
   background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-darker));
   border-radius: var(--radius-lg);
   display: flex;
@@ -345,8 +345,8 @@
 
 @media (min-width: 1024px) {
   .logo-icon-wrapper {
-    width: 3rem; /* Réduit de 4rem à 3rem */
-    height: 3rem; /* Réduit de 4rem à 3rem */
+    width: 4rem; /* Réduit de 4rem à 3rem */
+    height: 4rem; /* Réduit de 4rem à 3rem */
     border-radius: var(--radius-lg); /* Réduit de var(--radius-xl) à var(--radius-lg) */
   }
 }
