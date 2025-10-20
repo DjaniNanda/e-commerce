@@ -201,7 +201,7 @@
 
 /* Images Section */
 .images-section {
-  order: 1;
+  order: 0;
 }
 
 @media (min-width: 1024px) {
@@ -400,7 +400,7 @@
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  order: 0;
+  order: 1;
 }
 
 @media (min-width: 640px) {
