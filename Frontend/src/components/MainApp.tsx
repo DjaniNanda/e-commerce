@@ -6,7 +6,7 @@ import Cart from './Cart';
 import { useProducts } from '../hooks/useProducts';
 import { useCategories } from '../hooks/useCategories';
 import { Product } from '../types';
-import { Car, Grid, List, MapPin, Phone, Search } from 'lucide-react';
+import { Car, Grid, List, MapPin, Phone, Search, MessageCircle } from 'lucide-react';
 import '../components styles/MainApp.css';
 
 const MainApp: React.FC = () => {
@@ -227,6 +227,17 @@ const MainApp: React.FC = () => {
         isOpen={isCartOpen}
         onClose={() => setIsCartOpen(false)}
       />
+
+      {/* WhatsApp Button */}
+      <a
+        href="https://wa.me/237652010915"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="main-app__whatsapp-button"
+        aria-label="Contact us on WhatsApp"
+      >
+        <MessageCircle className="main-app__whatsapp-icon" />
+      </a>
 
       {/* Footer */}
       <footer className="main-app__footer">

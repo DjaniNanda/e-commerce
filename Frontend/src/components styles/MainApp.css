@@ -1429,6 +1429,82 @@
   }
 }
 
+/* WhatsApp Button */
+.main-app__whatsapp-button {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 3.5rem;
+  height: 3.5rem;
+  background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4), 0 8px 24px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 1000;
+  text-decoration: none;
+  animation: whatsapp-pulse 2s ease-in-out infinite;
+}
+
+@media (min-width: 640px) {
+  .main-app__whatsapp-button {
+    width: 4rem;
+    height: 4rem;
+    bottom: 2.5rem;
+    right: 2.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .main-app__whatsapp-button {
+    width: 4.5rem;
+    height: 4.5rem;
+  }
+}
+
+.main-app__whatsapp-button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(37, 211, 102, 0.5), 0 12px 32px rgba(0, 0, 0, 0.25);
+  animation: none;
+}
+
+.main-app__whatsapp-button:active {
+  transform: scale(1.05);
+}
+
+.main-app__whatsapp-icon {
+  width: 1.75rem;
+  height: 1.75rem;
+  color: white;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+@media (min-width: 640px) {
+  .main-app__whatsapp-icon {
+    width: 2rem;
+    height: 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .main-app__whatsapp-icon {
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+}
+
+@keyframes whatsapp-pulse {
+  0%, 100% {
+    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4), 0 8px 24px rgba(0, 0, 0, 0.2);
+  }
+  50% {
+    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.6), 0 8px 24px rgba(0, 0, 0, 0.3), 0 0 0 10px rgba(37, 211, 102, 0.1);
+  }
+}
+
 /* Footer */
 .main-app__footer {
   background: linear-gradient(to right, #1f2937, #111827);
@@ -2181,7 +2257,7 @@
   .main-app__spinner {
     animation: none;
   }
-  
+
   .main-app__hero-feature,
   .main-app__error-button,
   .main-app__clear-filters,
@@ -2191,9 +2267,17 @@
   .main-app__footer-link {
     transition: none;
   }
-  
+
   .main-app__hero-feature:hover,
   .main-app__footer-social-button:hover {
+    transform: none;
+  }
+
+  .main-app__whatsapp-button {
+    animation: none;
+  }
+
+  .main-app__whatsapp-button:hover {
     transform: none;
   }
 }
