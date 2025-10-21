@@ -11,39 +11,15 @@ interface OrderConfirmationProps {
 
 const OrderConfirmation: React.FC<OrderConfirmationProps> = ({ isOpen, onClose, orderData }) => {
   const modalRef = useRef<HTMLDivElement>(null);
-  const continueButtonRef = useRef<HTMLButtonElement>(null);
-  const [countdown, setCountdown] = useState(5);
-  const [showWhatsAppAlert, setShowWhatsAppAlert] = useState(false);
+  const whatsappButtonRef = useRef<HTMLButtonElement>(null);
 
   const whatsAppPhoneNumber = '237652010915';
-
-  useEffect(() => {
-    if (isOpen && orderData) {
-      setShowWhatsAppAlert(true);
-      setCountdown(5);
-
-      const countdownInterval = setInterval(() => {
-        setCountdown((prev) => {
-          if (prev <= 1) {
-            clearInterval(countdownInterval);
-            const message = generateWhatsAppMessage(orderData);
-            const whatsappUrl = getWhatsAppUrl(whatsAppPhoneNumber, message);
-            window.open(whatsappUrl, '_blank');
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-
-      return () => clearInterval(countdownInterval);
-    }
-  }, [isOpen, orderData]);
 
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
       setTimeout(() => {
-        continueButtonRef.current?.focus();
+        whatsappButtonRef.current?.focus();
       }, 400);
 
       return () => {
@@ -80,7 +56,7 @@ const OrderConfirmation: React.FC<OrderConfirmationProps> = ({ isOpen, onClose, 
     onClose();
   }, [onClose]);
 
-  const handleManualWhatsAppClick = useCallback(() => {
+  const handleWhatsAppClick = useCallback(() => {
     if (orderData) {
       const message = generateWhatsAppMessage(orderData);
       const whatsappUrl = getWhatsAppUrl(whatsAppPhoneNumber, message);
@@ -106,61 +82,81 @@ const OrderConfirmation: React.FC<OrderConfirmationProps> = ({ isOpen, onClose, 
           <div className="success-icon-container">
             <CheckCircle className="success-icon" aria-hidden="true" />
           </div>
-          <h1 id="confirmation-title" className="success-title">Commande confirmée !</h1>
+          <h1 id="confirmation-title" className="success-title">Commande enregistrée !</h1>
           <p id="confirmation-description" className="success-subtitle">
-            Votre Commande • Enregistrée avec succès
+            Cliquez sur le bouton ci-dessous pour valider votre commande via WhatsApp
           </p>
         </header>
 
         <div className="order-content">
           <div className="order-content-inner">
 
-            {/* WhatsApp Redirect Alert */}
-            {showWhatsAppAlert && countdown > 0 && (
-              <section className="whatsapp-redirect-alert" role="region" aria-labelledby="whatsapp-alert-title" style={{
-                backgroundColor: '#25D366',
-                color: 'white',
-                padding: '1.5rem',
-                borderRadius: '0.75rem',
-                marginBottom: '1.5rem',
-                textAlign: 'center',
-                animation: 'pulse 2s ease-in-out infinite'
-              }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem', flexDirection: 'column' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                    <MessageCircle size={32} aria-hidden="true" />
-                    <h2 id="whatsapp-alert-title" style={{ fontSize: '1.25rem', fontWeight: 'bold', margin: 0 }}>
-                      Redirection vers WhatsApp
-                    </h2>
-                  </div>
-                  <p style={{ margin: '0.5rem 0', fontSize: '1rem' }}>
-                    Vous allez être redirigé vers WhatsApp dans <strong style={{ fontSize: '1.5rem' }}>{countdown}</strong> seconde{countdown !== 1 ? 's' : ''}...
-                  </p>
-                  <p style={{ margin: 0, fontSize: '0.875rem', opacity: 0.9 }}>
-                    Votre commande avec tous les détails et prix sera automatiquement envoyée
-                  </p>
+            {/* WhatsApp Validation Alert */}
+            <section className="whatsapp-validation-alert" role="region" aria-labelledby="whatsapp-alert-title" style={{
+              backgroundColor: '#25D366',
+              color: 'white',
+              padding: '1.5rem',
+              borderRadius: '0.75rem',
+              marginBottom: '1.5rem',
+              textAlign: 'center',
+              boxShadow: '0 4px 6px rgba(37, 211, 102, 0.2)'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem', flexDirection: 'column' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                  <MessageCircle size={32} aria-hidden="true" />
+                  <h2 id="whatsapp-alert-title" style={{ fontSize: '1.25rem', fontWeight: 'bold', margin: 0 }}>
+                    Validation requise sur WhatsApp
+                  </h2>
                 </div>
-              </section>
-            )}
-
-            {/* Call Confirmation Alert */}
-            <section className="call-alert" role="region" aria-labelledby="call-alert-title">
-              <div className="call-alert-content">
-                <div className="call-alert-icon">
-                  <Phone className="call-alert-icon-svg" aria-hidden="true" />
-                </div>
-                <div>
-                  <h2 id="call-alert-title" className="call-alert-title">Confirmation par appel</h2>
-                  <p className="call-alert-text">
-                    Notre équipe vous contactera au numéro{' '}
-                    <span className="phone-highlight">
-                      {orderData.customerInfo.phone}
-                    </span>{' '}
-                    dans les prochaines minutes pour confirmer votre commande et les détails de livraison.
-                  </p>
-                </div>
+                <p style={{ margin: '0.5rem 0', fontSize: '1rem', lineHeight: '1.5' }}>
+                  Pour valider votre commande, vous devez <strong>envoyer les détails via WhatsApp</strong>.
+                </p>
+                <p style={{ margin: 0, fontSize: '0.875rem', opacity: 0.95, lineHeight: '1.4' }}>
+                  Votre commande sera confirmée uniquement après l'envoi du message WhatsApp avec tous les détails et prix.
+                </p>
               </div>
             </section>
+
+            {/* WhatsApp Action Button - Primary CTA */}
+            <div style={{ marginBottom: '2rem' }}>
+              <button
+                ref={whatsappButtonRef}
+                onClick={handleWhatsAppClick}
+                className="whatsapp-primary-button"
+                type="button"
+                style={{
+                  backgroundColor: '#25D366',
+                  color: 'white',
+                  padding: '1.25rem 2rem',
+                  borderRadius: '0.75rem',
+                  border: 'none',
+                  fontSize: '1.125rem',
+                  fontWeight: '700',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.75rem',
+                  width: '100%',
+                  transition: 'all 0.3s',
+                  boxShadow: '0 10px 15px -3px rgba(37, 211, 102, 0.3)',
+                  animation: 'pulse 2s ease-in-out infinite'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = '#128C7E';
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                  e.currentTarget.style.boxShadow = '0 20px 25px -5px rgba(37, 211, 102, 0.4)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = '#25D366';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(37, 211, 102, 0.3)';
+                }}
+              >
+                <MessageCircle size={24} aria-hidden="true" />
+                Valider ma commande sur WhatsApp
+              </button>
+            </div>
 
             <div className="order-grid">
               {/* Left Column - Order Details */}
@@ -264,15 +260,15 @@ const OrderConfirmation: React.FC<OrderConfirmationProps> = ({ isOpen, onClose, 
                     <CheckCircle aria-hidden="true" />
                   </div>
                   <h4 className="timeline-step-title">Enregistrée</h4>
-                  <p className="timeline-step-description">Commande reçue</p>
+                  <p className="timeline-step-description">Commande créée</p>
                 </div>
                 
                 <div className="timeline-step" role="listitem">
                   <div className="timeline-step-icon timeline-step-icon--active">
-                    <Phone aria-hidden="true" />
+                    <MessageCircle aria-hidden="true" />
                   </div>
-                  <h4 className="timeline-step-title">Appel</h4>
-                  <p className="timeline-step-description">Confirmation en cours</p>
+                  <h4 className="timeline-step-title">WhatsApp</h4>
+                  <p className="timeline-step-description">Validation requise</p>
                 </div>
                 
                 <div className="timeline-step" role="listitem">
@@ -297,14 +293,14 @@ const OrderConfirmation: React.FC<OrderConfirmationProps> = ({ isOpen, onClose, 
             <section className="important-notice" role="region" aria-labelledby="notice-title">
               <div className="notice-content">
                 <div className="notice-icon">
-                  <Phone aria-hidden="true" />
+                  <MessageCircle aria-hidden="true" />
                 </div>
                 <div>
-                  <h3 id="notice-title" className="notice-title">Restez disponible !</h3>
+                  <h3 id="notice-title" className="notice-title">Action requise !</h3>
                   <p className="notice-text">
-                    Assurez-vous que votre téléphone soit accessible. Notre équipe vous appellera 
-                    dans les <span className="notice-highlight">15-30 prochaines minutes</span> pour 
-                    confirmer les détails de votre commande et organiser la livraison.
+                    Votre commande n'est <span className="notice-highlight">pas encore validée</span>. 
+                    Vous devez cliquer sur le bouton WhatsApp ci-dessus pour envoyer les détails de votre 
+                    commande. Notre équipe confirmera ensuite votre commande et organisera la livraison.
                   </p>
                 </div>
               </div>
@@ -330,39 +326,6 @@ const OrderConfirmation: React.FC<OrderConfirmationProps> = ({ isOpen, onClose, 
             {/* Action Buttons */}
             <div className="action-section">
               <button
-                onClick={handleManualWhatsAppClick}
-                className="whatsapp-manual-button"
-                type="button"
-                style={{
-                  backgroundColor: '#25D366',
-                  color: 'white',
-                  padding: '0.875rem 1.5rem',
-                  borderRadius: '0.5rem',
-                  border: 'none',
-                  fontSize: '1rem',
-                  fontWeight: '600',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '0.5rem',
-                  width: '100%',
-                  marginBottom: '1rem',
-                  transition: 'all 0.2s',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = '#128C7E';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = '#25D366';
-                }}
-              >
-                <MessageCircle aria-hidden="true" />
-                Ouvrir WhatsApp maintenant
-              </button>
-
-              <button
-                ref={continueButtonRef}
                 onClick={handleContinueClick}
                 className="continue-button"
                 type="button"
