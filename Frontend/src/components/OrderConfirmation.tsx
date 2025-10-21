@@ -91,16 +91,38 @@ const OrderConfirmation: React.FC<OrderConfirmationProps> = ({ isOpen, onClose, 
         <div className="order-content">
           <div className="order-content-inner">
 
-            {/* WhatsApp Validation Alert */}
-            <section className="whatsapp-validation-alert" role="region" aria-labelledby="whatsapp-alert-title" style={{
-              backgroundColor: '#25D366',
-              color: 'white',
-              padding: '1.5rem',
-              borderRadius: '0.75rem',
-              marginBottom: '1.5rem',
-              textAlign: 'center',
-              boxShadow: '0 4px 6px rgba(37, 211, 102, 0.2)'
-            }}>
+            {/* WhatsApp Validation Alert - Clickable */}
+            <button
+              onClick={handleWhatsAppClick}
+              className="whatsapp-validation-alert"
+              role="button"
+              aria-labelledby="whatsapp-alert-title"
+              type="button"
+              style={{
+                backgroundColor: '#25D366',
+                color: 'white',
+                padding: '1.5rem',
+                borderRadius: '0.75rem',
+                marginBottom: '1.5rem',
+                textAlign: 'center',
+                boxShadow: '0 4px 6px rgba(37, 211, 102, 0.2)',
+                border: 'none',
+                cursor: 'pointer',
+                width: '100%',
+                transition: 'all 0.3s',
+                animation: 'pulse 2s ease-in-out infinite'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = '#128C7E';
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(37, 211, 102, 0.3)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = '#25D366';
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 4px 6px rgba(37, 211, 102, 0.2)';
+              }}
+            >
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem', flexDirection: 'column' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                   <MessageCircle size={32} aria-hidden="true" />
@@ -114,8 +136,11 @@ const OrderConfirmation: React.FC<OrderConfirmationProps> = ({ isOpen, onClose, 
                 <p style={{ margin: 0, fontSize: '0.875rem', opacity: 0.95, lineHeight: '1.4' }}>
                   Votre commande sera confirmée uniquement après l'envoi du message WhatsApp avec tous les détails et prix.
                 </p>
+                <p style={{ margin: '0.75rem 0 0 0', fontSize: '0.875rem', fontWeight: '600', opacity: 1 }}>
+                  👆 Cliquez ici pour ouvrir WhatsApp
+                </p>
               </div>
-            </section>
+            </button>
 
             {/* WhatsApp Action Button - Primary CTA */}
             <div style={{ marginBottom: '2rem' }}>
