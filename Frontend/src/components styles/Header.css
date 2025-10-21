@@ -298,11 +298,6 @@
   min-width: 0;
 }
 
-@media (min-width: 375px) {
-  .logo-section {
-    gap: var(--spacing-xl);
-  }
-}
 
 @media (min-width: 768px) {
   .logo-section {
@@ -351,7 +346,7 @@
 
 @media (min-width: 1024px) {
   .logo-icon-wrapper {
-    width: 3.7rem; 
+    width: .7rem; 
     height: 3.7rem; 
     border-radius: var(--radius-lg); /* Réduit de var(--radius-xl) à var(--radius-lg) */
   }
