@@ -322,8 +322,8 @@
 }
 
 .logo-icon-wrapper {
-  width: 4.5rem;
-  height: 4.5rem;
+  width: 4.2rem;
+  height: 4.2rem;
   background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-darker));
   border-radius: var(--radius-lg);
   display: flex;
@@ -336,23 +336,23 @@
 
 @media (min-width: 375px) {
   .logo-icon-wrapper {
-    width: 3rem;
-    height: 3rem;
+    width: 2.7rem;
+    height: 2.7rem;
   }
 }
 
 @media (min-width: 768px) {
   .logo-icon-wrapper {
-    width: 4rem;
-    height: 4rem;
+    width: 3.7rem;
+    height: 3.7rem;
     border-radius: var(--radius-xl);
   }
 }
 
 @media (min-width: 1024px) {
   .logo-icon-wrapper {
-    width: 4rem; 
-    height: 4rem; 
+    width: 3.7rem; 
+    height: 3.7rem; 
     border-radius: var(--radius-lg); /* Réduit de var(--radius-xl) à var(--radius-lg) */
   }
 }
