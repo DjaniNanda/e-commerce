@@ -357,30 +357,30 @@
 }
 
 .logo-icon {
-  height: 3rem;
-  width: 3rem;
+  height: 4rem;
+  width: 4rem;
   color: var(--white);
   flex-shrink: 0;
 }
 
 @media (min-width: 375px) {
   .logo-icon {
-    height: 2.25rem;
-    width: 2.25rem;
+    height: 3.25rem;
+    width: 3.25rem;
   }
 }
 
 @media (min-width: 768px) {
   .logo-icon {
-    height: 3rem;
-    width: 3rem;
+    height: 4rem;
+    width: 4rem;
   }
 }
 
 @media (min-width: 1024px) {
   .logo-icon {
-    height: 2.75rem; /* Réduit de 2.25rem à 1.75rem */
-    width: 2.75rem; /* Réduit de 2.25rem à 1.75rem */
+    height: 3.75rem; /* Réduit de 2.25rem à 1.75rem */
+    width: 3.75rem; /* Réduit de 2.25rem à 1.75rem */
   }
 }
 
