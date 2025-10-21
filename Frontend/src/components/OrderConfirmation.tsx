@@ -1,5 +1,6 @@
-import React, { useCallback, useEffect, useRef } from 'react';
-import { CheckCircle, Phone, MapPin, Package, Clock, Truck, CreditCard } from 'lucide-react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { CheckCircle, Phone, MapPin, Package, Clock, Truck, CreditCard, MessageCircle } from 'lucide-react';
+import { generateWhatsAppMessage, getWhatsAppUrl } from '../utils/whatsappUtils';
 import '../components styles/OrderConfirmation.css';
 
 interface OrderConfirmationProps {
@@ -11,16 +12,40 @@ interface OrderConfirmationProps {
 const OrderConfirmation: React.FC<OrderConfirmationProps> = ({ isOpen, onClose, orderData }) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const continueButtonRef = useRef<HTMLButtonElement>(null);
+  const [countdown, setCountdown] = useState(5);
+  const [showWhatsAppAlert, setShowWhatsAppAlert] = useState(false);
 
-  // Prevent body scroll when modal is open
+  const whatsAppPhoneNumber = '237652010915';
+
+  useEffect(() => {
+    if (isOpen && orderData) {
+      setShowWhatsAppAlert(true);
+      setCountdown(5);
+
+      const countdownInterval = setInterval(() => {
+        setCountdown((prev) => {
+          if (prev <= 1) {
+            clearInterval(countdownInterval);
+            const message = generateWhatsAppMessage(orderData);
+            const whatsappUrl = getWhatsAppUrl(whatsAppPhoneNumber, message);
+            window.open(whatsappUrl, '_blank');
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+
+      return () => clearInterval(countdownInterval);
+    }
+  }, [isOpen, orderData]);
+
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
-      // Focus continue button after animation
       setTimeout(() => {
         continueButtonRef.current?.focus();
       }, 400);
-      
+
       return () => {
         document.body.style.overflow = 'unset';
       };
@@ -55,6 +80,14 @@ const OrderConfirmation: React.FC<OrderConfirmationProps> = ({ isOpen, onClose, 
     onClose();
   }, [onClose]);
 
+  const handleManualWhatsAppClick = useCallback(() => {
+    if (orderData) {
+      const message = generateWhatsAppMessage(orderData);
+      const whatsappUrl = getWhatsAppUrl(whatsAppPhoneNumber, message);
+      window.open(whatsappUrl, '_blank');
+    }
+  }, [orderData, whatsAppPhoneNumber]);
+
   if (!isOpen || !orderData) return null;
 
   return (
@@ -81,7 +114,35 @@ const OrderConfirmation: React.FC<OrderConfirmationProps> = ({ isOpen, onClose, 
 
         <div className="order-content">
           <div className="order-content-inner">
-            
+
+            {/* WhatsApp Redirect Alert */}
+            {showWhatsAppAlert && countdown > 0 && (
+              <section className="whatsapp-redirect-alert" role="region" aria-labelledby="whatsapp-alert-title" style={{
+                backgroundColor: '#25D366',
+                color: 'white',
+                padding: '1.5rem',
+                borderRadius: '0.75rem',
+                marginBottom: '1.5rem',
+                textAlign: 'center',
+                animation: 'pulse 2s ease-in-out infinite'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem', flexDirection: 'column' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                    <MessageCircle size={32} aria-hidden="true" />
+                    <h2 id="whatsapp-alert-title" style={{ fontSize: '1.25rem', fontWeight: 'bold', margin: 0 }}>
+                      Redirection vers WhatsApp
+                    </h2>
+                  </div>
+                  <p style={{ margin: '0.5rem 0', fontSize: '1rem' }}>
+                    Vous allez être redirigé vers WhatsApp dans <strong style={{ fontSize: '1.5rem' }}>{countdown}</strong> seconde{countdown !== 1 ? 's' : ''}...
+                  </p>
+                  <p style={{ margin: 0, fontSize: '0.875rem', opacity: 0.9 }}>
+                    Votre commande avec tous les détails et prix sera automatiquement envoyée
+                  </p>
+                </div>
+              </section>
+            )}
+
             {/* Call Confirmation Alert */}
             <section className="call-alert" role="region" aria-labelledby="call-alert-title">
               <div className="call-alert-content">
@@ -266,8 +327,40 @@ const OrderConfirmation: React.FC<OrderConfirmationProps> = ({ isOpen, onClose, 
               </div>
             </section>
 
-            {/* Action Button */}
+            {/* Action Buttons */}
             <div className="action-section">
+              <button
+                onClick={handleManualWhatsAppClick}
+                className="whatsapp-manual-button"
+                type="button"
+                style={{
+                  backgroundColor: '#25D366',
+                  color: 'white',
+                  padding: '0.875rem 1.5rem',
+                  borderRadius: '0.5rem',
+                  border: 'none',
+                  fontSize: '1rem',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.5rem',
+                  width: '100%',
+                  marginBottom: '1rem',
+                  transition: 'all 0.2s',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = '#128C7E';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = '#25D366';
+                }}
+              >
+                <MessageCircle aria-hidden="true" />
+                Ouvrir WhatsApp maintenant
+              </button>
+
               <button
                 ref={continueButtonRef}
                 onClick={handleContinueClick}
@@ -278,7 +371,7 @@ const OrderConfirmation: React.FC<OrderConfirmationProps> = ({ isOpen, onClose, 
                 <Package aria-hidden="true" />
                 Continuer mes achats
               </button>
-              
+
               <p id="thank-you-text" className="thank-you-text">
                 Merci pour votre confiance ! 🙏
               </p>
