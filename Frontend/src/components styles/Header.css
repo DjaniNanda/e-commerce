@@ -316,8 +316,8 @@
 }
 
 .logo-icon-wrapper {
-  width: 3.5rem;
-  height: 3.5rem;
+  width: 4rem;
+  height: 4rem;
   background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-darker));
   border-radius: var(--radius-lg);
   display: flex;
@@ -330,23 +330,23 @@
 
 @media (min-width: 375px) {
   .logo-icon-wrapper {
-    width: 2rem;
-    height: 2rem;
+    width: 2.5rem;
+    height: 2.5rem;
   }
 }
 
 @media (min-width: 768px) {
   .logo-icon-wrapper {
-    width: 3rem;
-    height: 3rem;
+    width: 3.5rem;
+    height: 3.5rem;
     border-radius: var(--radius-xl);
   }
 }
 
 @media (min-width: 1024px) {
   .logo-icon-wrapper {
-    width: 3.5rem; 
-    height: 3.5rem; 
+    width: 4rem; 
+    height: 4rem; 
     border-radius: var(--radius-lg); /* Réduit de var(--radius-xl) à var(--radius-lg) */
   }
 }
