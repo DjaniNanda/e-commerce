@@ -426,16 +426,16 @@
 
 @media (min-width: 768px) {
   .logo-icon-wrapper {
-    width: 4.5rem;
-    height: 4.5rem;
+    width: 5.5rem;
+    height: 5.5rem;
     border-radius: var(--radius-xl);
   }
 }
 
 @media (min-width: 1024px) {
   .logo-icon-wrapper {
-    width: 5rem;
-    height: 5rem;
+    width: 6rem;
+    height: 6rem;
     border-radius: var(--radius-lg);
   }
 }
