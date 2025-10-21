@@ -417,7 +417,7 @@
   }
 }
 
-@media (min-width: 480px) {
+@media (min-width: 400px) {
   .logo-icon-wrapper {
     width: 4.5rem;
     height: 4.5rem;
