@@ -300,7 +300,7 @@
 
 @media (min-width: 375px) {
   .logo-section {
-    gap: var(--spacing-sm);
+    gap: var(--spacing-xl);
   }
 }
 
