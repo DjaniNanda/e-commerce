@@ -316,8 +316,8 @@
 }
 
 .logo-icon-wrapper {
-  width: 10rem;
-  height: 10rem;
+  width: 40rem;
+  height: 40rem;
   background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-darker));
   border-radius: var(--radius-lg);
   display: flex;
