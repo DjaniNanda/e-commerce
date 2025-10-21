@@ -298,6 +298,12 @@
   min-width: 0;
 }
 
+@media (min-width: 375px) {
+  .logo-section {
+    gap: var(--spacing-sm);
+  }
+}
+
 @media (min-width: 768px) {
   .logo-section {
     gap: var(--spacing-lg);
