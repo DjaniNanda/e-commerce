@@ -230,7 +230,7 @@ const MainApp: React.FC = () => {
 
       {/* WhatsApp Button */}
       <a
-        href="https://wa.me/237652010915"
+        href="https://wa.me/237699849474"
         target="_blank"
         rel="noopener noreferrer"
         className="main-app__whatsapp-button"
