@@ -13,7 +13,7 @@ const OrderConfirmation: React.FC<OrderConfirmationProps> = ({ isOpen, onClose, 
   const modalRef = useRef<HTMLDivElement>(null);
   const whatsappButtonRef = useRef<HTMLButtonElement>(null);
 
-  const whatsAppPhoneNumber = '237652010915';
+  const whatsAppPhoneNumber = '237699849474';
 
   useEffect(() => {
     if (isOpen) {
