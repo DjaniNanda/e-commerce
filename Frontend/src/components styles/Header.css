@@ -681,15 +681,6 @@
   }
 }
 
-.logo-section:hover .brand-logo {
-  filter: grayscale(0%) opacity(1);
-  transform: scale(1.1);
-}
-
-.brand-logo:hover {
-  filter: grayscale(0%) opacity(1) brightness(1.1);
-  transform: scale(1.15) !important;
-}
 
 /* Desktop Search - Enhanced responsive behavior */
 .search-desktop {
