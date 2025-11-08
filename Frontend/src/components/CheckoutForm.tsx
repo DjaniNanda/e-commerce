@@ -472,7 +472,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ isOpen, onClose, onSubmit }
                 ) : (
                   <>
                     <Shield className="submit-icon" aria-hidden="true" />
-                    <span>Confirmer ma commande</span>
+                    <span>Confirmer votre commande</span>
                   </>
                 )}
               </button>
