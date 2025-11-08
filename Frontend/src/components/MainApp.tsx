@@ -238,7 +238,7 @@ const MainApp: React.FC = () => {
         aria-label="Contact us on WhatsApp"
       >
         <span className="main-app__whatsapp-icon"></span>
-        <FaWhatsapp  />
+        <FaWhatsapp/>
       </a>
 
       {/* Footer */}
