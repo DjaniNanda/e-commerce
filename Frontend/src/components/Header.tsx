@@ -216,9 +216,8 @@ const Header: React.FC<HeaderProps> = ({
                 </div>
                 <div>
                   <h1 className="logo-title">
-                    AUTO-BUSINESS
+                    AUTO-BUSINESS 237
                   </h1>
-                  <p className="logo-tagline">Pièces détachées automobiles</p>
                 </div>
               </div>
 
