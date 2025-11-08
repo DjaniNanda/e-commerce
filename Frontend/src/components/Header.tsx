@@ -214,10 +214,36 @@ const Header: React.FC<HeaderProps> = ({
                   </div>
                   <div className="logo-accent"></div>
                 </div>
-                <div>
+                <div className="logo-text-container">
                   <h1 className="logo-title">
                     AUTO-BUSINESS 237
                   </h1>
+                  <div className="brand-logos">
+                    <img 
+                      src="https://cdn.worldvectorlogo.com/logos/mercedes-benz-9.svg" 
+                      alt="Mercedes" 
+                      className="brand-logo"
+                      title="Mercedes-Benz"
+                    />
+                    <img 
+                      src="https://cdn.worldvectorlogo.com/logos/toyota-6.svg" 
+                      alt="Toyota" 
+                      className="brand-logo"
+                      title="Toyota"
+                    />
+                    <img 
+                      src="https://cdn.worldvectorlogo.com/logos/hyundai-motor-company-logo.svg" 
+                      alt="Hyundai" 
+                      className="brand-logo"
+                      title="Hyundai"
+                    />
+                    <img 
+                      src="https://cdn.worldvectorlogo.com/logos/kia-logo-1.svg" 
+                      alt="Kia" 
+                      className="brand-logo"
+                      title="Kia"
+                    />
+                  </div>
                 </div>
               </div>
 
