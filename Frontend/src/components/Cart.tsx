@@ -302,7 +302,7 @@ const Cart: React.FC<{
                       aria-describedby="cart-benefits"
                       type="button"
                     >
-                      {isSubmittingToCheckout ? 'Préparation...' : 'Passer ma commande'}
+                      {isSubmittingToCheckout ? 'Préparation...' : 'Passer votre commande'}
                     </button>
                   </div>
                 </footer>
