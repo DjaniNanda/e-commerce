@@ -172,7 +172,7 @@ const Header: React.FC<HeaderProps> = ({
                 </div>
                 <div className="topbar-item topbar-item-hidden-mobile">
                   <Clock className="topbar-icon" />
-                  <span>Ouvert 8h30-22h30</span>
+                  <span>Ouvert 8h00-18h30</span>
                 </div>
               </div>
               <div className="topbar-right">
