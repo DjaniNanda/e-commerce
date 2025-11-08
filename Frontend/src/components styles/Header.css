@@ -398,8 +398,8 @@
 }
 
 .logo-icon-wrapper {
-  width: 2rem;
-  height: 2rem;
+  width: 4rem;
+  height: 4rem;
   background: linear-gradient(135deg, var(--primary-blue), var(--primary-blue-darker));
   border-radius: var(--radius-lg);
   display: flex;
@@ -419,23 +419,23 @@
 
 @media (min-width: 400px) {
   .logo-icon-wrapper {
-    width: 2.5rem;
-    height: 2.5rem;
+    width: 4.5rem;
+    height: 4.5rem;
   }
 }
 
 @media (min-width: 768px) {
   .logo-icon-wrapper {
-    width: 3.5rem;
-    height: 3.5rem;
+    width: 5.5rem;
+    height: 5.5rem;
     border-radius: var(--radius-xl);
   }
 }
 
 @media (min-width: 1024px) {
   .logo-icon-wrapper {
-    width: 4rem;
-    height: 4rem;
+    width: 6rem;
+    height: 6rem;
     border-radius: var(--radius-lg);
   }
 }
@@ -446,37 +446,37 @@
 }
 
 .logo-icon {
-  height: 1.75rem;
-  width: 1.75rem;
+  height: 2rem;
+  width: 2rem;
   color: var(--white);
   flex-shrink: 0;
 }
 
 @media (min-width: 360px) {
   .logo-icon {
-    height: 2.4rem;
-    width: 2.4rem;
+    height: 2.5rem;
+    width: 2.5rem;
   }
 }
 
 @media (min-width: 400px) {
-  .logo-icon {
-    height: 2.2rem;
-    width: 2.2rem;
-  }
-}
-
-@media (min-width: 768px) {
   .logo-icon {
     height: 3rem;
     width: 3rem;
   }
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 768px) {
   .logo-icon {
     height: 3.5rem;
     width: 3.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .logo-icon {
+    height: 4rem;
+    width: 4rem;
   }
 }
 

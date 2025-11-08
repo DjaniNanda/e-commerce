@@ -220,25 +220,25 @@ const Header: React.FC<HeaderProps> = ({
                   </h1>
                   <div className="brand-logos">
                     <img 
-                      src="https://cdn.worldvectorlogo.com/logos/mercedes-benz-9.svg" 
+                      src="/mercedes.jpeg" 
                       alt="Mercedes" 
                       className="brand-logo"
                       title="Mercedes-Benz"
                     />
                     <img 
-                      src="https://cdn.worldvectorlogo.com/logos/toyota-6.svg" 
+                      src="/toyota.jpeg" 
                       alt="Toyota" 
                       className="brand-logo"
                       title="Toyota"
                     />
                     <img 
-                      src="https://cdn.worldvectorlogo.com/logos/hyundai-motor-company-logo.svg" 
+                      src="/hyundai.jpeg" 
                       alt="Hyundai" 
                       className="brand-logo"
                       title="Hyundai"
                     />
                     <img 
-                      src="https://cdn.worldvectorlogo.com/logos/kia-logo-1.svg" 
+                      src="/kia.jpeg" 
                       alt="Kia" 
                       className="brand-logo"
                       title="Kia"
