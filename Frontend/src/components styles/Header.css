@@ -653,31 +653,31 @@
 
 @media (min-width: 360px) {
   .brand-logo {
-    height: 1.4rem;
+    height: 2rem;
   }
 }
 
 @media (min-width: 400px) {
   .brand-logo {
-    height: 1.7rem;
+    height: 2.3rem;
   }
 }
 
 @media (min-width: 768px) {
   .brand-logo {
-    height: 2rem;
+    height: 2.6rem;
   }
 }
 
 @media (min-width: 1024px) {
   .brand-logo {
-    height: 2.4rem;
+    height: 3rem;
   }
 }
 
 @media (min-width: 1280px) {
   .brand-logo {
-    height: 2.75rem;
+    height: 3.3rem;
   }
 }
 
