@@ -454,29 +454,29 @@
 
 @media (min-width: 360px) {
   .logo-icon {
-    height: 3.1rem;
-    width: 3.1rem;
+    height: 3.5rem;
+    width: 3.5rem;
   }
 }
 
 @media (min-width: 400px) {
   .logo-icon {
-    height: 3.6rem;
-    width: 3.6rem;
+    height: 4rem;
+    width: 4rem;
   }
 }
 
 @media (min-width: 768px) {
   .logo-icon {
-    height: 4.1rem;
-    width: 4.1rem;
+    height: 4.5rem;
+    width: 4.5rem;
   }
 }
 
 @media (min-width: 1024px) {
   .logo-icon {
-    height: 4.6rem;
-    width: 4.6rem;
+    height: 5rem;
+    width: 5rem;
   }
 }
 
