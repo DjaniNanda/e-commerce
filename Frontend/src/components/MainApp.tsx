@@ -5,6 +5,7 @@ import ProductModal from './ProductModal';
 import Cart from './Cart';
 import { useProducts } from '../hooks/useProducts';
 import { useCategories } from '../hooks/useCategories';
+import { FaWhatsapp } from 'react-icons/fa';
 import { Product } from '../types';
 import { Car, Grid, List, MapPin, Phone, Search, MessageCircle } from 'lucide-react';
 import '../components styles/MainApp.css';
@@ -236,7 +237,8 @@ const MainApp: React.FC = () => {
         className="main-app__whatsapp-button"
         aria-label="Contact us on WhatsApp"
       >
-        <MessageCircle className="main-app__whatsapp-icon" />
+        <span className="main-app__whatsapp-icon"></span>
+        <FaWhatsapp  />
       </a>
 
       {/* Footer */}
@@ -296,15 +298,15 @@ const MainApp: React.FC = () => {
               <div className="main-app__footer-hours">
                 <div className="main-app__footer-hours-item">
                   <span>Lundi - Vendredi:</span>
-                  <span className="main-app__footer-hours-time">8h30 - 22h30</span>
+                  <span className="main-app__footer-hours-time">8h00 - 18h30</span>
                 </div>
                 <div className="main-app__footer-hours-item">
                   <span>Samedi:</span>
-                  <span className="main-app__footer-hours-time">8h30 - 22h30</span>
+                  <span className="main-app__footer-hours-time">8h00 - 18h30</span>
                 </div>
                 <div className="main-app__footer-hours-item">
                   <span>Dimanche:</span>
-                  <span className="main-app__footer-hours-time">8h30 - 22h30</span>
+                  <span className="main-app__footer-hours-time">8h00 - 18h30</span>
                 </div>
               </div>
             </div>
