@@ -18,47 +18,34 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
 
-    public ProductResponse getAllProducts() {
-        logger.info("Starting getAllProducts method");
+    public ProductResponse getAllProducts(String sortBy) {
+        logger.info("Starting getAllProducts method with sortBy: {}", sortBy);
         try {
-            List<Product> products = productRepository.findAll();
-            logger.info("Successfully retrieved {} products from database", products.size());
-            ProductResponse response = new ProductResponse(products, products.size());
-            logger.info("Successfully created ProductResponse with {} products", products.size());
-            return response;
-        } catch (Exception e) {
-            logger.error("Error occurred while getting all products: {}", e.getMessage(), e);
-            throw e;
-        }
-    }
-
-    public Product getProductById(Long id) {
-        logger.info("Starting getProductById method with id: {}", id);
-        try {
-            if (id == null) {
-                logger.warn("Product ID is null");
-                throw new IllegalArgumentException("Product ID cannot be null");
+            List<Product> products;
+            switch (sortBy) {
+                case "price_desc":
+                    products = productRepository.findAllByOrderByPriceDesc();
+                    break;
+                case "name_asc":
+                    products = productRepository.findAllByOrderByNameAsc();
+                    break;
+                case "name_desc":
+                    products = productRepository.findAllByOrderByNameDesc();
+                    break;
+                case "price_asc":
+                default:
+                    products = productRepository.findAllByOrderByPriceAsc();
             }
-
-            logger.debug("Searching for product with id: {}", id);
-            Product product = productRepository.findById(id)
-                    .orElseThrow(() -> {
-                        logger.warn("Product not found with id: {}", id);
-                        return new ResourceNotFoundException("Product not found with id: " + id);
-                    });
-
-            logger.info("Successfully found product with id: {} and name: {}", id, product.getName());
-            return product;
-        } catch (ResourceNotFoundException e) {
-            logger.error("Product not found with id: {}", id);
-            throw e;
+            
+            logger.info("Successfully retrieved {} products from database with sort: {}", products.size(), sortBy);
+            return new ProductResponse(products, products.size());
         } catch (Exception e) {
-            logger.error("Unexpected error occurred while getting product by id {}: {}", id, e.getMessage(), e);
+            logger.error("Unexpected error occurred while getting all products: {}", e.getMessage(), e);
             throw e;
         }
     }
 
-    public ProductResponse searchProducts(String query) {
+    public ProductResponse searchProducts(String query, String sortBy) {
         logger.info("Starting searchProducts method with query: '{}'", query);
         try {
             if (query == null || query.trim().isEmpty()) {
@@ -67,7 +54,21 @@ public class ProductService {
             }
 
             logger.debug("Executing search query: '{}'", query);
-            List<Product> products = productRepository.findByNameOrDescriptionContainingIgnoreCase(query);
+            List<Product> products;
+            switch (sortBy) {
+                case "price_desc":
+                    products = productRepository.findByNameOrDescriptionContainingIgnoreCaseOrderByPriceDesc(query);
+                    break;
+                case "name_asc":
+                    products = productRepository.findByNameOrDescriptionContainingIgnoreCaseOrderByNameAsc(query);
+                    break;
+                case "name_desc":
+                    products = productRepository.findByNameOrDescriptionContainingIgnoreCaseOrderByNameDesc(query);
+                    break;
+                case "price_asc":
+                default:
+                    products = productRepository.findByNameOrDescriptionContainingIgnoreCaseOrderByPriceAsc(query);
+            }
             logger.info("Search query '{}' returned {} products", query, products.size());
 
             ProductResponse response = new ProductResponse(products, products.size());
@@ -79,7 +80,7 @@ public class ProductService {
         }
     }
 
-    public ProductResponse filterProducts(String category, Integer minPrice, Integer maxPrice, String search) {
+    public ProductResponse filterProducts(String category, Integer minPrice, Integer maxPrice, String search, String sortBy) {
         logger.info("Starting filterProducts method with category: '{}', minPrice: {}, maxPrice: {}, search: '{}'",
                 category, minPrice, maxPrice, search);
         try {
@@ -97,7 +98,7 @@ public class ProductService {
                     normalizedCategory, minPrice, maxPrice, normalizedSearch);
 
             logger.debug("Executing filter query with normalized parameters");
-            List<Product> products = productRepository.findWithFilters(normalizedCategory, minPrice, maxPrice, normalizedSearch);
+            List<Product> products = productRepository.findWithFilters(normalizedCategory, minPrice, maxPrice, normalizedSearch, sortBy);
             logger.info("Filter query returned {} products", products.size());
 
             ProductResponse response = new ProductResponse(products, products.size());
@@ -197,6 +198,11 @@ public class ProductService {
             logger.error("Error occurred while updating product with id {}: {}", id, e.getMessage(), e);
             throw e;
         }
+    }
+
+    public Product getProductById(Long id) {
+        return productRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + id));
     }
 
     public void deleteProduct(Long id) {

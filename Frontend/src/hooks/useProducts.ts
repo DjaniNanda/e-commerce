@@ -8,11 +8,11 @@ export const useProducts = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Load all products on initial mount
-  const loadProducts = async () => {
+  // Load all products on initial mount with sorting
+  const loadProducts = async (sortBy: string = 'price_asc') => {
     try {
       setLoading(true);
-      const response = await productService.getAllProducts();
+      const response = await productService.getAllProducts(sortBy);
       setProducts(response.products);
       setProductsCount(response.count);
       setError(null);
@@ -24,11 +24,11 @@ export const useProducts = () => {
     }
   };
 
-  // Search products
-  const searchProducts = async (query: string) => {
+  // Search products with sorting
+  const searchProducts = async (query: string, sortBy: string = 'price_asc') => {
     try {
       setLoading(true);
-      const response = await productService.searchProducts(query.trim());
+      const response = await productService.searchProducts(query.trim(), sortBy);
       setProducts(response.products);
       setProductsCount(response.count);
       setError(null);
@@ -40,16 +40,20 @@ export const useProducts = () => {
     }
   };
 
-  // Filter products
+  // Filter products with sorting
   const filterProducts = async (filters: {
     category?: string;
     minPrice?: number;
     maxPrice?: number;
     search?: string;
+    sortBy?: string;
   }) => {
     try {
       setLoading(true);
-      const response = await productService.filterProducts(filters);
+      const response = await productService.filterProducts({
+        ...filters,
+        sortBy: filters.sortBy || 'price_asc'
+      });
       setProducts(response.products);
       setProductsCount(response.count);
       setError(null);

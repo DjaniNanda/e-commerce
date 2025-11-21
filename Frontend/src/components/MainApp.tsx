@@ -19,6 +19,7 @@ const MainApp: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [sortBy, setSortBy] = useState<'price_asc' | 'price_desc' | 'name_asc' | 'name_desc'>('price_asc');
   const [hasInitialized, setHasInitialized] = useState(false);
   
   const [filters, setFilters] = useState({
@@ -38,12 +39,13 @@ const MainApp: React.FC = () => {
       minPrice: filters.priceRange[0] > 0 ? filters.priceRange[0] : undefined,
       maxPrice: filters.priceRange[1] < 1000000 ? filters.priceRange[1] : undefined,
       search: searchQuery || undefined,
+      sortBy: sortBy
     };
     
     return Object.fromEntries(
       Object.entries(params).filter(([_, value]) => value !== undefined)
     );
-  }, [searchQuery, selectedCategory, filters.category, filters.priceRange]);
+  }, [searchQuery, selectedCategory, filters.category, filters.priceRange, sortBy]);
 
   // Initialize products on mount only
   useEffect(() => {
@@ -81,12 +83,12 @@ const MainApp: React.FC = () => {
         priceRange: [0, 1000000]
       });
       
-      await searchProducts(trimmedQuery);
+      await searchProducts(trimmedQuery, sortBy);
       
     } catch (error) {
       console.error('Search error:', error);
     }
-  }, [searchProducts]);
+  }, [searchProducts, sortBy]);
 
   const handleCategoryClick = useCallback(async (category: string) => {
     console.log('Category clicked:', category);
@@ -99,14 +101,19 @@ const MainApp: React.FC = () => {
     
     setSearchQuery('');
     setSelectedCategory(category);
-    setFilters(prev => ({ ...prev, category }));
+    setFilters(prev => ({
+      ...prev,
+      category
+    }));
     
-    try {
-      await filterProducts({ category });
-    } catch (error) {
-      console.error('Category filter error:', error);
-    }
-  }, [filterProducts]);
+    await filterProducts({
+      category,
+      minPrice: filters.priceRange[0],
+      maxPrice: filters.priceRange[1],
+      search: '',
+      sortBy
+    });
+  }, [filterProducts, filters.priceRange, sortBy]);
 
   const clearFilters = useCallback(() => {
     console.log('Clearing all filters');
@@ -138,17 +145,36 @@ const MainApp: React.FC = () => {
     return (
       <div className="main-app__error">
         <div className="main-app__error-content">
-          <div className="main-app__error-icon">
-            <span>⚠️</span>
+          <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2">
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as any)}
+                className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="price_asc">Prix croissant</option>
+                <option value="price_desc">Prix décroissant</option>
+                <option value="name_asc">Nom (A-Z)</option>
+                <option value="name_desc">Nom (Z-A)</option>
+              </select>
+            </div>
+            <div className="flex items-center space-x-2">
+              <button
+                onClick={() => setViewMode('grid')}
+                className={`p-2 rounded-lg ${viewMode === 'grid' ? 'bg-blue-100 text-blue-600' : 'bg-gray-100'}`}
+                aria-label="Vue en grille"
+              >
+                <Grid size={20} />
+              </button>
+              <button
+                onClick={() => setViewMode('list')}
+                className={`p-2 rounded-lg ${viewMode === 'list' ? 'bg-blue-100 text-blue-600' : 'bg-gray-100'}`}
+                aria-label="Vue en liste"
+              >
+                <List size={20} />
+              </button>
+            </div>
           </div>
-          <h3 className="main-app__error-title">Erreur de chargement</h3>
-          <p className="main-app__error-message">{error}</p>
-          <button
-            onClick={() => window.location.reload()}
-            className="main-app__error-button"
-          >
-            Réessayer
-          </button>
         </div>
       </div>
     );

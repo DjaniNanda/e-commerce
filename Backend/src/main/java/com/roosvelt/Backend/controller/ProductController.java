@@ -20,8 +20,8 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping
-    public ResponseEntity<ProductResponse> getAllProducts() {
-        ProductResponse productResponse = productService.getAllProducts();
+    public ResponseEntity<ProductResponse> getAllProducts(@RequestParam(defaultValue = "price_asc") String sortBy) {
+        ProductResponse productResponse = productService.getAllProducts(sortBy);
         return ResponseEntity.ok(productResponse);
     }
 
@@ -32,8 +32,8 @@ public class ProductController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<ProductResponse> searchProducts(@RequestParam String q) {
-        ProductResponse productResponse = productService.searchProducts(q);
+    public ResponseEntity<ProductResponse> searchProducts(@RequestParam String q, @RequestParam(defaultValue = "price_asc") String sortBy) {
+        ProductResponse productResponse = productService.searchProducts(q, sortBy);
         return ResponseEntity.ok(productResponse);
     }
 
@@ -42,12 +42,13 @@ public class ProductController {
             @RequestParam(required = false) String category,
             @RequestParam(required = false) Integer minPrice,
             @RequestParam(required = false) Integer maxPrice,
-            @RequestParam(required = false) String search) {
+            @RequestParam(required = false) String search,
+            @RequestParam(defaultValue = "price_asc") String sortBy) {
 
         String normalizedCategory = "null".equals(category) ? null : category;
         String normalizedSearch = "null".equals(search) ? null : search;
 
-        ProductResponse response = productService.filterProducts(normalizedCategory, minPrice, maxPrice, normalizedSearch);
+        ProductResponse response = productService.filterProducts(normalizedCategory, minPrice, maxPrice, normalizedSearch, sortBy);
         return ResponseEntity.ok(response);
     }
 

@@ -20,9 +20,9 @@ interface CreateProductWithFiles {
 }
 
 export const productService = {
-  // Récupérer tous les produits
-  getAllProducts: async (): Promise<ProductResponse> => {
-    return await api.get('/products');
+  // Récupérer tous les produits avec tri
+  getAllProducts: async (sortBy: string = 'price_asc'): Promise<ProductResponse> => {
+    return await api.get(`/products?sortBy=${sortBy}`);
   },
   
   // Récupérer un produit par ID
@@ -30,13 +30,13 @@ export const productService = {
     return await api.get(`/products/${id}`);
   },
   
-  // Rechercher des produits
-  searchProducts: async (query: string): Promise<ProductResponse> => {
+  // Rechercher des produits avec tri
+  searchProducts: async (query: string, sortBy: string = 'price_asc'): Promise<ProductResponse> => {
     const trimmedQuery = query.trim();
     if (!trimmedQuery) {
       return { products: [], count: 0 };
     }
-    return await api.get(`/products/search?q=${encodeURIComponent(trimmedQuery)}`);
+    return await api.get(`/products/search?q=${encodeURIComponent(trimmedQuery)}&sortBy=${sortBy}`);
   },
   
   // Filtrer les produits par catégorie
@@ -49,12 +49,13 @@ export const productService = {
     return await api.get(`/products/price?min=${minPrice}&max=${maxPrice}`);
   },
   
-  // Filtrer les produits avec plusieurs critères
+  // Filtrer les produits avec plusieurs critères et tri
   filterProducts: async (filters: {
     category?: string;
     minPrice?: number;
     maxPrice?: number;
     search?: string;
+    sortBy?: string;
   }): Promise<ProductResponse> => {
     const params = new URLSearchParams();
     
@@ -62,6 +63,7 @@ export const productService = {
     if (filters.minPrice !== undefined) params.append('minPrice', filters.minPrice.toString());
     if (filters.maxPrice !== undefined) params.append('maxPrice', filters.maxPrice.toString());
     if (filters.search) params.append('search', filters.search);
+    params.append('sortBy', filters.sortBy || 'price_asc');
     
     return await api.get(`/products/filter?${params.toString()}`);
   },
