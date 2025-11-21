@@ -83,7 +83,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ isOpen, onClose, onSubmit }
   const validateField = useCallback((name: string, value: string) => {
     switch (name) {
       case 'firstName':
-        return !value.trim() ? 'Prénom requis' : '';
+        return '';
       case 'lastName':
         return !value.trim() ? 'Nom requis' : '';
       case 'phone':
@@ -225,30 +225,23 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ isOpen, onClose, onSubmit }
                   </h3>
                   
                   <div className="input-grid">
-                    <div className="input-group">
-                      <label htmlFor="firstName" className="input-label">
-                        Prénom *
-                      </label>
-                      <input
-                        ref={firstInputRef}
-                        type="text"
-                        id="firstName"
-                        name="firstName"
-                        value={formData.firstName}
-                        onChange={handleInputChange}
-                        onBlur={handleInputBlur}
-                        className={`form-input ${errors.firstName ? 'form-input-error' : ''}`}
-                        placeholder="Votre prénom"
-                        autoComplete="given-name"
-                        aria-describedby={errors.firstName ? 'firstName-error' : undefined}
-                        aria-invalid={!!errors.firstName}
-                      />
-                      {errors.firstName && (
-                        <p id="firstName-error" className="error-message" role="alert">
-                          <span className="error-dot" aria-hidden="true"></span>
-                          {errors.firstName}
-                        </p>
-                      )}
+                    <div className="form-group">
+                      <label htmlFor="firstName">Prénom (optionnel)</label>
+                      <div className="input-with-icon">
+                        <User size={18} />
+                        <input
+                          ref={firstInputRef}
+                          type="text"
+                          id="firstName"
+                          name="firstName"
+                          value={formData.firstName}
+                          onChange={handleInputChange}
+                          onBlur={handleInputBlur}
+                          placeholder="Facultatif"
+                          aria-invalid={!!errors.firstName}
+                          aria-errormessage={errors.firstName ? 'firstNameError' : undefined}
+                        />
+                      </div>
                     </div>
 
                     <div className="input-group">

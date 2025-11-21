@@ -90,6 +90,23 @@ const MainApp: React.FC = () => {
     }
   }, [searchProducts, sortBy]);
 
+  // Effect to handle sort changes
+  useEffect(() => {
+    if (!hasInitialized) return;
+    
+    const applyFilters = async () => {
+      await filterProducts({
+        category: selectedCategory,
+        minPrice: filters.priceRange[0],
+        maxPrice: filters.priceRange[1],
+        search: searchQuery,
+        sortBy
+      });
+    };
+    
+    applyFilters();
+  }, [sortBy, hasInitialized]);
+
   const handleCategoryClick = useCallback(async (category: string) => {
     console.log('Category clicked:', category);
     
@@ -189,6 +206,42 @@ const MainApp: React.FC = () => {
       />
 
       <main className="main-app__container">
+
+        {/* Controls */}
+        <div className="main-app__controls">
+          <div className="main-app__sort-controls">
+            <div className="main-app__sort-select">
+              <label htmlFor="sort-by" className="main-app__sort-label">Trier par :</label>
+              <select
+                id="sort-by"
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as any)}
+                className="main-app__sort-select-input"
+              >
+                <option value="price_asc">Prix croissant</option>
+                <option value="price_desc">Prix décroissant</option>
+                <option value="name_asc">Nom (A-Z)</option>
+                <option value="name_desc">Nom (Z-A)</option>
+              </select>
+            </div>
+            <div className="main-app__view-toggle">
+              <button
+                onClick={() => setViewMode('grid')}
+                className={`main-app__view-button ${viewMode === 'grid' ? 'main-app__view-button--active' : ''}`}
+                aria-label="Vue en grille"
+              >
+                <Grid size={20} />
+              </button>
+              <button
+                onClick={() => setViewMode('list')}
+                className={`main-app__view-button ${viewMode === 'list' ? 'main-app__view-button--active' : ''}`}
+                aria-label="Vue en liste"
+              >
+                <List size={20} />
+              </button>
+            </div>
+          </div>
+        </div>
 
         {/* Products Grid/List */}
         {loading ? (

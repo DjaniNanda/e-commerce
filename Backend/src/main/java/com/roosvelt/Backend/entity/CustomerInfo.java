@@ -5,7 +5,6 @@ import jakarta.validation.constraints.NotBlank;
 
 @Embeddable
 public class CustomerInfo {
-    @NotBlank
     private String firstName;
 
     @NotBlank
