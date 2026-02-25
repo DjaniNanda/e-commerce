@@ -5,14 +5,17 @@ import ProductModal from './ProductModal';
 import Cart from './Cart';
 import { useProducts } from '../hooks/useProducts';
 import { useCategories } from '../hooks/useCategories';
+import { useCart } from '../context/CartContext';
 import { FaWhatsapp } from 'react-icons/fa';
 import { Product } from '../types';
-import { Car, Grid, List, MapPin, Phone, Search, MessageCircle } from 'lucide-react';
+import { Car, Grid, List, MapPin, Phone, Search, MessageCircle, ShoppingCart } from 'lucide-react';
 import '../components styles/MainApp.css';
 
 const MainApp: React.FC = () => {
   const { products, productsCount, loading, error, searchProducts, filterProducts } = useProducts();
   useCategories();
+  const { state: cartState } = useCart();
+  const totalCartItems = cartState.items.reduce((sum, item) => sum + item.quantity, 0);
   
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -201,7 +204,6 @@ const MainApp: React.FC = () => {
     <div className="main-app">
       <Header
         onSearch={handleSearch}
-        onCartClick={() => setIsCartOpen(true)}
         onCategoryClick={handleCategoryClick}
       />
 
@@ -307,6 +309,20 @@ const MainApp: React.FC = () => {
         isOpen={isCartOpen}
         onClose={() => setIsCartOpen(false)}
       />
+
+      {/* Floating Cart Button */}
+      <button
+        onClick={() => setIsCartOpen(true)}
+        className="main-app__floating-cart-button"
+        aria-label={`Panier avec ${totalCartItems} article${totalCartItems !== 1 ? 's' : ''}`}
+      >
+        <ShoppingCart className="main-app__floating-cart-icon" />
+        {totalCartItems > 0 && (
+          <span className="main-app__floating-cart-badge" aria-hidden="true">
+            {totalCartItems > 99 ? '99+' : totalCartItems}
+          </span>
+        )}
+      </button>
 
       {/* WhatsApp Button */}
       <a

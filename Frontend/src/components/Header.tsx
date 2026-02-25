@@ -1,19 +1,16 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { Search, ShoppingCart, Menu, X, MapPin, Clock, Phone, ChevronDown } from 'lucide-react';
+import { Search, Menu, X, MapPin, Clock, Phone, ChevronDown } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useCart } from '../context/CartContext';
 import { useCategories } from '../hooks/useCategories';
 import '../components styles/Header.css';
 
 interface HeaderProps {
   onSearch?: (query: string) => void;
-  onCartClick?: () => void;
   onCategoryClick?: (category: string) => void;
 }
 
 const Header: React.FC<HeaderProps> = ({
   onSearch = () => {},
-  onCartClick = () => {},
   onCategoryClick = () => {}
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -22,7 +19,6 @@ const Header: React.FC<HeaderProps> = ({
   const [showCategories, setShowCategories] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   
-  const { state } = useCart();
   const { categories } = useCategories();
   const navigate = useNavigate();
   const location = useLocation();
@@ -30,8 +26,6 @@ const Header: React.FC<HeaderProps> = ({
   const mobileSearchInputRef = useRef<HTMLInputElement>(null);
   const categoriesDropdownRef = useRef<HTMLDivElement>(null);
   const categoriesButtonRef = useRef<HTMLButtonElement>(null);
-
-  const totalItems = state.items.reduce((sum, item) => sum + item.quantity, 0);
 
   // Enhanced responsive detection
   useEffect(() => {
@@ -306,20 +300,6 @@ const Header: React.FC<HeaderProps> = ({
 
               {/* Cart and Menu */}
               <div className="header-actions">
-                {!isAdminPage && (
-                  <button
-                    onClick={onCartClick}
-                    className="cart-button"
-                    aria-label={`Panier avec ${totalItems} article${totalItems !== 1 ? 's' : ''}`}
-                  >
-                    <ShoppingCart className="cart-icon" />
-                    {totalItems > 0 && (
-                      <span className="cart-badge" aria-hidden="true">
-                        {totalItems > 99 ? '99+' : totalItems}
-                      </span>
-                    )}
-                  </button>
-                )}
 
                 <button
                   onClick={() => setIsMenuOpen(!isMenuOpen)}
