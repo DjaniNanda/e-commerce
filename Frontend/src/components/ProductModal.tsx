@@ -259,19 +259,6 @@ const ProductModal: React.FC<{
                   <ShoppingCart className="cart-icon" aria-hidden="true" />
                   Ajouter au panier
                 </button>
-
-                <div className="delivery-info" role="region" aria-label="Informations de livraison">
-                  <h4 className="delivery-title">
-                    <span className="delivery-icon" aria-hidden="true">🚛</span>
-                    Livraison gratuite
-                  </h4>
-                  <ul className="delivery-list">
-                    <li>✓ Livraison gratuite à Yaoundé</li>
-                    <li>✓ Expédition dans tout le Cameroun</li>
-                    <li>✓ Paiement à la livraison disponible</li>
-                    <li>✓ Support client 7j/7</li>
-                  </ul>
-                </div>
               </div>
             </section>
           </div>

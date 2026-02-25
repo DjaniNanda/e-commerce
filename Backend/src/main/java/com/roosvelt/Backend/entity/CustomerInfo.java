@@ -1,12 +1,15 @@
 package com.roosvelt.Backend.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.validation.constraints.NotBlank;
 
 @Embeddable
 public class CustomerInfo {
+    @Column(name = "first_name")
     private String firstName;
 
+    @Column(name = "last_name")
     @NotBlank
     private String lastName;
 
