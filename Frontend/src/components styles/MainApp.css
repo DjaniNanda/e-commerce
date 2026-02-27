@@ -154,90 +154,65 @@
   }
 }
 
-/* Loading and Error States */
-.main-app__loading,
-.main-app__error {
-  min-height: 100vh;
-  background: linear-gradient(to bottom right, #f9fafb, #eff6ff);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem;
+/* ── Skeleton loading cards ── */
+@keyframes shimmer {
+  0%   { background-position: -600px 0; }
+  100% { background-position:  600px 0; }
 }
 
-.main-app__loading-content,
-.main-app__error-content {
-  text-align: center;
-  max-width: 24rem;
+.main-app__skeleton-card {
+  background: #fff;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+}
+
+.main-app__skeleton-img {
   width: 100%;
+  height: 10rem;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 600px 100%;
+  animation: shimmer 1.4s infinite linear;
 }
 
-.main-app__error-content {
-  padding: 0 1rem;
+.main-app__skeleton-body {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
 }
 
-@media (min-width: 480px) {
-  .main-app__error-content {
-    padding: 0 1.5rem;
-  }
+.main-app__skeleton-line {
+  border-radius: 0.375rem;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 600px 100%;
+  animation: shimmer 1.4s infinite linear;
+}
+.main-app__skeleton-line--title { height: 1rem;   width: 70%; }
+.main-app__skeleton-line--sub   { height: 0.75rem; width: 45%; }
+.main-app__skeleton-line--price { height: 1.25rem; width: 55%; margin-top: 0.25rem; }
+
+.main-app__skeleton-btn {
+  height: 2.5rem;
+  border-radius: 0.5rem;
+  margin-top: 0.5rem;
+  background: linear-gradient(90deg, #dbeafe 25%, #bfdbfe 50%, #dbeafe 75%);
+  background-size: 600px 100%;
+  animation: shimmer 1.4s infinite linear;
 }
 
+/* Keep spinner for inline refresh indicator */
 .main-app__spinner {
   animation: spin 1s linear infinite;
   border-radius: 50%;
-  height: 3rem;
-  width: 3rem;
+  height: 2rem;
+  width: 2rem;
   border: 2px solid transparent;
   border-bottom-color: #2563eb;
   margin: 0 auto 1rem;
 }
 
-@media (min-width: 480px) {
-  .main-app__spinner {
-    height: 3.5rem;
-    width: 3.5rem;
-    margin-bottom: 1.25rem;
-  }
-}
 
-@media (min-width: 768px) {
-  .main-app__spinner {
-    height: 4rem;
-    width: 4rem;
-    margin-bottom: 1.5rem;
-  }
-}
-
-@media (min-width: 1024px) {
-  .main-app__spinner {
-    height: 3.5rem; /* Réduit de 4rem à 3.5rem */
-    width: 3.5rem; /* Réduit de 4rem à 3.5rem */
-    margin-bottom: 1.25rem; /* Réduit de 1.5rem à 1.25rem */
-  }
-}
-
-.main-app__loading-text {
-  color: #6b7280;
-  font-size: 1rem;
-}
-
-@media (min-width: 480px) {
-  .main-app__loading-text {
-    font-size: 1.125rem;
-  }
-}
-
-@media (min-width: 768px) {
-  .main-app__loading-text {
-    font-size: 1.25rem;
-  }
-}
-
-@media (min-width: 1024px) {
-  .main-app__loading-text {
-    font-size: 1.125rem; /* Réduit de 1.25rem à 1.125rem */
-  }
-}
 
 .main-app__error-icon {
   width: 4rem;

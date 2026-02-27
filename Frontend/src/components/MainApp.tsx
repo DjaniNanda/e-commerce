@@ -23,7 +23,6 @@ const MainApp: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [sortBy, setSortBy] = useState<'price_asc' | 'price_desc' | 'name_asc' | 'name_desc'>('price_asc');
-  const [hasInitialized, setHasInitialized] = useState(false);
   
   const [filters, setFilters] = useState({
     category: '',
@@ -50,65 +49,38 @@ const MainApp: React.FC = () => {
     );
   }, [searchQuery, selectedCategory, filters.category, filters.priceRange, sortBy]);
 
-  // Initialize products on mount only
-  useEffect(() => {
-    if (!hasInitialized && !loading) {
-      console.log('Initializing MainApp - loading initial products');
-      setHasInitialized(true);
-    }
-  }, [hasInitialized, loading]);
-
   const handleSearch = useCallback(async (query: string) => {
-    console.log('Search initiated:', query);
-    
-    // Prevent duplicate searches
-    if (lastSearchQuery.current === query) {
-      return;
-    }
+    if (lastSearchQuery.current === query) return;
     lastSearchQuery.current = query;
-    
     try {
       const trimmedQuery = query.trim();
       if (!trimmedQuery) {
         setSearchQuery('');
         setSelectedCategory('');
-        setFilters({
-          category: '',
-          priceRange: [0, 1000000]
-        });
+        setFilters({ category: '', priceRange: [0, 1000000] });
         return;
       }
-      
       setSearchQuery(query);
       setSelectedCategory('');
-      setFilters({
-        category: '',
-        priceRange: [0, 1000000]
-      });
-      
+      setFilters({ category: '', priceRange: [0, 1000000] });
       await searchProducts(trimmedQuery, sortBy);
-      
     } catch (error) {
       console.error('Search error:', error);
     }
   }, [searchProducts, sortBy]);
 
-  // Effect to handle sort changes
+  // Re-apply filters when sort changes
+  const isFirstSort = useRef(true);
   useEffect(() => {
-    if (!hasInitialized) return;
-    
-    const applyFilters = async () => {
-      await filterProducts({
-        category: selectedCategory,
-        minPrice: filters.priceRange[0],
-        maxPrice: filters.priceRange[1],
-        search: searchQuery,
-        sortBy
-      });
-    };
-    
-    applyFilters();
-  }, [sortBy, hasInitialized]);
+    if (isFirstSort.current) { isFirstSort.current = false; return; }
+    filterProducts({
+      category: selectedCategory,
+      minPrice: filters.priceRange[0],
+      maxPrice: filters.priceRange[1],
+      search: searchQuery,
+      sortBy
+    });
+  }, [sortBy]);
 
   const handleCategoryClick = useCallback(async (category: string) => {
     console.log('Category clicked:', category);
@@ -147,58 +119,6 @@ const MainApp: React.FC = () => {
       priceRange: [0, 1000000]
     });
   }, []);
-
-  // Loading state
-  if (loading && (!products || products.length === 0) && !hasInitialized) {
-    return (
-      <div className="main-app__loading">
-        <div className="main-app__loading-content">
-          <div className="main-app__spinner"></div>
-          <p className="main-app__loading-text">Chargement...</p>
-        </div>
-      </div>
-    );
-  }
-
-  // Error state
-  if (error && (!products || products.length === 0)) {
-    return (
-      <div className="main-app__error">
-        <div className="main-app__error-content">
-          <div className="flex items-center space-x-4">
-            <div className="flex items-center space-x-2">
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as any)}
-                className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              >
-                <option value="price_asc">Prix croissant</option>
-                <option value="price_desc">Prix décroissant</option>
-                <option value="name_asc">Nom (A-Z)</option>
-                <option value="name_desc">Nom (Z-A)</option>
-              </select>
-            </div>
-            <div className="flex items-center space-x-2">
-              <button
-                onClick={() => setViewMode('grid')}
-                className={`p-2 rounded-lg ${viewMode === 'grid' ? 'bg-blue-100 text-blue-600' : 'bg-gray-100'}`}
-                aria-label="Vue en grille"
-              >
-                <Grid size={20} />
-              </button>
-              <button
-                onClick={() => setViewMode('list')}
-                className={`p-2 rounded-lg ${viewMode === 'list' ? 'bg-blue-100 text-blue-600' : 'bg-gray-100'}`}
-                aria-label="Vue en liste"
-              >
-                <List size={20} />
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="main-app">
@@ -246,10 +166,19 @@ const MainApp: React.FC = () => {
         </div>
 
         {/* Products Grid/List */}
-        {loading ? (
-          <div className="main-app__products-loading">
-            <div className="main-app__spinner"></div>
-            <p className="main-app__products-loading-text">Chargement des produits...</p>
+        {loading && (products || []).length === 0 ? (
+          <div className={`main-app__products-grid main-app__products-grid--grid`}>
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div key={i} className="main-app__skeleton-card">
+                <div className="main-app__skeleton-img" />
+                <div className="main-app__skeleton-body">
+                  <div className="main-app__skeleton-line main-app__skeleton-line--title" />
+                  <div className="main-app__skeleton-line main-app__skeleton-line--sub" />
+                  <div className="main-app__skeleton-line main-app__skeleton-line--price" />
+                  <div className="main-app__skeleton-btn" />
+                </div>
+              </div>
+            ))}
           </div>
         ) : (productsCount || 0) === 0 && (searchQuery || selectedCategory) ? (
           <div className="main-app__no-results">
