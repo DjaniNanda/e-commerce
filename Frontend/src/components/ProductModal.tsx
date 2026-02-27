@@ -54,12 +54,14 @@ const ProductModal: React.FC<{
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, onClose]);
 
-  // Prevent body scroll when modal is open
+  // Prevent body scroll when modal is open + hide floating buttons
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
+      document.body.classList.add('product-modal-open');
       return () => {
         document.body.style.overflow = 'unset';
+        document.body.classList.remove('product-modal-open');
       };
     }
   }, [isOpen]);

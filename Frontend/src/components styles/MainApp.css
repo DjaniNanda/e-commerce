@@ -1547,6 +1547,15 @@
   }
 }
 
+/* Hide floating buttons when product modal is open */
+body.product-modal-open .main-app__floating-cart-button,
+body.product-modal-open .main-app__whatsapp-button {
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.8);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
 /* Floating Cart Button */
 .main-app__floating-cart-button {
   position: fixed;
