@@ -326,7 +326,7 @@ const MainApp: React.FC = () => {
 
       {/* WhatsApp Button */}
       <a
-        href="https://wa.me/237699849474"
+        href="https://wa.me/237659230573"
         target="_blank"
         rel="noopener noreferrer"
         className="main-app__whatsapp-button"
@@ -372,10 +372,10 @@ const MainApp: React.FC = () => {
                 <div className="main-app__footer-contact-item">
                   <Phone className="main-app__footer-contact-icon" />
                   <a 
-                    href="tel:+237699849474" 
+                    href="tel:+237659230573" 
                     className="main-app__footer-contact-text hover:text-blue-300 transition-colors cursor-pointer"
                   >
-                    +237 699 849 474
+                    +237 659 230 573
                   </a>
                 </div>
                 <div className="main-app__footer-contact-item">

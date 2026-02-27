@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { X, ShoppingCart, ChevronLeft, ChevronRight } from 'lucide-react';
+import { X, ShoppingCart, ChevronLeft, ChevronRight, ClipboardList } from 'lucide-react';
 import { Product } from '../types';
 import { useCart } from '../context/CartContext';
+import CheckoutForm from './CheckoutForm';
+import OrderConfirmation from './OrderConfirmation';
 import '../components styles/ProductModal.css';
 
 const ProductModal: React.FC<{
@@ -13,6 +15,9 @@ const ProductModal: React.FC<{
   const [imageError, setImageError] = useState<boolean[]>([]);
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
+  const [showCheckout, setShowCheckout] = useState(false);
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [orderData, setOrderData] = useState<any>(null);
   const { dispatch } = useCart();
 
   // Reset state when modal opens
@@ -63,6 +68,24 @@ const ProductModal: React.FC<{
 
   const handleAddToCart = () => {
     dispatch({ type: 'ADD_ITEM', payload: product });
+  };
+
+  const handleOrderHere = () => {
+    dispatch({ type: 'ADD_ITEM', payload: product });
+    setShowCheckout(true);
+  };
+
+  const handleCheckoutSubmit = (submittedOrderData: any) => {
+    setOrderData(submittedOrderData);
+    setShowCheckout(false);
+    setShowConfirmation(true);
+    dispatch({ type: 'CLEAR_CART' });
+  };
+
+  const handleOrderConfirmationClose = () => {
+    setShowConfirmation(false);
+    setOrderData(null);
+    onClose();
   };
 
   const formatPrice = (price: number) => {
@@ -128,6 +151,7 @@ const ProductModal: React.FC<{
   };
 
   return (
+  <>
     <div className="modal-overlay" onClick={handleOverlayClick}>
       <div className="modal-container">
         {/* Header */}
@@ -250,21 +274,49 @@ const ProductModal: React.FC<{
               </div>
 
               <div className="actions-section">
-                <button 
-                  onClick={handleAddToCart} 
-                  className="add-to-cart-button"
-                  aria-label={`Ajouter ${product.name} au panier`}
-                  type="button"
-                >
-                  <ShoppingCart className="cart-icon" aria-hidden="true" />
-                  Ajouter au panier
-                </button>
+                <div className="actions-buttons-row">
+                  <button 
+                    onClick={handleAddToCart} 
+                    className="add-to-cart-button"
+                    aria-label={`Ajouter ${product.name} au panier`}
+                    type="button"
+                  >
+                    <ShoppingCart className="cart-icon" aria-hidden="true" />
+                    Ajouter au panier
+                  </button>
+                  <button 
+                    onClick={handleOrderHere}
+                    className="order-here-button"
+                    aria-label={`Commander ${product.name} directement`}
+                    type="button"
+                  >
+                    <ClipboardList className="cart-icon" aria-hidden="true" />
+                    Commandez ici
+                  </button>
+                </div>
               </div>
             </section>
           </div>
         </div>
       </div>
     </div>
+
+    {showCheckout && (
+      <CheckoutForm
+        isOpen={showCheckout}
+        onClose={() => setShowCheckout(false)}
+        onSubmit={handleCheckoutSubmit}
+      />
+    )}
+
+    {showConfirmation && (
+      <OrderConfirmation
+        isOpen={showConfirmation}
+        onClose={handleOrderConfirmationClose}
+        orderData={orderData}
+      />
+    )}
+  </>
   );
 };
 

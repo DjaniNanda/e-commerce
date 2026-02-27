@@ -13,7 +13,7 @@ const OrderConfirmation: React.FC<OrderConfirmationProps> = ({ isOpen, onClose, 
   const modalRef = useRef<HTMLDivElement>(null);
   const whatsappButtonRef = useRef<HTMLButtonElement>(null);
 
-  const whatsAppPhoneNumber = '237699849474';
+  const whatsAppPhoneNumber = '237659230573';
 
   useEffect(() => {
     if (isOpen) {
@@ -340,10 +340,10 @@ const OrderConfirmation: React.FC<OrderConfirmationProps> = ({ isOpen, onClose, 
               <div className="contact-phone">
                 <Phone aria-hidden="true" />
                 <a 
-                  href="tel:+237699849474" 
+                  href="tel:+237659230573" 
                   className="contact-phone-number hover:text-blue-700 transition-colors"
                 >
-                  +237 699 849 474
+                  +237 659 230 573
                 </a>
               </div>
             </section>

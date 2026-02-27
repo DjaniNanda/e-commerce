@@ -172,8 +172,8 @@ const Header: React.FC<HeaderProps> = ({
               <div className="topbar-right">
                 <div className="topbar-item">
                   <Phone className="topbar-icon" />
-                  <a href="tel:+237699849474" className="topbar-phone hover:text-blue-200 transition-colors">
-                    +237 699 849 474
+                  <a href="tel:+237659230573" className="topbar-phone hover:text-blue-200 transition-colors">
+                    +237 659 230 573
                   </a>
                 </div>
               </div>
