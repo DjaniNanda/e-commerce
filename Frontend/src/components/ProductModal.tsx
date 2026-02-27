@@ -276,15 +276,6 @@ const ProductModal: React.FC<{
               <div className="actions-section">
                 <div className="actions-buttons-row">
                   <button 
-                    onClick={handleAddToCart} 
-                    className="add-to-cart-button"
-                    aria-label={`Ajouter ${product.name} au panier`}
-                    type="button"
-                  >
-                    <ShoppingCart className="cart-icon" aria-hidden="true" />
-                    Ajouter au panier
-                  </button>
-                  <button 
                     onClick={handleOrderHere}
                     className="order-here-button"
                     aria-label={`Commander ${product.name} directement`}
@@ -292,6 +283,15 @@ const ProductModal: React.FC<{
                   >
                     <ClipboardList className="cart-icon" aria-hidden="true" />
                     Commandez ici
+                  </button>
+                  <button 
+                    onClick={handleAddToCart} 
+                    className="add-to-cart-button"
+                    aria-label={`Ajouter ${product.name} au panier`}
+                    type="button"
+                  >
+                    <ShoppingCart className="cart-icon" aria-hidden="true" />
+                    Ajouter au panier
                   </button>
                 </div>
               </div>

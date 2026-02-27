@@ -698,18 +698,13 @@
 
 .actions-buttons-row {
   display: flex;
+  flex-direction: column;
   gap: 0.75rem;
   width: 100%;
 }
 
-@media (min-width: 640px) {
-  .actions-buttons-row {
-    gap: 1rem;
-  }
-}
-
 .add-to-cart-button {
-  flex: 1;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -755,7 +750,7 @@
 }
 
 .order-here-button {
-  flex: 1;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
