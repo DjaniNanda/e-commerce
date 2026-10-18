@@ -186,7 +186,11 @@ const AdminPanel: React.FC = () => {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <button
-                onClick={() => navigate('/')}
+                onClick={() =>
+                  window.location.hostname.startsWith('admin.')
+                    ? window.location.assign('https://www.autobusiness237.com')
+                    : navigate('/')
+                }
                 className="flex items-center space-x-2 px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-xl transition-all duration-200 backdrop-blur-sm"
               >
                 <ArrowLeft className="h-5 w-5" />
@@ -201,7 +205,7 @@ const AdminPanel: React.FC = () => {
             <div className="flex items-center space-x-3">
               <div className="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-xl">
                 <span className="text-white text-sm font-medium">
-                  🔒 Mode Administrateur
+                   Mode Administrateur
                 </span>
               </div>
             </div>
