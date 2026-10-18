@@ -7,6 +7,8 @@ import ProductDetails from './components/admin/ProductDetails';
 import OrderDetails from './components/admin/OrderDetails';
 import ProductForm from './components/admin/ProductForm';
 
+const isAdminHost = window.location.hostname.startsWith('admin.');
+
 function App() {
   return (
     
@@ -14,7 +16,10 @@ function App() {
         <Router>
           <Routes>
             {/* Public Routes */}
-            <Route path="/" element={<MainApp />} />
+            <Route
+              path="/"
+              element={isAdminHost ? <Navigate to="/admin" replace /> : <MainApp />}
+            />
             
             {/* Admin Routes */}
             <Route path="/admin" element={<AdminPanel />} />
@@ -24,7 +29,10 @@ function App() {
             <Route path="/admin/orders/:id" element={<OrderDetails />} />
             
             {/* Catch all - redirect to home */}
-            <Route path="*" element={<Navigate to="/" replace />} />
+            <Route
+              path="*"
+              element={<Navigate to={isAdminHost ? '/admin' : '/'} replace />}
+            />
           </Routes>
         </Router>
       </CartProvider>
