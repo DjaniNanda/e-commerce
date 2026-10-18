@@ -22,10 +22,9 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedMethods("GET")
                 .allowedHeaders("*");
 
-        // Une origine ne contient jamais de "/" final : on le retire pour éviter les erreurs de saisie
         Set<String> origins = new LinkedHashSet<>();
         for (String url : frontendUrls) {
-            String origin = url.trim().replaceAll("/+$", "");
+            String origin = url.trim();
             if (!origin.isEmpty()) {
                 origins.add(origin);
             }
