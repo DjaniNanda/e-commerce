@@ -1,8 +1,9 @@
 {
   "rewrites": [
     {
-      "source": "/(.*)",
-      "destination": "/index.html"
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "admin.autobusiness237.com" }],
+      "destination": "/admin/:path*"
     }
   ]
 }
